@@ -1,8 +1,11 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { CircleUserRound } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -46,8 +49,58 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
+function HeroAuthButton({
+  className,
+  size,
+  ...props
+}: Omit<ButtonProps, "variant">) {
+  const navigate = useNavigate();
+  const [authenticated, setAuthenticated] = React.useState(false);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setAuthenticated(Boolean(data.session));
+    });
+
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) setAuthenticated(Boolean(session));
+    });
+
+    return () => {
+      mounted = false;
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    props.onClick?.(event);
+    if (event.defaultPrevented) return;
+    navigate({ to: authenticated ? "/admin" : "/auth" });
+  };
+
+  return (
+    <button
+      {...props}
+      type={props.type ?? "button"}
+      onClick={handleClick}
+      className={cn(buttonVariants({ variant: "heroOutline", size, className }))}
+      aria-label={authenticated ? "Buka dashboard admin" : "Masuk atau daftar"}
+    >
+      <CircleUserRound className="size-4" aria-hidden="true" />
+      <span className="hidden sm:inline">{authenticated ? "Dashboard" : "Masuk / Daftar"}</span>
+      <span className="sm:hidden">{authenticated ? "Admin" : "Masuk"}</span>
+    </button>
+  );
+}
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
+    if (variant === "heroOutline" && !asChild) {
+      return <HeroAuthButton className={className} size={size} {...props} />;
+    }
+
     const Comp = asChild ? Slot : "button";
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
