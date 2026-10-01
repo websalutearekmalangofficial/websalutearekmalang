@@ -19,7 +19,7 @@ type Check = {
 };
 
 async function runSyncChecks(): Promise<{ checks: Check[]; counts: Record<string, number>; latest: string | null }> {
-  const tables = ["registrations", "pages", "sections", "section_items", "nav_items", "media_library", "whatsapp_templates", "whatsapp_messages"] as const;
+  const tables = ["registrations", "pages", "sections", "section_items", "nav_items", "media_library", "hero_banners", "whatsapp_templates", "whatsapp_messages"] as const;
   const results = await Promise.all(tables.map(async (table) => {
     const { count, error } = await supabase.from(table).select("*", { count: "exact", head: true });
     return { table, count: count ?? 0, error };
@@ -28,7 +28,7 @@ async function runSyncChecks(): Promise<{ checks: Check[]; counts: Record<string
   const registrationResult = results.find((r) => r.table === "registrations")!;
   const templatesResult = results.find((r) => r.table === "whatsapp_templates")!;
   const messagesResult = results.find((r) => r.table === "whatsapp_messages")!;
-  const cmsResults = results.filter((r) => ["pages", "sections", "section_items", "nav_items", "media_library"].includes(r.table));
+  const cmsResults = results.filter((r) => ["pages", "sections", "section_items", "nav_items", "media_library", "hero_banners"].includes(r.table));
   const cmsOk = cmsResults.every((r) => !r.error);
   const latest = await supabase.from("registrations").select("updated_at").order("updated_at", { ascending: false }).limit(1).maybeSingle();
 
@@ -44,6 +44,14 @@ async function runSyncChecks(): Promise<{ checks: Check[]; counts: Record<string
       detail: cmsOk ? "Pages, sections, section items, navigasi, dan media dapat dibaca." : "Salah satu tabel CMS tidak dapat dibaca.",
       ok: cmsOk,
       icon: Server,
+    },
+    {
+      label: "Hero Banner Beranda",
+      detail: results.find((r) => r.table === "hero_banners")?.error
+        ? results.find((r) => r.table === "hero_banners")!.error!.message
+        : `${results.find((r) => r.table === "hero_banners")?.count ?? 0} banner tersimpan dan siap dipakai frontend`,
+      ok: !results.find((r) => r.table === "hero_banners")?.error,
+      icon: FileCheck2,
     },
     {
       label: "Dokumen Pendaftaran",
