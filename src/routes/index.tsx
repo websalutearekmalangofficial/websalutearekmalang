@@ -250,7 +250,7 @@ function HeroBanner() {
     if (banners.length <= 1) return;
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % banners.length);
-    }, 5_500);
+    }, 3_000);
     return () => window.clearInterval(timer);
   }, [banners.length]);
 
