@@ -88,7 +88,7 @@ function RegistrationPage() {
       // 1. Simpan data teks ke tabel registrations
       const { error: dbError } = await supabase.from("registrations").insert([
         {
-          nama_lengkap: formData.namaLengkap,
+          nama: formData.namaLengkap,
           tempat_lahir: formData.tempatLahir,
           tanggal_lahir: formData.tanggalLahir,
           agama: formData.agama,
@@ -101,11 +101,11 @@ function RegistrationPage() {
           nomor_hp_2: formData.nomorHp2 || null,
           email: formData.email,
           sosial_media: formData.sosialMedia,
-          jalur_pendaftaran: formData.jalurPendaftaran,
+          jalur: formData.jalurPendaftaran,
           jenjang_pendidikan: formData.jenjangPendidikan,
           fakultas: formData.fakultas || null,
           jurusan: formData.jurusan,
-          status_pendaftaran: "Menunggu Verifikasi",
+          status: "Menunggu Verifikasi",
         },
       ]);
 
