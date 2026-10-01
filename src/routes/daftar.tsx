@@ -12,12 +12,15 @@ export const Route = createFileRoute("/daftar")({
 function RegistrationPage() {
   const [currentStep, setCurrentStep] = useState(1);
 
+  // State untuk menyimpan data form dari Langkah 1 & 2
   const [formData, setFormData] = useState({
     namaLengkap: "",
     namaSekolah: "",
     asalKota: "",
     email: "",
     nomorHp: "",
+    jalurPendaftaran: "",
+    jurusan: "",
   });
 
   const [errors, setErrors] = useState({
@@ -27,6 +30,11 @@ function RegistrationPage() {
 
   const handleNext = () => {
     if (currentStep < 4) setCurrentStep(currentStep + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -52,6 +60,7 @@ function RegistrationPage() {
       <div className="max-w-5xl mx-auto px-4 md:px-6">
         <h1 className="text-2xl font-bold text-slate-800 mb-4">Halaman Pendaftaran</h1>
 
+        {/* Stepper Navigation */}
         <div className="flex flex-wrap md:flex-nowrap items-center gap-1 bg-[#fde047] p-1 rounded-lg mb-6 overflow-hidden shadow-sm">
           {steps.map((step) => {
             const isActive = currentStep === step.id;
@@ -73,20 +82,23 @@ function RegistrationPage() {
           })}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden relative min-h-[500px]">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden relative min-h-[500px] flex flex-col">
           
           <div className="absolute top-0 right-0 w-full md:w-2/3 h-full z-0 opacity-20 md:opacity-100">
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
             <img
               src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470&auto=format&fit=crop"
-              alt="Mahasiswa UT"
+              alt="Background Mahasiswa"
               className="w-full h-full object-cover"
             />
           </div>
 
-          <div className="relative z-10 p-6 md:p-10 md:w-3/5">
+          {/* Area Form yang bisa di-scroll jika panjang */}
+          <div className="relative z-10 p-6 md:p-10 md:w-3/5 flex-grow">
+            
+            {/* ================= LANGKAH 1 ================= */}
             {currentStep === 1 && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="animate-in fade-in slide-in-from-left-4 duration-500">
                 <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">
                   Formulir Pendaftaran Mahasiswa SALUT Arek Malang - Langkah 1: Data Diri Dasar
                 </h2>
@@ -178,15 +190,60 @@ function RegistrationPage() {
                     </div>
                   </div>
                 </div>
-
               </div>
             )}
 
+            {/* ================= LANGKAH 2 ================= */}
             {currentStep === 2 && (
-              <div className="animate-in fade-in h-[400px] flex items-center justify-center">
-                <p className="text-slate-500 font-bold">Komponen Langkah 2: Pilih Jalur & Jurusan akan muncul di sini.</p>
+              <div className="animate-in fade-in slide-in-from-right-4 duration-500">
+                <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">
+                  Formulir Pendaftaran Mahasiswa SALUT Arek Malang - Langkah 2: Jalur & Jurusan
+                </h2>
+                <p className="text-sm text-slate-600 mb-8 font-medium">
+                  Pilih jalur pendaftaran dan program studi yang Anda minati.
+                </p>
+
+                <div className="space-y-6">
+                  {/* Field Jalur Pendaftaran */}
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Pilih Jalur Pendaftaran <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.jalurPendaftaran}
+                      onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90 backdrop-blur-sm font-medium text-slate-700"
+                    >
+                      <option value="" disabled>-- Pilih Jalur --</option>
+                      <option value="Reguler">Reguler</option>
+                      <option value="RPL">RPL (Rekognisi Pembelajaran Lampau)</option>
+                    </select>
+                  </div>
+
+                  {/* Field Jurusan */}
+                  <div>
+                    <label className="block text-sm font-bold text-slate-900 mb-1.5">
+                      Pilih Jurusan / Program Studi <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={formData.jurusan}
+                      onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/90 backdrop-blur-sm font-medium text-slate-700"
+                    >
+                      <option value="" disabled>-- Cari atau Pilih Jurusan --</option>
+                      <option value="S1 Manajemen">S1 Manajemen</option>
+                      <option value="S1 Akuntansi">S1 Akuntansi</option>
+                      <option value="S1 Ilmu Hukum">S1 Ilmu Hukum</option>
+                      <option value="S1 Ilmu Komunikasi">S1 Ilmu Komunikasi</option>
+                      <option value="S1 PGSD">S1 PGSD</option>
+                      <option value="S1 PGPAUD">S1 PGPAUD</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             )}
+
+            {/* Placeholder untuk Step 3 dan 4 */}
             {currentStep === 3 && (
               <div className="animate-in fade-in h-[400px] flex items-center justify-center">
                 <p className="text-slate-500 font-bold">Komponen Langkah 3: Unggah Dokumen akan muncul di sini.</p>
@@ -199,7 +256,19 @@ function RegistrationPage() {
             )}
           </div>
 
-          <div className="relative z-10 border-t border-slate-100 bg-white/80 backdrop-blur-md p-6 flex justify-end">
+          {/* Area Tombol Footer (Navigasi Sebelumnya & Selanjutnya) */}
+          <div className="relative z-10 border-t border-slate-100 bg-white/80 backdrop-blur-md p-6 flex justify-between items-center mt-auto">
+            {currentStep > 1 ? (
+              <button
+                onClick={handlePrev}
+                className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-3 px-6 rounded-full transition-transform hover:-translate-y-0.5"
+              >
+                ← Sebelumnya
+              </button>
+            ) : (
+              <div></div> /* Div kosong agar tombol Selanjutnya tetap di kanan */
+            )}
+            
             <button
               onClick={handleNext}
               className="flex items-center gap-2 bg-[#fbd043] hover:bg-yellow-400 text-slate-900 font-bold py-3 px-8 rounded-full shadow-md transition-transform hover:-translate-y-0.5"
