@@ -56,54 +56,32 @@ const processSteps = [
     number: "1",
     icon: ClipboardPenLine,
     title: "Isi Formulir",
-    body: (
-      <>
-        Kunjungi situs <strong>salutearekmalang.com</strong> lalu isi formulir pendaftaran secara lengkap dan benar.
-      </>
-    ),
   },
   {
     number: "2",
     icon: CheckCircle2,
     title: "Pilih Jalur",
     badges: ["SIPAS", "Non SIPAS"],
-    body: (
-      <>
-        Tentukan jalur pendaftaran: <strong>SIPAS</strong> atau <strong>Non SIPAS</strong>, kemudian pilih jenis jalur: <strong>Reguler</strong> atau <strong>RPL</strong>.
-      </>
-    ),
   },
   {
     number: "3",
     icon: GraduationCap,
     title: "Pilih Jurusan",
-    body: "Pilih program studi yang Anda minati.",
   },
   {
     number: "4",
     icon: CloudUpload,
     title: "Unggah Dokumen",
-    body: (
-      <>
-        KTP, KK, Ijazah SMA/SMK, Legalisir Ijazah, Transkrip Nilai.
-      </>
-    ),
   },
   {
     number: "5",
     icon: MonitorCheck,
     title: "Verifikasi Admin",
-    body: "Data Anda diperiksa dan diverifikasi oleh admin kami.",
   },
   {
     number: "6",
     icon: IdCard,
     title: "Dapat Nomor Akun",
-    body: (
-      <>
-        Anda menerima nomor akun untuk melanjutkan proses.
-      </>
-    ),
   },
 ];
 
@@ -309,8 +287,7 @@ function CombinedCTAProcessSection() {
         <div className="min-w-0 w-full pt-0 lg:pt-2">
           <div className="mb-5 md:mb-6">
             <h2 className="font-display text-xl font-black leading-tight text-ut-navy sm:text-2xl md:text-3xl">
-              Alur Pendaftaran
-              <span className="block">Sentra Layanan UT</span>
+              Alur Pendaftaran Sentra Layanan UT
             </h2>
             <div className="mt-2 h-1 w-48 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
           </div>
@@ -344,7 +321,6 @@ function CombinedCTAProcessSection() {
                     
                     {/* Teks */}
                     <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
-                    <p className="text-[0.68rem] font-medium leading-snug text-slate-500 sm:text-xs">{step.body}</p>
                   </article>
                   
                   {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
