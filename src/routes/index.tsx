@@ -263,7 +263,7 @@ function HeroBanner() {
           key={activeBanner.id}
           src={activeBanner.url}
           alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
-          className="relative z-10 block h-[240px] w-full object-cover sm:h-[340px] md:h-[440px] lg:h-[520px]"
+          className="relative z-10 block h-auto max-h-[80vh] w-full object-contain"
         />
       ) : (
         <div className="h-[240px] w-full bg-hero-deep sm:h-[340px] md:h-[440px] lg:h-[520px]" aria-hidden="true" />
