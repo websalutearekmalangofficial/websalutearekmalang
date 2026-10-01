@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, Eye, EyeOff, Plus, Save, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Eye, EyeOff, ImagePlus, Plus, Power, RefreshCw, Replace, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminCard, Field, inputClass, textareaClass } from "@/components/admin/field";
@@ -9,6 +9,7 @@ import { MediaPicker } from "@/components/admin/media-picker";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchPages, fetchSections, swapOrder } from "@/lib/admin-cms";
+import { deleteHeroBanner, fetchHeroBanners, moveHeroBanner, replaceHeroBanner, setHeroBannerActive, uploadHeroBanner, type HeroBanner } from "@/lib/hero-banners";
 import { iconNames, sectionKinds, type PageRecord, type Section, type SectionItem } from "@/lib/cms";
 
 export const Route = createFileRoute("/_authenticated/admin/halaman")({
@@ -102,6 +103,13 @@ function PagesAdmin() {
         </div>
 
         {selectedPage ? <PageForm page={selectedPage} onSaved={refreshPages} /> : null}
+
+        {selectedPage?.slug === "beranda" ? (
+          <HeroBannerManager
+            pageId={selectedPage.id}
+            sectionId={sections.find((section) => section.kind === "hero")?.id ?? null}
+          />
+        ) : null}
       </AdminCard>
 
       <AdminCard
@@ -218,6 +226,209 @@ function PageForm({ page, onSaved }: { page: PageRecord; onSaved: () => void }) 
         </Button>
       </div>
     </div>
+  );
+}
+
+
+function HeroBannerManager({ pageId, sectionId }: { pageId: string; sectionId: string | null }) {
+  const queryClient = useQueryClient();
+  const [uploading, setUploading] = useState(false);
+
+  const bannersQuery = useQuery({
+    queryKey: ["hero-banners", pageId, sectionId],
+    queryFn: () => fetchHeroBanners(pageId, sectionId!),
+    enabled: Boolean(sectionId),
+  });
+
+  const banners = bannersQuery.data ?? [];
+
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ["hero-banners", pageId, sectionId] });
+
+  const uploadFiles = async (files: FileList | null) => {
+    if (!sectionId || !files?.length) return;
+    setUploading(true);
+    try {
+      const selected = Array.from(files);
+      await Promise.all(
+        selected.map((file) =>
+          uploadHeroBanner(file, {
+            pageId,
+            sectionId,
+            title: file.name,
+            altText: `Hero Banner Salute Arek Malang - ${file.name}`,
+          }),
+        ),
+      );
+      toast.success(`${selected.length} banner berhasil diunggah.`);
+      refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengunggah banner.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const replace = async (banner: HeroBanner, file: File | undefined) => {
+    if (!file) return;
+    try {
+      await replaceHeroBanner(banner.id, file);
+      toast.success("Hero banner berhasil diganti.");
+      refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengganti banner.");
+    }
+  };
+
+  const remove = async (banner: HeroBanner) => {
+    if (!confirm(`Hapus banner "${banner.title ?? "ini"}"?`)) return;
+    try {
+      await deleteHeroBanner(banner.id);
+      toast.success("Hero banner dihapus.");
+      refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal menghapus banner.");
+    }
+  };
+
+  const toggle = async (banner: HeroBanner) => {
+    try {
+      await setHeroBannerActive(banner.id, !banner.is_active);
+      toast.success(banner.is_active ? "Banner dinonaktifkan." : "Banner diaktifkan.");
+      refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengubah status banner.");
+    }
+  };
+
+  const move = async (index: number, direction: -1 | 1) => {
+    const target = banners[index + direction];
+    const current = banners[index];
+    if (!current || !target) return;
+    try {
+      await moveHeroBanner(current, target);
+      refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengubah urutan slide.");
+    }
+  };
+
+  if (!sectionId) {
+    return (
+      <AdminCard title="Hero Banner Beranda" description="Section Hero untuk Beranda belum tersedia.">
+        <p className="text-sm text-muted-foreground">Buat atau pulihkan section dengan jenis “Hero (banner utama)” terlebih dahulu.</p>
+      </AdminCard>
+    );
+  }
+
+  return (
+    <AdminCard
+      title="Hero Banner Beranda"
+      description="Kelola gambar hero dari database dan Supabase Storage. Satu gambar tampil sebagai banner tunggal; lebih dari satu gambar otomatis menjadi slide."
+    >
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ut-sky/30 bg-section-blue p-4">
+        <div>
+          <p className="text-sm font-black text-ut-navy">Banner aktif: {banners.filter((banner) => banner.is_active).length}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Urutan slide mengikuti nomor di bawah. Gunakan tombol naik/turun untuk mengatur urutan.
+          </p>
+        </div>
+        <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow transition hover:-translate-y-0.5">
+          <ImagePlus className="size-4" aria-hidden="true" />
+          {uploading ? "Mengunggah..." : "Upload Multiple Banner"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/avif"
+            multiple
+            className="sr-only"
+            disabled={uploading}
+            onChange={(event) => {
+              void uploadFiles(event.target.files);
+              event.currentTarget.value = "";
+            }}
+          />
+        </label>
+      </div>
+
+      {bannersQuery.isLoading ? (
+        <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">Memuat hero banner...</div>
+      ) : banners.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border p-8 text-center">
+          <ImagePlus className="mx-auto size-8 text-muted-foreground" aria-hidden="true" />
+          <p className="mt-3 text-sm font-black text-ut-navy">Belum ada hero banner.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Upload satu atau beberapa gambar untuk mulai membuat banner/slide.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {banners.map((banner, index) => (
+            <article key={banner.id} className={`overflow-hidden rounded-2xl border bg-card ${banner.is_active ? "border-ut-sky/50" : "border-border opacity-70"}`}>
+              <div className="grid gap-4 p-4 md:grid-cols-[220px_minmax(0,1fr)]">
+                <div className="relative aspect-video overflow-hidden rounded-xl bg-slate-100">
+                  {banner.url ? (
+                    <img src={banner.url} alt={banner.alt_text ?? "Hero banner"} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="grid h-full place-items-center text-xs text-muted-foreground">Preview tidak tersedia</div>
+                  )}
+                  <span className="absolute left-2 top-2 rounded-full bg-ut-navy px-2.5 py-1 text-xs font-black text-white">
+                    Slide {index + 1}
+                  </span>
+                </div>
+
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="truncate text-sm font-black text-ut-navy">{banner.title ?? "Hero Banner"}</h3>
+                      <p className="mt-1 truncate text-xs text-muted-foreground">{banner.storage_path}</p>
+                    </div>
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-black ${banner.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
+                      {banner.is_active ? "Aktif" : "Nonaktif"}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-3 py-2 text-xs font-black text-ut-navy hover:bg-section-blue">
+                      <Replace className="size-3.5" aria-hidden="true" />
+                      Replace
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/avif"
+                        className="sr-only"
+                        onChange={(event) => {
+                          void replace(banner, event.target.files?.[0]);
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                    </label>
+                    <Button type="button" variant="formOutline" size="form" onClick={() => void toggle(banner)}>
+                      <Power className="size-3.5" aria-hidden="true" />
+                      {banner.is_active ? "Nonaktifkan" : "Aktifkan"}
+                    </Button>
+                    <Button type="button" variant="formOutline" size="form" disabled={index === 0} onClick={() => void move(index, -1)}>
+                      <ArrowUp className="size-3.5" aria-hidden="true" />
+                      Naik
+                    </Button>
+                    <Button type="button" variant="formOutline" size="form" disabled={index === banners.length - 1} onClick={() => void move(index, 1)}>
+                      <ArrowDown className="size-3.5" aria-hidden="true" />
+                      Turun
+                    </Button>
+                    <Button type="button" variant="formOutline" size="form" onClick={() => void remove(banner)}>
+                      <Trash2 className="size-3.5" aria-hidden="true" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {banners.length > 1 ? (
+        <div className="mt-4 flex items-center gap-2 rounded-xl bg-ut-navy px-4 py-3 text-xs font-bold text-white">
+          <RefreshCw className="size-4 shrink-0" aria-hidden="true" />
+          Mode slide aktif: banner aktif akan berganti otomatis di halaman Beranda.
+        </div>
+      ) : null}
+    </AdminCard>
   );
 }
 
