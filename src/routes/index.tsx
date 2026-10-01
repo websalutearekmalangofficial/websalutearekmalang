@@ -308,6 +308,10 @@ function CombinedCTAProcessSection() {
                     <Icon className="mx-auto mb-2 size-7 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
                     
                     {/* Badges (jika ada) */}
+                    {/* Teks */}
+                    <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
+
+                    {/* Badges di bawah judul */}
                     {step.badges ? (
                       <div className="mb-2 flex flex-wrap justify-center gap-1">
                         {step.badges.map((badge) => (
@@ -318,9 +322,6 @@ function CombinedCTAProcessSection() {
                         ))}
                       </div>
                     ) : null}
-                    
-                    {/* Teks */}
-                    <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
                   </article>
                   
                   {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
