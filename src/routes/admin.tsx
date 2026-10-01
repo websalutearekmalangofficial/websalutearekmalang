@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Building2, CheckCircle2, Clock, XCircle, FileText, Search, RefreshCw, UserCheck } from "lucide-react";
+import { Building2, CheckCircle2, Clock, XCircle, FileText, Search, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 
@@ -48,9 +48,9 @@ function AdminDashboardPage() {
   // Filter data berdasarkan pencarian dan status
   const filteredRegistrations = registrations.filter((reg) => {
     const matchesSearch = 
-      reg.nama_lengkap.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reg.jurusan.toLowerCase().includes(searchTerm.toLowerCase());
+      (reg.nama_lengkap || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (reg.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (reg.jurusan || "").toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = filterStatus === "Semua" || reg.status_pendaftaran === filterStatus;
 
@@ -91,7 +91,7 @@ function AdminDashboardPage() {
             <div>
               <p className="text-xs font-bold text-slate-500 uppercase">Menunggu Verifikasi</p>
               <h3 className="text-2xl font-extrabold text-slate-900">
-                {registrations.filter(r => r.status_pendaftaran === 'Menunggu Verifikasi').length}
+                {registrations.filter(r => r.status_pendaftaran === 'Menunggu Verifikasi' || !r.status_pendaftaran).length}
               </h3>
             </div>
           </div>
@@ -187,8 +187,8 @@ function AdminDashboardPage() {
                         }`}>
                           {reg.status_pendaftaran === 'Disetujui' && <CheckCircle2 className="w-3.5 h-3.5"/>}
                           {reg.status_pendaftaran === 'Ditolak' && <XCircle className="w-3.5 h-3.5"/>}
-                          {reg.status_pendaftaran === 'Menunggu Verifikasi' && <Clock className="w-3.5 h-3.5"/>}
-                          {reg.status_pendaftaran}
+                          {(!reg.status_pendaftaran || reg.status_pendaftaran === 'Menunggu Verifikasi') && <Clock className="w-3.5 h-3.5"/>}
+                          {reg.status_pendaftaran || 'Menunggu Verifikasi'}
                         </span>
                       </td>
                       <td className="py-4 px-6 text-center">
