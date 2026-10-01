@@ -343,7 +343,6 @@ function RegistrationsAdmin() {
               ) : null}
             </div>
           </div>
-        </div>
   );
 }
 
