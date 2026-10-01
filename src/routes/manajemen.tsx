@@ -8,10 +8,10 @@ export const Route = createFileRoute("/manajemen")({
   head: () => ({
     meta: [{ title: "Manajemen Pendaftar - Sentra Layanan UT Arek Malang" }],
   }),
-  component:ajemenDashboardPage,
+  component: AdminDashboardPage,
 });
 
-functionajemenDashboardPage() {
+function AdminDashboardPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("Semua");
