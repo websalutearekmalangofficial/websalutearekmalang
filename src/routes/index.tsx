@@ -85,7 +85,7 @@ const processSteps = [
     badges: ["SIPAS", "Non SIPAS"],
     body: (
       <>
-        Tentukan jalur pendaftaran: <strong>SIPAS</strong> atau <strong>Non SIPAS</strong>, kemudian pilih jenis jalur: <strong>Reguler</strong> atau <strong>RPL</strong> (Rekognisi Pembelajaran Lampau).
+        Tentukan jalur pendaftaran: <strong>SIPAS</strong> atau <strong>Non SIPAS</strong>, kemudian pilih jenis jalur: <strong>Reguler</strong> atau <strong>RPL</strong>.
       </>
     ),
   },
@@ -93,7 +93,7 @@ const processSteps = [
     number: "3",
     icon: GraduationCap,
     title: "Pilih Jurusan",
-    body: "Pilih jurusan sesuai dengan program studi yang Anda inginkan (seperti pada gambar di samping).",
+    body: "Pilih program studi yang Anda minati.",
   },
   {
     number: "4",
@@ -101,12 +101,7 @@ const processSteps = [
     title: "Unggah Dokumen",
     body: (
       <>
-        Unggah dokumen persyaratan:
-        <br />• KTP
-        <br />• KK
-        <br />• Ijazah SMA/SMK
-        <br />• Legalisir Ijazah SMA/SMK
-        <br />• Transkrip Nilai SMA/SMK yang sudah dilegalisir.
+        KTP, KK, Ijazah SMA/SMK, Legalisir Ijazah, Transkrip Nilai.
       </>
     ),
   },
@@ -114,7 +109,7 @@ const processSteps = [
     number: "5",
     icon: MonitorCheck,
     title: "Verifikasi oleh Admin",
-    body: "Data dan dokumen Anda akan diverifikasi oleh admin. Jika semua sudah sesuai, proses akan dilanjutkan ke tahap akhir.",
+    body: "Data Anda diperiksa dan diverifikasi oleh admin kami.",
   },
   {
     number: "6",
@@ -122,7 +117,7 @@ const processSteps = [
     title: "Dapat Nomor Akun Pendaftaran",
     body: (
       <>
-        Setelah verifikasi selesai, Anda akan <strong>mendapatkan nomor akun pendaftaran</strong> melalui email atau nomor HP yang Anda daftarkan.
+        Anda menerima nomor akun untuk melanjutkan proses.
       </>
     ),
   },
@@ -190,8 +185,7 @@ function Index() {
         setSelectedPath={setSelectedPath}
         handleSubmit={handleSubmit}
       />
-      <CallToActionSection />
-      <RegistrationProcess />
+      <CombinedCTAProcessSection />
       <BenefitsSection />
       <TestimonialsSection />
       <FooterBanner />
@@ -356,12 +350,14 @@ function HeroRegistration({
   );
 }
 
-// === KOMPONEN BARU DITAMBAHKAN DI SINI ===
-function CallToActionSection() {
+// === KOMPONEN BARU: GABUNGAN CTA & ALUR PENDAFTARAN ===
+function CombinedCTAProcessSection() {
   return (
-    <section className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:px-12 relative z-10">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-12">
-        <div className="flex flex-col items-start gap-6 md:gap-8">
+    <section id="panduan" className="bg-white px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative z-10 border-b border-slate-100">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-[40%_minmax(0,1fr)] lg:gap-16">
+        
+        {/* Kolom Kiri: Teks & Tombol (Sticky saat di-scroll di desktop) */}
+        <div className="flex flex-col items-start gap-6 md:gap-8 lg:sticky lg:top-32">
           <h2 className="text-[2.5rem] font-sans font-medium tracking-tight leading-[1.1] text-slate-900 md:text-5xl lg:text-6xl">
             Kuliah Fleksibel,
             <br />
@@ -381,12 +377,56 @@ function CallToActionSection() {
           </Link>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-xl bg-slate-100 shadow-lg">
-          <img
-            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470&auto=format&fit=crop"
-            alt="Sekelompok Mahasiswa UT berdiskusi"
-            className="w-full h-auto object-cover aspect-[4/3] md:aspect-auto"
-          />
+        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
+        <div className="w-full pt-4 lg:pt-0">
+          <div className="mb-8 md:mb-10">
+            <h2 className="font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
+              Alur Pendaftaran
+              <span className="block">Sentra Layanan UT</span>
+            </h2>
+            <div className="mt-3 h-1.5 w-64 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
+          </div>
+
+          {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
+          <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {processSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <div key={step.number} className="relative">
+                  <article className="relative h-full rounded-xl border border-ut-sky/40 bg-white px-4 pb-5 pt-10 text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:pt-12">
+                    {/* Nomor Step */}
+                    <span className="absolute -top-4 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-ut-yellow text-lg font-black text-ut-navy shadow-md lg:-left-2 lg:translate-x-0">
+                      {step.number}
+                    </span>
+                    
+                    {/* Ikon */}
+                    <Icon className="mx-auto mb-4 size-10 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
+                    
+                    {/* Badges (jika ada) */}
+                    {step.badges ? (
+                      <div className="mb-3 flex flex-wrap justify-center gap-1.5">
+                        {step.badges.map((badge) => (
+                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-ut-sky/40 bg-slate-50 px-2 py-0.5 text-[0.65rem] font-bold text-ut-blue">
+                            <CheckCircle2 className="size-2.5 text-ut-yellow" aria-hidden="true" />
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                    
+                    {/* Teks */}
+                    <h3 className="mb-2 text-sm font-black leading-tight text-ut-navy">{step.title}</h3>
+                    <p className="text-xs font-medium leading-relaxed text-slate-500">{step.body}</p>
+                  </article>
+                  
+                  {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
+                  {index % 3 !== 2 && index < processSteps.length - 1 ? (
+                    <ChevronRight className="absolute -right-3 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-ut-blue/50 lg:block" aria-hidden="true" />
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
@@ -466,55 +506,6 @@ function RegistrationForm({
         </div>
       </form>
     </aside>
-  );
-}
-
-function RegistrationProcess() {
-  return (
-    <section id="panduan" className="relative scroll-mt-20 bg-background px-4 pb-12 pt-10 sm:px-6 md:px-8 md:pt-12 lg:px-12">
-      <div className="absolute inset-x-0 top-0 h-28 bg-section-swoop" aria-hidden="true" />
-      <div className="relative mx-auto max-w-7xl">
-        <div className="mb-8 max-w-xl md:mb-10">
-          <div className="mb-2 h-1.5 w-20 rounded-full bg-ut-yellow" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
-            Alur Pendaftaran
-            <span className="block">Sentra Layanan UT</span>
-          </h2>
-          <div className="mt-3 h-1.5 w-64 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
-        </div>
-
-        <div className="grid gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[repeat(6,minmax(0,1fr))] lg:gap-x-5">
-          {processSteps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <div key={step.number} className="relative">
-                <article className="relative h-full rounded-xl border border-ut-sky/55 bg-card px-4 pb-5 pt-10 text-center shadow-step transition duration-300 hover:-translate-y-1 hover:shadow-form sm:pt-12">
-                  <span className="absolute -top-4 left-1/2 grid size-11 -translate-x-1/2 place-items-center rounded-full bg-ut-yellow text-xl font-black text-ut-navy shadow-yellow sm:size-12 sm:text-2xl lg:-left-1 lg:translate-x-0">
-                    {step.number}
-                  </span>
-                  <Icon className="mx-auto mb-3 size-12 text-ut-blue sm:size-16" strokeWidth={1.8} aria-hidden="true" />
-                  {step.badges ? (
-                    <div className="mb-3 flex justify-center gap-2">
-                      {step.badges.map((badge) => (
-                        <span key={badge} className="inline-flex items-center gap-1 rounded-lg border border-ut-sky bg-background px-2 py-1 text-[0.62rem] font-black text-ut-blue">
-                          <CheckCircle2 className="size-3 text-ut-yellow" aria-hidden="true" />
-                          {badge}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
-                  <h3 className="mb-2 text-sm font-black leading-tight text-ut-navy sm:text-base">{step.title}</h3>
-                  <p className="text-xs font-medium leading-relaxed text-muted-foreground">{step.body}</p>
-                </article>
-                {index < processSteps.length - 1 ? (
-                  <ChevronRight className="absolute -right-4 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-ut-blue lg:block" aria-hidden="true" />
-                ) : null}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
   );
 }
 
