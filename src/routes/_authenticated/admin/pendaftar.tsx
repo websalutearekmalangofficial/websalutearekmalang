@@ -214,7 +214,8 @@ function RegistrationsAdmin() {
     );
   };
 
-  return (\n    <div className="space-y-6">
+  return (
+    <div className="space-y-6">
             <div className="mx-auto max-w-[1500px]">
               <section className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <div>
@@ -342,7 +343,8 @@ function RegistrationsAdmin() {
               ) : null}
             </div>
           </div>
-        \n  );
+        </div>
+  );
 }
 
 function DocumentSummary({ registrationId }: { registrationId: string }) {
