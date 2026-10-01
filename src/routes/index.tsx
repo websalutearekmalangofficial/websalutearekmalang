@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BookOpenCheck,
   Building2,
@@ -190,6 +190,7 @@ function Index() {
         setSelectedPath={setSelectedPath}
         handleSubmit={handleSubmit}
       />
+      <CallToActionSection />
       <RegistrationProcess />
       <BenefitsSection />
       <TestimonialsSection />
@@ -350,6 +351,43 @@ function HeroRegistration({
         </div>
 
         <RegistrationForm selectedPath={selectedPath} setSelectedPath={setSelectedPath} handleSubmit={handleSubmit} />
+      </div>
+    </section>
+  );
+}
+
+// === KOMPONEN BARU DITAMBAHKAN DI SINI ===
+function CallToActionSection() {
+  return (
+    <section className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:px-12 relative z-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-12">
+        <div className="flex flex-col items-start gap-6 md:gap-8">
+          <h2 className="text-[2.5rem] font-sans font-medium tracking-tight leading-[1.1] text-slate-900 md:text-5xl lg:text-6xl">
+            Kuliah Fleksibel,
+            <br />
+            Raih
+            <br />
+            Masa Depan
+            <br />
+            Bersama
+            <br />
+            SALUT Arek Malang
+          </h2>
+          <Link
+            to="/daftar"
+            className="inline-flex h-12 md:h-14 items-center justify-center rounded-full bg-[#fbd043] px-8 text-base md:text-lg font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+          >
+            Mulai Pendaftaran
+          </Link>
+        </div>
+
+        <div className="relative w-full overflow-hidden rounded-xl bg-slate-100 shadow-lg">
+          <img
+            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470&auto=format&fit=crop"
+            alt="Sekelompok Mahasiswa UT berdiskusi"
+            className="w-full h-auto object-cover aspect-[4/3] md:aspect-auto"
+          />
+        </div>
       </div>
     </section>
   );
