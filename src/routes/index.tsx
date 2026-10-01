@@ -165,25 +165,22 @@ function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
       <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
-        <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
-          <div className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Logo Sentra Layanan UT Arek Malang" className="size-full object-contain p-1.5" />
-            ) : (
+        <a
+          href="#home"
+          className="flex min-w-0 max-w-[calc(100vw-8.5rem)] items-center justify-start"
+          aria-label="Sentra Layanan UT Beranda"
+        >
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt="Logo Sentra Layanan UT Arek Malang"
+              className="block h-auto w-[clamp(150px,42vw,360px)] max-h-10 object-contain object-left sm:w-[clamp(190px,38vw,400px)] sm:max-h-12 md:w-[min(400px,34vw)] md:max-h-14"
+            />
+          ) : (
+            <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
               <Building2 className="size-6 sm:size-7" aria-hidden="true" />
-            )}
-          </div>
-          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <div className="min-w-0 leading-none">
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">UNIVERSITAS</p>
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">TERBUKA</p>
             </div>
-            <span className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block" aria-hidden="true" />
-            <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
-              Sentra Layanan
-              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">UT</span>
-            </div>
-          </div>
+          )}
         </a>
 
         <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
