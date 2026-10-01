@@ -2,15 +2,10 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  BarChart3,
   CheckCircle2,
-  ChevronDown,
   ClipboardList,
-  CreditCard,
   ExternalLink,
   FileText,
-  GraduationCap,
-  Home,
   Mail,
   MessageCircle,
   Pencil,
@@ -19,7 +14,6 @@ import {
   Search,
   Trash2,
   UserRound,
-  Users,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -92,15 +86,6 @@ const DOCUMENT_LABELS: Record<string, string> = {
   transkrip: "Transkrip Nilai",
   suratSehat: "Surat Keterangan Sehat",
 };
-
-const SIDEBAR_ITEMS = [
-  { label: "Dashboard", icon: Home, href: "/admin" },
-  { label: "Pendaftaran", icon: ClipboardList, href: "/admin/pendaftar", active: true },
-  { label: "Dokumen", icon: FileText, href: "/admin/pendaftar" },
-  { label: "NIM & Pembayaran", icon: CreditCard, href: "/admin/pendaftar" },
-  { label: "Pengguna Admin", icon: Users, href: "/admin/pendaftar" },
-  { label: "Pelaporan", icon: BarChart3, href: "/admin/pendaftar" },
-] as const;
 
 function documentLabel(filename: string) {
   const key = filename.replace(/\.[^.]+$/, "");
@@ -229,73 +214,7 @@ function RegistrationsAdmin() {
     );
   };
 
-  return (
-    <div className="min-h-screen bg-[#f8f9fa] text-slate-800">
-      <div className="flex min-h-screen">
-        <aside className="fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-slate-900 text-white shadow-xl">
-          <div className="flex min-h-20 items-center gap-3 border-b border-white/10 px-5">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-yellow-400 text-slate-900">
-              <GraduationCap className="size-7" />
-            </div>
-            <div className="leading-tight">
-              <p className="text-sm font-black tracking-wide">SALUT</p>
-              <p className="text-[11px] font-semibold text-slate-300">UNIVERSITAS TERBUKA</p>
-            </div>
-          </div>
-
-          <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-5">
-            {SIDEBAR_ITEMS.map((item) => {
-              const Icon = item.icon;
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`group flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition-colors ${
-                    item.active
-                      ? "bg-yellow-400 text-slate-950 shadow-sm"
-                      : "text-slate-300 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <Icon className="size-5 shrink-0" />
-                  <span>{item.label}</span>
-                  {item.active ? <span className="ml-auto size-2 rounded-full bg-slate-900" /> : null}
-                </a>
-              );
-            })}
-          </nav>
-
-          <div className="border-t border-white/10 p-4">
-            <div className="rounded-xl bg-white/5 p-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Panel Admin</p>
-              <p className="mt-1 text-xs text-slate-200">Kelola pendaftaran dan verifikasi data.</p>
-            </div>
-          </div>
-        </aside>
-
-        <main className="ml-64 min-h-screen min-w-0 flex-1">
-          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-5 shadow-sm sm:px-8">
-            <div>
-              <h1 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Dashboard Admin</h1>
-              <p className="hidden text-xs font-medium text-slate-500 sm:block">Manajemen Pendaftaran</p>
-            </div>
-
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-slate-100"
-              onClick={() => toast.info("Menu profil admin")}
-            >
-              <span className="flex size-9 items-center justify-center rounded-full bg-slate-900 text-xs font-black text-white">
-                AD
-              </span>
-              <span className="hidden text-left sm:block">
-                <span className="block text-xs font-black text-slate-900">Profile</span>
-                <span className="block text-[10px] text-slate-500">Administrator</span>
-              </span>
-              <ChevronDown className="size-4 text-slate-500" />
-            </button>
-          </header>
-
-          <div className="p-4 sm:p-6 lg:p-8">
+  return (\n    <div className="space-y-6">
             <div className="mx-auto max-w-[1500px]">
               <section className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
                 <div>
@@ -423,10 +342,7 @@ function RegistrationsAdmin() {
               ) : null}
             </div>
           </div>
-        </main>
-      </div>
-    </div>
-  );
+        \n  );
 }
 
 function DocumentSummary({ registrationId }: { registrationId: string }) {
