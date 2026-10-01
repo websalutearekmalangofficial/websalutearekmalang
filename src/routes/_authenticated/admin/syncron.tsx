@@ -133,11 +133,12 @@ function SyncAdmin() {
       </AdminCard>
 
       <AdminCard title="Ringkasan Data" description="Jumlah baris yang saat ini terbaca melalui Data API dengan sesi admin.">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {[
             ["Pendaftar", query.data?.counts.registrations],
             ["Halaman", query.data?.counts.pages],
             ["Section", query.data?.counts.sections],
+            ["Hero Banner", query.data?.counts.hero_banners],
             ["Template WA", query.data?.counts.whatsapp_templates],
           ].map(([label, value]) => (
             <div key={String(label)} className="rounded-2xl border bg-section-blue/50 p-4">
