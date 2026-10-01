@@ -50,10 +50,31 @@ const FIELD_GROUPS = [
     fields: [
       ["jalur", "Jalur Pendaftaran"], ["jenjang_pendidikan", "Jenjang Pendidikan"],
       ["fakultas", "Fakultas"], ["jurusan", "Program Studi"],
-      ["sekolah", "Sekolah (legacy)"], ["kota", "Kota (legacy)"],
+      ["sekolah", "Sekolah (data lama)"], ["kota", "Kota (data lama)"],
     ],
   },
 ] as const;
+
+const DOCUMENT_LABELS: Record<string, string> = {
+  "pasFoto": "Pas Foto",
+  "ktp": "Kartu Tanda Penduduk (KTP)",
+  "kk": "Kartu Keluarga (KK)",
+  "ijazah": "Ijazah Terakhir",
+  "transkrip": "Transkrip Nilai",
+  "suratSehat": "Surat Keterangan Sehat",
+};
+
+function documentLabel(filename: string) {
+  const key = filename.replace(/\.[^.]+$/, "");
+  return DOCUMENT_LABELS[key] ?? filename;
+}
+
+function formatFileSize(size: number | null) {
+  if (size === null || !Number.isFinite(size)) return "";
+  return size < 1024 * 1024
+    ? `${Math.max(1, Math.round(size / 1024))} KB`
+    : `${(size / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 function formatValue(value: unknown) {
   if (value === null || value === undefined || value === "") return "-";
@@ -127,9 +148,16 @@ function RegistrationsAdmin() {
     setDraft((current) => current ? { ...current, [key]: value } : current);
   };
 
+  const setSocialField = (key: string, value: string) => {
+    setDraft((current) => current ? {
+      ...current,
+      sosial_media: { ...(current.sosial_media ?? {}), [key]: value },
+    } : current);
+  };
+
   return (
     <div className="space-y-5">
-      <AdminCard title="Data Pendaftar" description="CMS lengkap seluruh data yang masuk dari /daftar.">
+      <AdminCard title="Data Pendaftar" description="CMS lengkap seluruh data yang masuk dari /daftar, termasuk dokumen unggahan.">
         <div className="grid gap-3 md:grid-cols-[1fr_220px_auto]">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
@@ -188,6 +216,7 @@ function RegistrationsAdmin() {
           onEdit={() => { setDraft(selected); setEditing(true); }}
           onSave={() => update.mutate(draft)}
           onField={setField}
+          onSocialField={setSocialField}
           saving={update.isPending}
           onDelete={() => remove.mutate(selected.id)}
         />
@@ -197,10 +226,11 @@ function RegistrationsAdmin() {
 }
 
 function RegistrationDetail({
-  row, editing, onClose, onEdit, onSave, onField, saving, onDelete,
+  row, editing, onClose, onEdit, onSave, onField, onSocialField, saving, onDelete,
 }: {
   row: RegistrationRow; editing: boolean; onClose: () => void; onEdit: () => void;
-  onSave: () => void; onField: (key: keyof RegistrationRow, value: string) => void; saving: boolean; onDelete: () => void;
+  onSave: () => void; onField: (key: keyof RegistrationRow, value: string) => void;
+  onSocialField: (key: string, value: string) => void; saving: boolean; onDelete: () => void;
 }) {
   const documents = useQuery({
     queryKey: ["registration-documents", row.id],
@@ -230,7 +260,14 @@ function RegistrationDetail({
                 const isSocial = key === "sosial_media";
                 return <div key={key}>
                   <label className="mb-1 block text-xs font-bold text-muted-foreground">{label}</label>
-                  {editing && !isSocial ? (
+                  {editing && isSocial ? (
+                    <div className="space-y-2">
+                      {["instagram", "tiktok", "facebook", "x"].map((social) => (
+                        <input key={social} className={inputClass} placeholder={social} aria-label={social}
+                          value={socials[social] ?? ""} onChange={(e) => onSocialField(social, e.target.value)} />
+                      ))}
+                    </div>
+                  ) : editing ? (
                     key === "alamat_lengkap" ? <textarea className={inputClass + " min-h-24"} value={formatValue(value) === "-" ? "" : formatValue(value)} onChange={(e) => onField(key as keyof RegistrationRow, e.target.value)} /> :
                     <input className={inputClass} type={key === "email" ? "email" : key === "tanggal_lahir" ? "date" : "text"} value={formatValue(value) === "-" ? "" : formatValue(value)} onChange={(e) => onField(key as keyof RegistrationRow, e.target.value)} />
                   ) : <p className="break-words rounded-lg bg-section-blue/50 px-3 py-2 text-sm font-medium">{isSocial ? formatValue(socials) : formatValue(value)}</p>}
@@ -251,30 +288,30 @@ function RegistrationDetail({
         </section>
 
         <section className="rounded-2xl border bg-card p-4">
-          <h3 className="mb-3 font-black text-ut-navy">Sosial Media</h3>
-          {Object.entries(socials).length ? Object.entries(socials).map(([key, value]) => <p key={key} className="text-sm"><span className="font-bold capitalize">{key}:</span> {value || "-"}</p>) : <p className="text-sm text-muted-foreground">Belum ada data sosial media.</p>}
+          <h3 className="mb-3 font-black text-ut-navy">Ringkasan Sosial Media</h3>
+          {Object.entries(socials).some(([, value]) => Boolean(value)) ? Object.entries(socials).filter(([, value]) => Boolean(value)).map(([key, value]) => <p key={key} className="break-words text-sm"><span className="font-bold capitalize">{key}:</span> {value}</p>) : <p className="text-sm text-muted-foreground">Belum ada data sosial media.</p>}
           <div className="mt-4 text-xs text-muted-foreground">Dibuat: {new Date(row.created_at).toLocaleString("id-ID")}<br />Diperbarui: {new Date(row.updated_at).toLocaleString("id-ID")}</div>
         </section>
       </div>
 
       <section className="mt-4 rounded-2xl border bg-card p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <div><h3 className="font-black text-ut-navy">Dokumen Pendaftaran</h3><p className="text-xs text-muted-foreground">Akses memakai signed URL 10 menit dan hanya untuk admin.</p></div>
+          <div><h3 className="font-black text-ut-navy">Dokumen Pendaftaran</h3><p className="text-xs text-muted-foreground">File privat; tautan akses sementara berlaku 10 menit dan hanya tersedia bagi admin.</p></div>
           <FileText className="size-5 text-ut-blue" />
         </div>
-        {documents.isLoading ? <p className="text-sm">Memuat dokumen…</p> : documents.data?.length ? (
+        {documents.isLoading ? <p className="text-sm">Memuat dokumen…</p> : documents.isError ? <p className="text-sm text-destructive">Dokumen gagal dimuat. Periksa hak akses Storage admin lalu coba refresh.</p> : documents.data?.length ? (
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {documents.data.map((doc) => (
-              <DocumentLink key={doc.path} path={doc.path} name={doc.name} />
+              <DocumentLink key={doc.path} path={doc.path} name={doc.name} size={doc.size} />
             ))}
           </div>
-        ) : <p className="text-sm text-muted-foreground">Belum ada dokumen terunggah.</p>}
+        ) : <p className="text-sm text-muted-foreground">Belum ada dokumen terunggah untuk pendaftar ini.</p>}
       </section>
     </AdminCard>
   );
 }
 
-function DocumentLink({ path, name }: { path: string; name: string }) {
+function DocumentLink({ path, name, size }: { path: string; name: string; size: number | null }) {
   const [url, setUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const open = async () => {
@@ -288,8 +325,11 @@ function DocumentLink({ path, name }: { path: string; name: string }) {
     } finally { setLoading(false); }
   };
   return (
-    <button type="button" onClick={open} className="flex items-center justify-between gap-2 rounded-xl border bg-section-blue/30 p-3 text-left hover:bg-section-blue">
-      <span className="min-w-0 truncate text-sm font-bold">{name}</span>
+    <button type="button" onClick={open} className="flex items-center justify-between gap-3 rounded-xl border bg-section-blue/30 p-3 text-left hover:bg-section-blue">
+      <span className="min-w-0">
+        <span className="block text-sm font-bold">{documentLabel(name)}</span>
+        <span className="block truncate text-xs text-muted-foreground">{name}{size !== null ? ` · ${formatFileSize(size)}` : ""}</span>
+      </span>
       {loading ? <RefreshCw className="size-4 animate-spin" /> : url ? <ExternalLink className="size-4" /> : <FileText className="size-4" />}
     </button>
   );
