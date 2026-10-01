@@ -177,8 +177,20 @@ function RegistrationPage() {
     setErrorMessage("");
 
     try {
-      const { error: dbError } = await supabase.from("registrations").insert([
-        {
+      const filesToUpload = Object.entries(documents).filter((entry): entry is [string, File] => Boolean(entry[1]));
+
+      for (const [, file] of filesToUpload) {
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error(`File "${file.name}" melebihi batas 10 MB.`);
+        }
+        if (!["application/pdf", "image/jpeg", "image/jpg"].includes(file.type)) {
+          throw new Error(`Format file "${file.name}" tidak didukung. Gunakan PDF atau JPG/JPEG.`);
+        }
+      }
+
+      const { data: registration, error: dbError } = await supabase
+        .from("registrations")
+        .insert({
           nama: formData.namaLengkap,
           tempat_lahir: formData.tempatLahir,
           tanggal_lahir: formData.tanggalLahir,
@@ -197,17 +209,34 @@ function RegistrationPage() {
           fakultas: formData.fakultas || null,
           jurusan: formData.jurusan,
           status: "Menunggu Verifikasi",
-        },
-      ]);
+        })
+        .select("id")
+        .single();
 
       if (dbError) throw dbError;
+      if (!registration?.id) throw new Error("Pendaftaran tersimpan tetapi ID pendaftaran tidak dapat diperoleh.");
 
-      for (const [key, file] of Object.entries(documents)) {
-        if (file) {
-          const fileExt = file.name.split(".").pop();
-          const fileName = `${Date.now()}_${key}.${fileExt}`;
-          await supabase.storage.from("dokumen-pendaftaran").upload(fileName, file);
+      const uploadedPaths: string[] = [];
+
+      for (const [key, file] of filesToUpload) {
+        const fileExt = file.name.split(".").pop()?.toLowerCase();
+        const filePath = `${registration.id}/${key}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from("dokumen-pendaftaran")
+          .upload(filePath, file, { upsert: false });
+
+        if (uploadError) {
+          if (uploadedPaths.length) {
+            await supabase.storage.from("dokumen-pendaftaran").remove(uploadedPaths);
+          }
+          await supabase
+            .from("registrations")
+            .update({ status: "Menunggu Upload Dokumen" })
+            .eq("id", registration.id);
+          throw new Error(`Dokumen "${file.name}" gagal diunggah: ${uploadError.message}`);
         }
+
+        uploadedPaths.push(filePath);
       }
 
       setIsSubmitting(false);
