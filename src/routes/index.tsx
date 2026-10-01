@@ -71,7 +71,7 @@ const processSteps = [
   {
     number: "1",
     icon: ClipboardPenLine,
-    title: "Isi Formulir di Website",
+    title: "Isi Formulir",
     body: (
       <>
         Kunjungi situs <strong>salutearekmalang.com</strong> lalu isi formulir pendaftaran secara lengkap dan benar.
@@ -81,7 +81,7 @@ const processSteps = [
   {
     number: "2",
     icon: CheckCircle2,
-    title: "Pilih Jalur Pendaftaran",
+    title: "Pilih Jalur",
     badges: ["SIPAS", "Non SIPAS"],
     body: (
       <>
@@ -108,13 +108,13 @@ const processSteps = [
   {
     number: "5",
     icon: MonitorCheck,
-    title: "Verifikasi oleh Admin",
+    title: "Verifikasi Admin",
     body: "Data Anda diperiksa dan diverifikasi oleh admin kami.",
   },
   {
     number: "6",
     icon: IdCard,
-    title: "Dapat Nomor Akun Pendaftaran",
+    title: "Dapat Nomor Akun",
     body: (
       <>
         Anda menerima nomor akun untuk melanjutkan proses.
@@ -354,10 +354,10 @@ function HeroRegistration({
 function CombinedCTAProcessSection() {
   return (
     <section id="panduan" className="bg-white px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative z-10 border-b border-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 md:gap-12 lg:grid-cols-2 lg:gap-10 xl:gap-12">
         
         {/* Kolom Kiri: Teks & Tombol (Sticky saat di-scroll di desktop) */}
-        <div className="flex flex-col items-start gap-6 md:gap-8 lg:sticky lg:top-32">
+        <div className="flex min-w-0 flex-col items-start gap-6 md:gap-8">
           <h2 className="text-[2.5rem] font-sans font-medium tracking-tight leading-[1.1] text-slate-900 md:text-5xl lg:text-6xl">
             Kuliah Fleksibel,
             <br />
@@ -378,7 +378,7 @@ function CombinedCTAProcessSection() {
         </div>
 
         {/* Kolom Kanan: Kartu Alur Pendaftaran */}
-        <div className="w-full pt-4 lg:pt-0">
+        <div className="min-w-0 w-full pt-4 lg:pt-0">
           <div className="mb-8 md:mb-10">
             <h2 className="font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
               Alur Pendaftaran
@@ -388,7 +388,7 @@ function CombinedCTAProcessSection() {
           </div>
 
           {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
-          <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
               return (
