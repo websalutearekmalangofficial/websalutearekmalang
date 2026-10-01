@@ -82,11 +82,57 @@ export type RegistrationRow = {
   kota: string | null;
   email: string | null;
   nomor_hp: string | null;
+  nomor_hp_2: string | null;
+  telp_rumah: string | null;
   jalur: string | null;
+  jenjang_pendidikan: string | null;
+  fakultas: string | null;
+  jurusan: string | null;
+  tempat_lahir: string | null;
+  tanggal_lahir: string | null;
+  agama: string | null;
+  jenis_kelamin: string | null;
+  kewarganegaraan: string | null;
+  nama_ibu_kandung: string | null;
+  alamat_lengkap: string | null;
+  sosial_media: Record<string, string> | null;
   status: string;
   notes: string | null;
+  user_id: string | null;
   created_at: string;
+  updated_at: string;
 };
+
+export type RegistrationDocument = {
+  name: string;
+  path: string;
+  size: number | null;
+  updated_at: string | null;
+};
+
+export async function fetchRegistrationDocuments(registrationId: string): Promise<RegistrationDocument[]> {
+  const { data, error } = await supabase.storage
+    .from("dokumen-pendaftaran")
+    .list(registrationId, { limit: 100, sortBy: { column: "name", order: "asc" } });
+  if (error) throw error;
+
+  return (data ?? [])
+    .filter((file) => Boolean(file.name))
+    .map((file) => ({
+      name: file.name,
+      path: `${registrationId}/${file.name}`,
+      size: file.metadata?.size ?? null,
+      updated_at: file.updated_at ?? null,
+    }));
+}
+
+export async function createRegistrationDocumentUrl(path: string) {
+  const { data, error } = await supabase.storage
+    .from("dokumen-pendaftaran")
+    .createSignedUrl(path, 10 * 60);
+  if (error) throw error;
+  return data.signedUrl;
+}
 
 export async function fetchRegistrations(): Promise<RegistrationRow[]> {
   const { data, error } = await supabase
