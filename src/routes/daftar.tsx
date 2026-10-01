@@ -18,7 +18,7 @@ function RegistrationPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // State data teks Step 1 yang sudah diperlengkap sesuai permintaan
+  // State data teks Step 1 & Step 2 yang dinamis
   const [formData, setFormData] = useState({
     // 1. Data Diri Calon Mahasiswa
     namaLengkap: "",
@@ -42,9 +42,11 @@ function RegistrationPage() {
       x: "",
     },
 
-    // Step 2: Jalur & Jurusan
+    // Step 2: Jenjang, Jalur, Fakultas & Jurusan
+    jenjangPendidikan: "",
+    fakultas: "",
     jalurPendaftaran: "Reguler",
-    jurusan: "S1 Manajemen",
+    jurusan: "",
   });
 
   // State data dokumen
@@ -117,6 +119,77 @@ function RegistrationPage() {
     { id: "suratSehat", label: "6. Surat Keterangan Sehat*", icon: Activity },
   ];
 
+  // Data Pilihan Jurusan Berdasarkan Jenjang & Fakultas (Referensi Resmi UT)
+  const getJurusanOptions = () => {
+    if (formData.jenjangPendidikan === "Diploma") {
+      return [
+        "D4 Pengelolaan Arsip dan Rekaman Informasi",
+        "D3 Perpajakan",
+        "D4 Kearsipan",
+        "D3 Teknologi Informasi",
+        "D4 Akuntansi Bisnis Digital",
+        "D4 Manajemen Logistik",
+        "D3 Penyiaran (Broadcast Journalism)"
+      ];
+    }
+    if (formData.jenjangPendidikan === "Sarjana (S1)") {
+      if (formData.fakultas === "FEB") {
+        return [
+          "Manajemen", "Ekonomi Pembangunan", "Ekonomi Syariah", 
+          "Akuntansi", "Akuntansi Keuangan Publik", "Pariwisata", "Kewirausahaan"
+        ];
+      }
+      if (formData.fakultas === "FKIP") {
+        return [
+          "Pendidikan Bahasa dan Sastra Indonesia", "Pendidikan Bahasa Inggris", 
+          "Pendidikan Biologi", "Pendidikan Fisika", "Pendidikan Kimia", 
+          "Pendidikan Matematika", "Pendidikan Ekonomi", "Pendidikan Pancasila dan Kewarganegaraan", 
+          "Teknologi Pendidikan", "Pendidikan Guru Sekolah Dasar (PGSD)", 
+          "Pendidikan Guru Pendidikan Anak Usia Dini (PGPAUD)", "Pendidikan Agama Islam"
+        ];
+      }
+      if (formData.fakultas === "FST") {
+        return [
+          "Statistika", "Matematika", "Biologi", "Teknologi Pangan", 
+          "Agribisnis", "Perencanaan Wilayah dan Kota", "Sistem Informasi", "Sains Data"
+        ];
+      }
+      if (formData.fakultas === "FHISIP") {
+        return [
+          "Ilmu Administrasi Publik", "Administrasi Bisnis", "Hukum", 
+          "Ilmu Pemerintahan", "Ilmu Komunikasi", "Perpustakaan dan Sains Informasi", 
+          "Sosiologi", "Sastra Inggris", "Perpajakan"
+        ];
+      }
+    }
+    if (formData.jenjangPendidikan === "Magister (S2)") {
+      return [
+        "Administrasi Publik (S2)", 
+        "Manajemen (S2) (bid. min. Keuangan/Pemasaran/SDM)", 
+        "Ilmu Kelautan (S2) (bid. min. Man. Perikanan)", 
+        "Pendidikan Matematika (S2)", 
+        "Pendidikan Dasar (S2)", 
+        "Pendidikan Bahasa Inggris (S2)", 
+        "Studi Lingkungan (S2)", 
+        "Pendidikan Anak Usia Dini (S2)", 
+        "Hukum (S2)"
+      ];
+    }
+    if (formData.jenjangPendidikan === "Doktoral (S3)") {
+      return [
+        "Doktor Administrasi Publik (S3)", 
+        "Doktor Ilmu Manajemen (S3)"
+      ];
+    }
+    if (formData.jenjangPendidikan === "Profesi") {
+      return ["Pendidikan Profesi Guru (PPG)"];
+    }
+    if (formData.jenjangPendidikan === "Sertifikat") {
+      return ["Program Sertifikat (MOOCs, BIPA, PMKM)"];
+    }
+    return [];
+  };
+
   // Komponen Halaman Sukses
   if (isSuccess) {
     return (
@@ -156,14 +229,9 @@ function RegistrationPage() {
               </li>
             </ul>
 
-            <h4 className="font-bold text-slate-900 mb-5">Periksa email Anda secara berkala.</h4>
-
             <div className="flex flex-wrap gap-4 border-t border-slate-100 pt-8">
               <button className="bg-[#fde047] hover:bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full shadow-sm transition flex items-center gap-2">
                 Cetak Bukti Pendaftaran (PDF) <CheckCircle2 className="w-4 h-4"/>
-              </button>
-              <button className="bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-full transition">
-                Lihat Status Pendaftaran
               </button>
               <Link to="/" className="bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-3 px-6 rounded-full transition ml-auto">
                 Kembali ke Beranda
@@ -237,8 +305,8 @@ function RegistrationPage() {
                     <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Email</span> <span className="font-bold break-all">{formData.email || "-"}</span></p>
                     <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Nomor HP/WhatsApp</span> <span className="font-bold">{formData.nomorHp || "-"}</span></p>
                     <div className="pt-3 border-t border-slate-100 mt-2">
-                      <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Jalur Pendaftaran</span> <span className="font-bold text-blue-700">{formData.jalurPendaftaran || "-"}</span></p>
-                      <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Jurusan Pendaftaran</span> <span className="font-bold text-blue-700">{formData.jurusan || "-"}</span></p>
+                      <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Jenjang / Program</span> <span className="font-bold text-blue-700">{formData.jenjangPendidikan || "-"}</span></p>
+                      <p><span className="block text-slate-500 text-xs font-semibold mb-0.5">Jurusan</span> <span className="font-bold text-blue-700">{formData.jurusan || "-"}</span></p>
                     </div>
                   </div>
                 </div>
@@ -248,37 +316,33 @@ function RegistrationPage() {
             {/* Form Konten Utama */}
             <div className={`p-6 md:p-8 lg:p-10 ${currentStep >= 3 ? 'w-full lg:w-[70%]' : 'w-full md:w-3/5'}`}>
               
-              {/* STEP 1: DATA DIRI (DIPERLENGKAP SESUAI PERMINTAAN) */}
+              {/* STEP 1: DATA DIRI */}
               {currentStep === 1 && (
                 <div className="animate-in fade-in slide-in-from-left-4 duration-500">
                   <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Langkah 1: Data Diri Calon Mahasiswa</h2>
                   <p className="text-sm text-slate-600 mb-8 font-medium">Lengkapi seluruh informasi di bawah ini secara akurat sesuai dokumen resmi.</p>
                   
                   <div className="space-y-6">
-                    {/* Bagian 1: Data Diri Calon Mahasiswa */}
                     <div className="bg-slate-50/90 backdrop-blur-sm p-5 rounded-xl border border-slate-200 space-y-4">
                       <h3 className="font-extrabold text-slate-800 text-base border-b pb-2">1. Data Diri Calon Mahasiswa</h3>
-                      
                       <div>
-                        <label className="block text-sm font-bold text-slate-900 mb-1">1. Nama Lengkap (Sesuai Ijazah) <span className="text-red-500">*</span></label>
-                        <input type="text" placeholder="Nama Lengkap" value={formData.namaLengkap} onChange={(e) => setFormData({ ...formData, namaLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                        <label className="block text-sm font-bold text-slate-900 mb-1">Nama Lengkap (Sesuai Ijazah) <span className="text-red-500">*</span></label>
+                        <input type="text" placeholder="Nama Lengkap" value={formData.namaLengkap} onChange={(e) => setFormData({ ...formData, namaLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                       </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">2. Tempat Lahir <span className="text-red-500">*</span></label>
-                          <input type="text" placeholder="Kota Kelahiran" value={formData.tempatLahir} onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Tempat Lahir <span className="text-red-500">*</span></label>
+                          <input type="text" placeholder="Kota Kelahiran" value={formData.tempatLahir} onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">3. Tanggal Lahir <span className="text-red-500">*</span></label>
-                          <input type="date" value={formData.tanggalLahir} onChange={(e) => setFormData({ ...formData, tanggalLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Tanggal Lahir <span className="text-red-500">*</span></label>
+                          <input type="date" value={formData.tanggalLahir} onChange={(e) => setFormData({ ...formData, tanggalLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                       </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">4. Agama <span className="text-red-500">*</span></label>
-                          <select value={formData.agama} onChange={(e) => setFormData({ ...formData, agama: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white">
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Agama <span className="text-red-500">*</span></label>
+                          <select value={formData.agama} onChange={(e) => setFormData({ ...formData, agama: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white">
                             <option value="">-- Pilih --</option>
                             <option value="Islam">Islam</option>
                             <option value="Kristen">Kristen</option>
@@ -289,63 +353,48 @@ function RegistrationPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">5. Jenis Kelamin <span className="text-red-500">*</span></label>
-                          <select value={formData.jenisKelamin} onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white">
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Jenis Kelamin <span className="text-red-500">*</span></label>
+                          <select value={formData.jenisKelamin} onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white">
                             <option value="">-- Pilih --</option>
                             <option value="Laki-laki">Laki-laki</option>
                             <option value="Perempuan">Perempuan</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">6. Kewarganegaraan <span className="text-red-500">*</span></label>
-                          <input type="text" value={formData.kewarganegaraan} onChange={(e) => setFormData({ ...formData, kewarganegaraan: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Kewarganegaraan</label>
+                          <input type="text" value={formData.kewarganegaraan} onChange={(e) => setFormData({ ...formData, kewarganegaraan: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                       </div>
-
                       <div>
-                        <label className="block text-sm font-bold text-slate-900 mb-1">7. Nama Ibu Kandung <span className="text-red-500">*</span></label>
-                        <input type="text" placeholder="Nama Lengkap Ibu Kandung" value={formData.namaIbuKandung} onChange={(e) => setFormData({ ...formData, namaIbuKandung: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                        <label className="block text-sm font-bold text-slate-900 mb-1">Nama Ibu Kandung <span className="text-red-500">*</span></label>
+                        <input type="text" placeholder="Nama Lengkap Ibu Kandung" value={formData.namaIbuKandung} onChange={(e) => setFormData({ ...formData, namaIbuKandung: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                       </div>
                     </div>
 
-                    {/* Bagian 2: Informasi Kontak */}
                     <div className="bg-slate-50/90 backdrop-blur-sm p-5 rounded-xl border border-slate-200 space-y-4">
                       <h3 className="font-extrabold text-slate-800 text-base border-b pb-2">2. Informasi Kontak & Sosial Media</h3>
-                      
                       <div>
-                        <label className="block text-sm font-bold text-slate-900 mb-1">1. Alamat Lengkap (Domisili saat ini) <span className="text-red-500">*</span></label>
-                        <textarea rows={2} placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" value={formData.alamatLengkap} onChange={(e) => setFormData({ ...formData, alamatLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                        <label className="block text-sm font-bold text-slate-900 mb-1">Alamat Lengkap <span className="text-red-500">*</span></label>
+                        <textarea rows={2} placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" value={formData.alamatLengkap} onChange={(e) => setFormData({ ...formData, alamatLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                       </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">2. Nomor Telepon Rumah</label>
-                          <input type="tel" placeholder="(Opsional)" value={formData.telpRumah} onChange={(e) => setFormData({ ...formData, telpRumah: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">No. Telepon Rumah</label>
+                          <input type="tel" placeholder="(Opsional)" value={formData.telpRumah} onChange={(e) => setFormData({ ...formData, telpRumah: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">5. Email Aktif <span className="text-red-500">*</span></label>
-                          <input type="email" placeholder="nama@email.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">Email Aktif <span className="text-red-500">*</span></label>
+                          <input type="email" placeholder="nama@email.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                       </div>
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">3. Nomor Handphone (WhatsApp) <span className="text-red-500">*</span></label>
-                          <input type="tel" placeholder="08xx-xxxx-xxxx" value={formData.nomorHp} onChange={(e) => setFormData({ ...formData, nomorHp: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">No. Handphone 1 (WhatsApp) <span className="text-red-500">*</span></label>
+                          <input type="tel" placeholder="08xx-xxxx-xxxx" value={formData.nomorHp} onChange={(e) => setFormData({ ...formData, nomorHp: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                         <div>
-                          <label className="block text-sm font-bold text-slate-900 mb-1">4. Nomor Handphone 2 (Cadangan)</label>
-                          <input type="tel" placeholder="(Opsional)" value={formData.nomorHp2} onChange={(e) => setFormData({ ...formData, nomorHp2: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white" />
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
-                        <label className="block text-sm font-bold text-slate-900 mb-2">6. Media Sosial (Instagram, TikTok, Facebook, X)</label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <input type="text" placeholder="Instagram (@username)" value={formData.sosialMedia.instagram} onChange={(e) => setFormData({ ...formData, sosialMedia: { ...formData.sosialMedia, instagram: e.target.value } })} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
-                          <input type="text" placeholder="TikTok (@username)" value={formData.sosialMedia.tiktok} onChange={(e) => setFormData({ ...formData, sosialMedia: { ...formData.sosialMedia, tiktok: e.target.value } })} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
-                          <input type="text" placeholder="Facebook (Nama Akun)" value={formData.sosialMedia.facebook} onChange={(e) => setFormData({ ...formData, sosialMedia: { ...formData.sosialMedia, facebook: e.target.value } })} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
-                          <input type="text" placeholder="X / Twitter (@username)" value={formData.sosialMedia.x} onChange={(e) => setFormData({ ...formData, sosialMedia: { ...formData.sosialMedia, x: e.target.value } })} className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                          <label className="block text-sm font-bold text-slate-900 mb-1">No. Handphone 2 (Cadangan)</label>
+                          <input type="tel" placeholder="(Opsional)" value={formData.nomorHp2} onChange={(e) => setFormData({ ...formData, nomorHp2: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white" />
                         </div>
                       </div>
                     </div>
@@ -353,30 +402,74 @@ function RegistrationPage() {
                 </div>
               )}
 
-              {/* STEP 2: JALUR & JURUSAN */}
+              {/* STEP 2: JALUR & JURUSAN BERJENJANG */}
               {currentStep === 2 && (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                  <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Langkah 2: Jalur & Jurusan</h2>
-                  <p className="text-sm text-slate-600 mb-8 font-medium">Pilih jalur pendaftaran dan program studi yang Anda minati.</p>
+                  <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Langkah 2: Jalur & Program Studi</h2>
+                  <p className="text-sm text-slate-600 mb-8 font-medium">Tentukan jalur, jenjang pendidikan, fakultas, serta program studi tujuan Anda.</p>
+                  
                   <div className="space-y-6">
+                    {/* 1. Pilih Jalur */}
                     <div>
                       <label className="block text-sm font-bold text-slate-900 mb-1.5">Pilih Jalur Pendaftaran <span className="text-red-500">*</span></label>
-                      <select value={formData.jalurPendaftaran} onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white/90 backdrop-blur-sm font-medium text-slate-700">
-                        <option value="" disabled>-- Pilih Jalur --</option>
+                      <select value={formData.jalurPendaftaran} onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white font-medium text-slate-700">
                         <option value="Reguler">Reguler</option>
                         <option value="RPL">RPL (Rekognisi Pembelajaran Lampau)</option>
                       </select>
                     </div>
+
+                    {/* 2. Pilih Jenjang Pendidikan */}
                     <div>
-                      <label className="block text-sm font-bold text-slate-900 mb-1.5">Pilih Jurusan / Program Studi <span className="text-red-500">*</span></label>
-                      <select value={formData.jurusan} onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })} className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white/90 backdrop-blur-sm font-medium text-slate-700">
-                        <option value="" disabled>-- Cari atau Pilih Jurusan --</option>
-                        <option value="S1 Manajemen">S1 Manajemen</option>
-                        <option value="S1 Akuntansi">S1 Akuntansi</option>
-                        <option value="S1 Ilmu Hukum">S1 Ilmu Hukum</option>
-                        <option value="S1 Ilmu Komunikasi">S1 Ilmu Komunikasi</option>
+                      <label className="block text-sm font-bold text-slate-900 mb-1.5">Pilih Jenjang Pendidikan <span className="text-red-500">*</span></label>
+                      <select 
+                        value={formData.jenjangPendidikan} 
+                        onChange={(e) => setFormData({ ...formData, jenjangPendidikan: e.target.value, fakultas: "", jurusan: "" })} 
+                        className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white font-medium text-slate-700"
+                      >
+                        <option value="" disabled>-- Pilih Jenjang --</option>
+                        <option value="Diploma">Diploma (D3 & D4)</option>
+                        <option value="Sarjana (S1)">Sarjana (S1)</option>
+                        <option value="Magister (S2)">Magister (S2)</option>
+                        <option value="Doktoral (S3)">Doktoral (S3)</option>
+                        <option value="Profesi">Pendidikan Profesi Guru (PPG)</option>
+                        <option value="Sertifikat">Program Sertifikat (MOOCs, BIPA, PMKM)</option>
                       </select>
                     </div>
+
+                    {/* 3. Khusus S1: Pilih Fakultas Terlebih Dahulu */}
+                    {formData.jenjangPendidikan === "Sarjana (S1)" && (
+                      <div className="animate-in fade-in duration-300">
+                        <label className="block text-sm font-bold text-slate-900 mb-1.5">Pilih Fakultas (S1) <span className="text-red-500">*</span></label>
+                        <select 
+                          value={formData.fakultas} 
+                          onChange={(e) => setFormData({ ...formData, fakultas: e.target.value, jurusan: "" })} 
+                          className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white font-medium text-slate-700"
+                        >
+                          <option value="" disabled>-- Pilih Fakultas --</option>
+                          <option value="FEB">Fakultas Ekonomi dan Bisnis (FEB)</option>
+                          <option value="FKIP">Fakultas Keguruan dan Ilmu Pendidikan (FKIP)</option>
+                          <option value="FST">Fakultas Sains dan Teknologi (FST)</option>
+                          <option value="FHISIP">Fakultas Hukum, Ilmu Sosial, dan Ilmu Politik (FHISIP)</option>
+                        </select>
+                      </div>
+                    )}
+
+                    {/* 4. Pilih Jurusan / Program Studi Berdasarkan Pilihan Sebelumnya */}
+                    {formData.jenjangPendidikan && (formData.jenjangPendidikan !== "Sarjana (S1)" || formData.fakultas) && (
+                      <div className="animate-in fade-in duration-300">
+                        <label className="block text-sm font-bold text-slate-900 mb-1.5">Pilih Jurusan / Program Studi <span className="text-red-500">*</span></label>
+                        <select 
+                          value={formData.jurusan} 
+                          onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })} 
+                          className="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white font-medium text-slate-700"
+                        >
+                          <option value="" disabled>-- Pilih Program Studi --</option>
+                          {getJurusanOptions().map((opt) => (
+                            <option key={opt} value={opt}>{opt}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -395,7 +488,7 @@ function RegistrationPage() {
                       return (
                         <div key={doc.id} className="flex flex-col">
                           <label className="text-xs font-extrabold text-slate-800 mb-2 truncate" title={doc.label}>{doc.label}</label>
-                          <div className={`relative flex flex-col items-center justify-center p-4 h-32 rounded-xl border-2 border-dashed transition-colors bg-white/90 backdrop-blur-sm ${isUploaded ? "border-green-400 bg-green-50/50" : "border-slate-300 hover:border-slate-400"}`}>
+                          <div className={`relative flex flex-col items-center justify-center p-4 h-32 rounded-xl border-2 border-dashed transition-colors bg-white/90 ${isUploaded ? "border-green-400 bg-green-50/50" : "border-slate-300 hover:border-slate-400"}`}>
                             {!isUploaded ? (
                               <>
                                 <Icon className="w-8 h-8 text-slate-400 mb-2" />
@@ -424,87 +517,65 @@ function RegistrationPage() {
               {currentStep === 4 && (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-500">
                   <h2 className="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Langkah 4: Tinjau & Kirim Permohonan</h2>
-                  <p className="text-sm text-slate-600 mb-8 font-medium">Harap tinjau semua informasi Anda di bawah ini sebelum mengirim. Data yang dikirim tidak dapat diubah.</p>
+                  <p className="text-sm text-slate-600 mb-8 font-medium">Harap tinjau semua informasi Anda di bawah ini sebelum mengirim.</p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    {/* Ringkasan Data Diri */}
-                    <div className="bg-slate-100/80 rounded-xl p-5 border border-slate-200 backdrop-blur-sm relative">
+                    <div className="bg-slate-100/80 rounded-xl p-5 border border-slate-200 relative">
                       <div className="flex justify-between items-center mb-3">
                         <h4 className="font-extrabold text-slate-800 text-sm">1. Ringkasan Data Diri</h4>
-                        <button onClick={() => jumpToStep(1)} className="text-xs font-bold bg-white border border-slate-300 px-3 py-1 rounded-full hover:bg-slate-50 transition">Ubah</button>
+                        <button onClick={() => jumpToStep(1)} className="text-xs font-bold bg-white border border-slate-300 px-3 py-1 rounded-full">Ubah</button>
                       </div>
-                      <div className="grid grid-cols-[90px_1fr] gap-x-2 gap-y-1 text-sm">
+                      <div className="grid grid-cols-[80px_1fr] gap-x-2 gap-y-1 text-sm">
                         <span className="text-slate-500 font-semibold">Nama:</span> <span className="font-bold text-slate-800 truncate">{formData.namaLengkap || "-"}</span>
-                        <span className="text-slate-500 font-semibold">TTL:</span> <span className="font-bold text-slate-800 truncate">{formData.tempatLahir ? `${formData.tempatLahir}, ${formData.tanggalLahir}` : "-"}</span>
-                        <span className="text-slate-500 font-semibold">Ibu Kandung:</span> <span className="font-bold text-slate-800 truncate">{formData.namaIbuKandung || "-"}</span>
+                        <span className="text-slate-500 font-semibold">TTL:</span> <span className="font-bold text-slate-800">{formData.tempatLahir}, {formData.tanggalLahir || "-"}</span>
                         <span className="text-slate-500 font-semibold">Email:</span> <span className="font-bold text-slate-800 truncate">{formData.email || "-"}</span>
                         <span className="text-slate-500 font-semibold">No HP:</span> <span className="font-bold text-slate-800">{formData.nomorHp || "-"}</span>
                       </div>
                     </div>
 
-                    {/* Ringkasan Program */}
-                    <div className="bg-slate-100/80 rounded-xl p-5 border border-slate-200 backdrop-blur-sm relative">
+                    <div className="bg-slate-100/80 rounded-xl p-5 border border-slate-200 relative">
                       <div className="flex justify-between items-center mb-3">
                         <h4 className="font-extrabold text-slate-800 text-sm">2. Pilihan Program & Jalur</h4>
-                        <button onClick={() => jumpToStep(2)} className="text-xs font-bold bg-white border border-slate-300 px-3 py-1 rounded-full hover:bg-slate-50 transition">Ubah</button>
+                        <button onClick={() => jumpToStep(2)} className="text-xs font-bold bg-white border border-slate-300 px-3 py-1 rounded-full">Ubah</button>
                       </div>
-                      <div className="grid grid-cols-[60px_1fr] gap-x-2 gap-y-1 text-sm">
-                        <span className="text-slate-500 font-semibold">Jalur:</span> <span className="font-bold text-slate-800">{formData.jalurPendaftaran || "-"}</span>
+                      <div className="grid grid-cols-[80px_1fr] gap-x-2 gap-y-1 text-sm">
+                        <span className="text-slate-500 font-semibold">Jalur:</span> <span className="font-bold text-slate-800">{formData.jalurPendaftaran}</span>
+                        <span className="text-slate-500 font-semibold">Jenjang:</span> <span className="font-bold text-slate-800">{formData.jenjangPendidikan}</span>
                         <span className="text-slate-500 font-semibold">Jurusan:</span> <span className="font-bold text-slate-800">{formData.jurusan || "-"}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Ringkasan Dokumen */}
-                  <div className="bg-slate-100/80 rounded-xl p-5 border border-slate-200 backdrop-blur-sm mb-8 relative">
-                    <div className="flex justify-between items-center mb-4">
-                      <h4 className="font-extrabold text-slate-800 text-sm">3. Ringkasan Dokumen Diunggah</h4>
-                      <button onClick={() => jumpToStep(3)} className="text-xs font-bold bg-white border border-slate-300 px-3 py-1 rounded-full hover:bg-slate-50 transition">Ubah</button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-4">
-                      {requiredDocs.map(doc => (
-                        <div key={doc.id} className="flex items-center gap-2">
-                          {documents[doc.id] ? <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0"/> : <XCircle className="w-4 h-4 text-red-400 shrink-0"/>}
-                          <span className={`text-sm truncate ${documents[doc.id] ? 'font-bold text-slate-800' : 'text-slate-400 font-medium'}`}>
-                            {doc.label.replace(/[0-9.]/g, '').replace('*', '').trim()} {documents[doc.id] && <span className="font-normal text-slate-500 text-xs ml-1">({documents[doc.id]?.name})</span>}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Checkbox Persetujuan */}
                   <div className="space-y-3 bg-white p-4 border border-slate-200 rounded-xl shadow-sm">
                     <label className="flex items-start gap-3 cursor-pointer group">
-                      <input type="checkbox" checked={agreements.dataBenar} onChange={(e) => setAgreements({...agreements, dataBenar: e.target.checked})} className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                      <span className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Saya menyatakan dengan ini bahwa semua data dan dokumen yang saya berikan adalah benar dan sah, yang menjamin tidak ada manipulasi data di kemudian hari.</span>
+                      <input type="checkbox" checked={agreements.dataBenar} onChange={(e) => setAgreements({...agreements, dataBenar: e.target.checked})} className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-600" />
+                      <span className="text-sm font-semibold text-slate-700">Saya menyatakan bahwa semua data dan dokumen yang saya berikan adalah benar dan sah.</span>
                     </label>
                     <label className="flex items-start gap-3 cursor-pointer group">
-                      <input type="checkbox" checked={agreements.setujuKetentuan} onChange={(e) => setAgreements({...agreements, setujuKetentuan: e.target.checked})} className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                      <span className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">Saya mengerti dan menyetujui ketentuan pendaftaran Sentra Layanan Universitas Terbuka.</span>
+                      <input type="checkbox" checked={agreements.setujuKetentuan} onChange={(e) => setAgreements({...agreements, setujuKetentuan: e.target.checked})} className="mt-1 w-4 h-4 rounded border-slate-300 text-blue-600" />
+                      <span className="text-sm font-semibold text-slate-700">Saya mengerti dan menyetujui ketentuan pendaftaran Sentra Layanan Universitas Terbuka.</span>
                     </label>
                   </div>
-                  <p className="text-sm font-extrabold text-slate-900 mt-5">Periksa kembali data Anda sebelum menekan tombol Kirim.</p>
                 </div>
               )}
 
             </div>
           </div>
 
-          {/* Area Tombol Footer */}
-          <div className="relative z-20 border-t border-slate-200 bg-white/95 backdrop-blur-md p-5 md:p-6 flex justify-between items-center mt-auto shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          {/* Footer Tombol Navigasi */}
+          <div className="relative z-20 border-t border-slate-200 bg-white/95 p-5 md:p-6 flex justify-between items-center mt-auto">
             {currentStep > 1 ? (
-              <button onClick={handlePrev} className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-2.5 px-6 rounded-full transition-transform hover:-translate-y-0.5">
+              <button onClick={handlePrev} className="flex items-center gap-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-2.5 px-6 rounded-full">
                 ← Sebelumnya
               </button>
             ) : <div/>}
             
             {currentStep < 4 ? (
-              <button onClick={handleNext} className="flex items-center gap-2 bg-[#fde047] hover:bg-yellow-400 text-slate-900 font-bold py-2.5 px-8 rounded-full shadow-md transition-transform hover:-translate-y-0.5">
+              <button onClick={handleNext} className="flex items-center gap-2 bg-[#fde047] hover:bg-yellow-400 text-slate-900 font-bold py-2.5 px-8 rounded-full shadow-md">
                 Selanjutnya <ArrowRight className="w-5 h-5" />
               </button>
             ) : (
-              <button disabled={isSubmitting} onClick={handleSubmit} className={`flex items-center gap-2 font-bold py-2.5 px-8 rounded-full shadow-md transition-all ${isSubmitting ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-[#fde047] hover:bg-yellow-400 text-slate-900 hover:-translate-y-0.5'}`}>
+              <button disabled={isSubmitting} onClick={handleSubmit} className={`flex items-center gap-2 font-bold py-2.5 px-8 rounded-full shadow-md ${isSubmitting ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-[#fde047] hover:bg-yellow-400 text-slate-900'}`}>
                 {isSubmitting ? "Mengirim..." : "✓ Kirim Permohonan Pendaftaran Sekarang"}
               </button>
             )}
