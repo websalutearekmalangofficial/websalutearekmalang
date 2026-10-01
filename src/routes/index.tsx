@@ -354,7 +354,7 @@ function HeroRegistration({
 function CombinedCTAProcessSection() {
   return (
     <section id="panduan" className="bg-white px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative z-10 border-b border-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-[40%_minmax(0,1fr)] lg:gap-16">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-12 xl:gap-16">
         
         {/* Kolom Kiri: Teks & Tombol (Sticky saat di-scroll di desktop) */}
         <div className="flex flex-col items-start gap-6 md:gap-8 lg:sticky lg:top-32">
