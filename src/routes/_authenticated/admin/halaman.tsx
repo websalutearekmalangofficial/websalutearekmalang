@@ -249,16 +249,14 @@ function HeroBannerManager({ pageId, sectionId }: { pageId: string; sectionId: s
     setUploading(true);
     try {
       const selected = Array.from(files);
-      await Promise.all(
-        selected.map((file) =>
-          uploadHeroBanner(file, {
-            pageId,
-            sectionId,
-            title: file.name,
-            altText: `Hero Banner Salute Arek Malang - ${file.name}`,
-          }),
-        ),
-      );
+      for (const file of selected) {
+        await uploadHeroBanner(file, {
+          pageId,
+          sectionId,
+          title: file.name,
+          altText: `Hero Banner Salute Arek Malang - ${file.name}`,
+        });
+      }
       toast.success(`${selected.length} banner berhasil diunggah.`);
       refresh();
     } catch (error) {
