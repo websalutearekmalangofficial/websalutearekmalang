@@ -43,13 +43,18 @@ function AdminDashboardPage() {
     },
   });
 
-  const filteredRegistrations = registrations.filter((reg) => {
-    const matchesSearch = 
-      (reg.nama_lengkap || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (reg.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (reg.jurusan || "").toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredRegistrations = registrations.filter((reg: any) => {
+    const nama = reg.nama_lengkap || reg.namaLengkap || "";
+    const email = reg.email || "";
+    const jurusan = reg.jurusan || "";
 
-    const matchesStatus = filterStatus === "Semua" || reg.status_pendaftaran === filterStatus;
+    const matchesSearch = 
+      nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      jurusan.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const status = reg.status_pendaftaran || reg.statusPendaftaran || "Menunggu Verifikasi";
+    const matchesStatus = filterStatus === "Semua" || status === filterStatus;
 
     return matchesSearch && matchesStatus;
   });
@@ -85,7 +90,7 @@ function AdminDashboardPage() {
             <div>
               <p className="text-xs font-bold text-slate-500 uppercase">Menunggu Verifikasi</p>
               <h3 className="text-2xl font-extrabold text-slate-900">
-                {registrations.filter(r => r.status_pendaftaran === 'Menunggu Verifikasi' || !r.status_pendaftaran).length}
+                {registrations.filter((r: any) => (r.status_pendaftaran || r.statusPendaftaran || "Menunggu Verifikasi") === 'Menunggu Verifikasi').length}
               </h3>
             </div>
           </div>
@@ -94,7 +99,7 @@ function AdminDashboardPage() {
             <div>
               <p className="text-xs font-bold text-slate-500 uppercase">Disetujui</p>
               <h3 className="text-2xl font-extrabold text-slate-900">
-                {registrations.filter(r => r.status_pendaftaran === 'Disetujui').length}
+                {registrations.filter((r: any) => (r.status_pendaftaran || r.statusPendaftaran) === 'Disetujui').length}
               </h3>
             </div>
           </div>
@@ -152,63 +157,76 @@ function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm">
-                  {filteredRegistrations.map((reg) => (
-                    <tr key={reg.id} className="hover:bg-slate-50/80 transition">
-                      <td className="py-4 px-6">
-                        <div className="font-extrabold text-slate-900">{reg.nama_lengkap}</div>
-                        <div className="text-xs text-slate-500">Ibu: {reg.nama_ibu_kandung} • TTL: {reg.tempat_lahir}, {reg.tanggal_lahir}</div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="font-semibold text-slate-800">{reg.email}</div>
-                        <div className="text-xs text-slate-500">{reg.nomor_hp}</div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="font-bold text-blue-700">{reg.jenjang_pendidikan}</div>
-                        <div className="text-xs font-semibold text-slate-600">{reg.jurusan}</div>
-                        <span className="inline-block mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded">
-                          Jalur: {reg.jalur_pendaftaran}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${
-                          reg.status_pendaftaran === 'Disetujui' 
-                            ? 'bg-green-100 text-green-800' 
-                            : reg.status_pendaftaran === 'Ditolak'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {reg.status_pendaftaran === 'Disetujui' && <CheckCircle2 className="w-3.5 h-3.5"/>}
-                          {reg.status_pendaftaran === 'Ditolak' && <XCircle className="w-3.5 h-3.5"/>}
-                          {(!reg.status_pendaftaran || reg.status_pendaftaran === 'Menunggu Verifikasi') && <Clock className="w-3.5 h-3.5"/>}
-                          {reg.status_pendaftaran || 'Menunggu Verifikasi'}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6 text-center">
-                        <div className="inline-flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
-                          <button
-                            onClick={() => updateStatusMutation.mutate({ id: reg.id, newStatus: "Disetujui" })}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                              reg.status_pendaftaran === 'Disetujui'
-                                ? 'bg-green-600 text-white shadow-xs'
-                                : 'bg-white text-slate-700 hover:bg-green-50 hover:text-green-700'
-                            }`}
-                          >
-                            Setujui
-                          </button>
-                          <button
-                            onClick={() => updateStatusMutation.mutate({ id: reg.id, newStatus: "Ditolak" })}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                              reg.status_pendaftaran === 'Ditolak'
-                                ? 'bg-red-600 text-white shadow-xs'
-                                : 'bg-white text-slate-700 hover:bg-red-50 hover:text-red-700'
-                            }`}
-                          >
-                            Tolak
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredRegistrations.map((reg: any) => {
+                    const nama = reg.nama_lengkap || reg.namaLengkap || "Tanpa Nama";
+                    const ibu = reg.nama_ibu_kandung || reg.namaIbuKandung || "-";
+                    const tempat = reg.tempat_lahir || reg.tempatLahir || "-";
+                    const tanggal = reg.tanggal_lahir || reg.tanggalLahir || "-";
+                    const email = reg.email || "-";
+                    const hp = reg.nomor_hp || reg.nomorHp || "-";
+                    const jenjang = reg.jenjang_pendidikan || reg.jenjangPendidikan || "Sarjana (S1)";
+                    const jurusan = reg.jurusan || "-";
+                    const jalur = reg.jalur_pendaftaran || reg.jalurPendaftaran || "Reguler";
+                    const status = reg.status_pendaftaran || reg.statusPendaftaran || "Menunggu Verifikasi";
+
+                    return (
+                      <tr key={reg.id} className="hover:bg-slate-50/80 transition">
+                        <td className="py-4 px-6">
+                          <div className="font-extrabold text-slate-900">{nama}</div>
+                          <div className="text-xs text-slate-500">Ibu: {ibu} • TTL: {tempat}, {tanggal}</div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="font-semibold text-slate-800">{email}</div>
+                          <div className="text-xs text-slate-500">{hp}</div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="font-bold text-blue-700">{jenjang}</div>
+                          <div className="text-xs font-semibold text-slate-600">{jurusan}</div>
+                          <span className="inline-block mt-1 bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded">
+                            Jalur: {jalur}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${
+                            status === 'Disetujui' 
+                              ? 'bg-green-100 text-green-800' 
+                              : status === 'Ditolak'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {status === 'Disetujui' && <CheckCircle2 className="w-3.5 h-3.5"/>}
+                            {status === 'Ditolak' && <XCircle className="w-3.5 h-3.5"/>}
+                            {status === 'Menunggu Verifikasi' && <Clock className="w-3.5 h-3.5"/>}
+                            {status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-center">
+                          <div className="inline-flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                            <button
+                              onClick={() => updateStatusMutation.mutate({ id: reg.id, newStatus: "Disetujui" })}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                                status === 'Disetujui'
+                                  ? 'bg-green-600 text-white shadow-xs'
+                                  : 'bg-white text-slate-700 hover:bg-green-50 hover:text-green-700'
+                              }`}
+                            >
+                              Setujui
+                            </button>
+                            <button
+                              onClick={() => updateStatusMutation.mutate({ id: reg.id, newStatus: "Ditolak" })}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                                status === 'Ditolak'
+                                  ? 'bg-red-600 text-white shadow-xs'
+                                  : 'bg-white text-slate-700 hover:bg-red-50 hover:text-red-700'
+                              }`}
+                            >
+                              Tolak
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
