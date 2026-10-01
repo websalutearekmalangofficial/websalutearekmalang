@@ -281,12 +281,12 @@ function HeroBanner() {
 // === KOMPONEN BARU: GABUNGAN CTA & ALUR PENDAFTARAN ===
 function CombinedCTAProcessSection() {
   return (
-    <section id="panduan" className="bg-white px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative z-10 border-b border-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 md:gap-12 lg:grid-cols-2 lg:gap-10 xl:gap-12">
+    <section id="panduan" className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12 relative z-10 border-b border-slate-100">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 md:gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
         
         {/* Kolom Kiri: Teks & Tombol (Sticky saat di-scroll di desktop) */}
-        <div className="flex min-w-0 flex-col items-start gap-6 md:gap-8">
-          <h2 className="text-[2.5rem] font-sans font-medium tracking-tight leading-[1.1] text-slate-900 md:text-5xl lg:text-6xl">
+        <div className="flex min-w-0 flex-col items-start gap-5 md:gap-6 lg:pt-2">
+          <h2 className="text-[2.25rem] font-sans font-medium tracking-tight leading-[1.08] text-slate-900 md:text-5xl lg:text-[3.4rem] xl:text-5xl">
             Kuliah Fleksibel,
             <br />
             Raih
@@ -299,43 +299,43 @@ function CombinedCTAProcessSection() {
           </h2>
           <Link
             to="/daftar"
-            className="inline-flex h-12 md:h-14 items-center justify-center rounded-full bg-[#fbd043] px-8 text-base md:text-lg font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            className="inline-flex h-11 md:h-12 items-center justify-center rounded-full bg-[#fbd043] px-7 text-sm md:text-base font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
           >
             Mulai Pendaftaran
           </Link>
         </div>
 
         {/* Kolom Kanan: Kartu Alur Pendaftaran */}
-        <div className="min-w-0 w-full pt-4 lg:pt-0">
-          <div className="mb-8 md:mb-10">
-            <h2 className="font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
+        <div className="min-w-0 w-full pt-0 lg:pt-2">
+          <div className="mb-5 md:mb-6">
+            <h2 className="font-display text-xl font-black leading-tight text-ut-navy sm:text-2xl md:text-3xl">
               Alur Pendaftaran
               <span className="block">Sentra Layanan UT</span>
             </h2>
-            <div className="mt-3 h-1.5 w-64 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
+            <div className="mt-2 h-1 w-48 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
           </div>
 
           {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
               return (
                 <div key={step.number} className="relative">
-                  <article className="relative h-full rounded-xl border border-ut-sky/40 bg-white px-4 pb-5 pt-10 text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:pt-12">
+                  <article className="relative h-full min-h-[150px] rounded-xl border border-ut-sky/40 bg-white px-3 pb-3 pt-8 text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:min-h-[160px] sm:pt-9">
                     {/* Nomor Step */}
-                    <span className="absolute -top-4 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-ut-yellow text-lg font-black text-ut-navy shadow-md lg:-left-2 lg:translate-x-0">
+                    <span className="absolute -top-3 left-1/2 grid size-7 -translate-x-1/2 place-items-center rounded-full bg-ut-yellow text-xs font-black text-ut-navy shadow-md lg:-left-1.5 lg:translate-x-0">
                       {step.number}
                     </span>
                     
                     {/* Ikon */}
-                    <Icon className="mx-auto mb-4 size-10 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
+                    <Icon className="mx-auto mb-2 size-7 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
                     
                     {/* Badges (jika ada) */}
                     {step.badges ? (
-                      <div className="mb-3 flex flex-wrap justify-center gap-1.5">
+                      <div className="mb-2 flex flex-wrap justify-center gap-1">
                         {step.badges.map((badge) => (
-                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-ut-sky/40 bg-slate-50 px-2 py-0.5 text-[0.65rem] font-bold text-ut-blue">
-                            <CheckCircle2 className="size-2.5 text-ut-yellow" aria-hidden="true" />
+                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-ut-sky/40 bg-slate-50 px-1.5 py-0.5 text-[0.6rem] font-bold text-ut-blue">
+                            <CheckCircle2 className="size-2 text-ut-yellow" aria-hidden="true" />
                             {badge}
                           </span>
                         ))}
@@ -343,13 +343,13 @@ function CombinedCTAProcessSection() {
                     ) : null}
                     
                     {/* Teks */}
-                    <h3 className="mb-2 text-sm font-black leading-tight text-ut-navy">{step.title}</h3>
-                    <p className="text-xs font-medium leading-relaxed text-slate-500">{step.body}</p>
+                    <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
+                    <p className="text-[0.68rem] font-medium leading-snug text-slate-500 sm:text-xs">{step.body}</p>
                   </article>
                   
                   {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
                   {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="absolute -right-3 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-ut-blue/50 lg:block" aria-hidden="true" />
+                    <ChevronRight className="absolute -right-2 top-1/2 z-10 hidden size-4 -translate-y-1/2 text-ut-blue/50 lg:block" aria-hidden="true" />
                   ) : null}
                 </div>
               );
