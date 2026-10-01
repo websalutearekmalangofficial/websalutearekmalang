@@ -24,6 +24,9 @@ import {
   ShieldCheck,
   User,
   X,
+  Gift,
+  Users,
+  Clock
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -140,6 +143,7 @@ function Index() {
     <main className="min-h-screen overflow-hidden bg-background font-body text-foreground">
       <Header />
       <HeroBanner />
+      <KeunggulanBannerSection />
       <CombinedCTAProcessSection />
       <BenefitsSection />
       <TestimonialsSection />
@@ -306,7 +310,63 @@ function HeroBanner() {
     </section>
   );
 }
-// === KOMPONEN BARU: GABUNGAN CTA & ALUR PENDAFTARAN ===
+
+// === KOMPONEN BARU: BANNER KEUNGGULAN LAYANAN ===
+function KeunggulanBannerSection() {
+  return (
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-8 mb-4 relative z-20">
+      <div className="bg-[#111c38] rounded-3xl p-6 md:p-8 lg:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 shadow-xl">
+        
+        {/* Item 1: Layanan Gratis */}
+        <div className="flex items-center gap-5 flex-1 w-full">
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
+            <Gift className="w-8 h-8" strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Layanan Gratis</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-snug">
+              Seluruh proses pendampingan tanpa biaya tambahan.
+            </p>
+          </div>
+        </div>
+
+        {/* Garis Pemisah (Hanya di Desktop) */}
+        <div className="hidden md:block w-px h-16 bg-slate-700"></div>
+
+        {/* Item 2: Pendampingan Akademik */}
+        <div className="flex items-center gap-5 flex-1 w-full">
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
+            <Users className="w-8 h-8" strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Pendampingan Akademik</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-snug">
+              Tim kami siap membantu selama masa perkuliahan.
+            </p>
+          </div>
+        </div>
+
+        {/* Garis Pemisah (Hanya di Desktop) */}
+        <div className="hidden md:block w-px h-16 bg-slate-700"></div>
+
+        {/* Item 3: Waktu Fleksibel */}
+        <div className="flex items-center gap-5 flex-1 w-full">
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
+            <Clock className="w-8 h-8" strokeWidth={2.5} />
+          </div>
+          <div>
+            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Waktu Fleksibel</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-snug">
+              Belajar kapan saja dan di mana saja.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 function CombinedCTAProcessSection() {
   return (
     <section id="panduan" className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12 relative z-10 border-b border-slate-100">
@@ -357,7 +417,6 @@ function CombinedCTAProcessSection() {
                     {/* Ikon */}
                     <Icon className="mx-auto mb-2 size-7 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
                     
-                    {/* Badges (jika ada) */}
                     {/* Teks */}
                     <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
 
