@@ -10,6 +10,7 @@ import {
   Menu,
   ShieldCheck,
   Users,
+  RefreshCw,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -29,6 +30,7 @@ const menu = [
   { to: "/admin/navigasi", label: "Menu Navigasi", icon: Menu, exact: false },
   { to: "/admin/media", label: "Media", icon: Images, exact: false },
   { to: "/admin/pendaftar", label: "Data Pendaftar", icon: Users, exact: false },
+  { to: "/admin/syncron", label: "Sinkronisasi", icon: RefreshCw, exact: false },
 ] as const;
 
 function AdminLayout() {
