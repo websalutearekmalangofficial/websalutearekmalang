@@ -257,72 +257,52 @@ function HeroBanner() {
   const activeBanner = banners[activeSlide] ?? banners[0];
 
   return (
-    <section id="home" className="relative scroll-mt-20 overflow-hidden bg-hero-deep text-hero-foreground">
-      <div className="absolute inset-0 bg-hero-deep" aria-hidden="true" />
+    <section id="home" aria-label="Hero Banner" className="relative scroll-mt-20 overflow-hidden bg-hero-deep">
       {activeBanner?.url ? (
-        <>
-          <div
-            key={activeBanner.id}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url("${activeBanner.url}")` }}
-            aria-label={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
-          />
-          <div className="absolute inset-0 bg-ut-navy/70" aria-hidden="true" />
-        </>
-      ) : null}
-      <div className="absolute inset-y-0 left-0 hidden w-72 bg-side-stripes lg:block" aria-hidden="true" />
-      <div className="pointer-events-none absolute -bottom-16 left-0 h-44 w-full bg-wave-white" aria-hidden="true" />
+        <img
+          key={activeBanner.id}
+          src={activeBanner.url}
+          alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
+          className="relative z-10 block h-[240px] w-full object-cover sm:h-[340px] md:h-[440px] lg:h-[520px]"
+        />
+      ) : (
+        <div className="h-[240px] w-full bg-hero-deep sm:h-[340px] md:h-[440px] lg:h-[520px]" aria-hidden="true" />
+      )}
 
-      <div className="relative mx-auto flex min-h-[360px] max-w-7xl items-center px-4 py-14 sm:px-6 md:min-h-[430px] md:px-8 md:py-16 lg:min-h-[500px] lg:px-12">
-        <div className="relative z-10 max-w-4xl lg:pl-16">
-          <div className="mb-5 flex flex-wrap items-center gap-2.5 text-hero-foreground/95 sm:gap-3 md:mb-6">
-            <p className="font-script text-2xl font-bold leading-none drop-shadow-title sm:text-3xl md:text-4xl">Salute Arek Malang</p>
-            <SmallLogo label="UT" />
-            <SmallLogo label="MP" />
-            <SmallLogo label="DIKTISAINTEK BERDAMPAK" wide />
+      {banners.length > 1 ? (
+        <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between sm:inset-x-6 md:inset-x-8">
+          <button
+            type="button"
+            onClick={() => setActiveSlide((current) => (current - 1 + banners.length) % banners.length)}
+            aria-label="Banner sebelumnya"
+            className="grid size-10 place-items-center rounded-full border border-white/60 bg-black/40 text-white backdrop-blur transition hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+          >
+            <ChevronLeft className="size-5" aria-hidden="true" />
+          </button>
+
+          <div className="flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-2 backdrop-blur" aria-label="Pilihan slide">
+            {banners.map((banner, index) => (
+              <button
+                key={banner.id}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                aria-label={`Tampilkan slide ${index + 1}`}
+                aria-current={index === activeSlide ? "true" : undefined}
+                className={`h-2.5 rounded-full transition-all ${index === activeSlide ? "w-7 bg-ut-yellow" : "w-2.5 bg-white/70 hover:bg-white"}`}
+              />
+            ))}
           </div>
 
-          <h1 className="max-w-[52rem] font-display text-[1.9rem] font-black uppercase leading-[1.02] text-hero-foreground drop-shadow-title sm:text-4xl md:text-5xl lg:text-[3.3rem] lg:leading-[0.98] xl:text-[3.45rem]">
-            SENTRA LAYANAN UNIVERSITAS TERBUKA ADA DI MPP MERDEKA MALANG LHO YUK KEPOIN !!!
-          </h1>
-          <div className="mt-4 h-2 w-52 max-w-full rounded-full bg-ut-yellow shadow-yellow sm:w-72 md:mt-5" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setActiveSlide((current) => (current + 1) % banners.length)}
+            aria-label="Banner berikutnya"
+            className="grid size-10 place-items-center rounded-full border border-white/60 bg-black/40 text-white backdrop-blur transition hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+          >
+            <ChevronRight className="size-5" aria-hidden="true" />
+          </button>
         </div>
-
-        {banners.length > 1 ? (
-          <div className="absolute inset-x-4 bottom-8 z-20 flex items-center justify-between sm:inset-x-6 md:inset-x-8 lg:inset-x-12">
-            <button
-              type="button"
-              onClick={() => setActiveSlide((current) => (current - 1 + banners.length) % banners.length)}
-              aria-label="Banner sebelumnya"
-              className="grid size-10 place-items-center rounded-full border border-white/50 bg-black/25 text-white backdrop-blur transition hover:bg-black/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-            >
-              <ChevronLeft className="size-5" aria-hidden="true" />
-            </button>
-
-            <div className="flex items-center gap-1.5 rounded-full bg-black/25 px-3 py-2 backdrop-blur" aria-label="Pilihan slide">
-              {banners.map((banner, index) => (
-                <button
-                  key={banner.id}
-                  type="button"
-                  onClick={() => setActiveSlide(index)}
-                  aria-label={`Tampilkan slide ${index + 1}`}
-                  aria-current={index === activeSlide ? "true" : undefined}
-                  className={`h-2.5 rounded-full transition-all ${index === activeSlide ? "w-7 bg-ut-yellow" : "w-2.5 bg-white/70 hover:bg-white"}`}
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setActiveSlide((current) => (current + 1) % banners.length)}
-              aria-label="Banner berikutnya"
-              className="grid size-10 place-items-center rounded-full border border-white/50 bg-black/25 text-white backdrop-blur transition hover:bg-black/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-            >
-              <ChevronRight className="size-5" aria-hidden="true" />
-            </button>
-          </div>
-        ) : null}
-      </div>
+      ) : null}
     </section>
   );
 }
