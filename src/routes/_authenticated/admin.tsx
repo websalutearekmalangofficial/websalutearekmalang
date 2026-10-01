@@ -9,8 +9,6 @@ import {
   FileText,
   GraduationCap,
   Home,
-  Images,
-  LayoutDashboard,
   ListOrdered,
   LogOut,
   Menu,
