@@ -117,6 +117,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/navigasi'
     | '/admin/pendaftar'
+    | '/admin/syncron'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -126,6 +127,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/navigasi'
     | '/admin/pendaftar'
+    | '/admin/syncron'
     | '/admin'
   id:
     | '__root__'
@@ -137,6 +139,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/navigasi'
     | '/_authenticated/admin/pendaftar'
+    | '/_authenticated/admin/syncron'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
