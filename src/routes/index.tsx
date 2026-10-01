@@ -32,7 +32,6 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
-import { fetchSiteLogoUrl } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -144,8 +143,8 @@ function Index() {
     <main className="min-h-screen overflow-hidden bg-background font-body text-foreground">
       <Header />
       <HeroBanner />
-      <KeunggulanBannerSection />
       <CombinedCTAProcessSection />
+      <KeunggulanBannerSection />
       <BenefitsSection />
       <TestimonialsSection />
       <FooterBanner />
@@ -155,32 +154,25 @@ function Index() {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const logoQuery = useQuery({
-    queryKey: ["site-logo"],
-    queryFn: fetchSiteLogoUrl,
-    staleTime: 60_000,
-  });
-  const logoUrl = logoQuery.data;
 
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
       <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
-        <a
-          href="#home"
-          className="flex min-w-0 max-w-[calc(100vw-8.5rem)] items-center justify-start"
-          aria-label="Sentra Layanan UT Beranda"
-        >
-          {logoUrl ? (
-            <img
-              src={logoUrl}
-              alt="Logo Sentra Layanan UT Arek Malang"
-              className="block h-auto w-[clamp(150px,42vw,360px)] max-h-10 object-contain object-left sm:w-[clamp(190px,38vw,400px)] sm:max-h-12 md:w-[min(400px,34vw)] md:max-h-14"
-            />
-          ) : (
-            <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
-              <Building2 className="size-6 sm:size-7" aria-hidden="true" />
+        <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
+          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
+            <Building2 className="size-6 sm:size-7" aria-hidden="true" />
+          </div>
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <div className="min-w-0 leading-none">
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">UNIVERSITAS</p>
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">TERBUKA</p>
             </div>
-          )}
+            <span className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block" aria-hidden="true" />
+            <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
+              Sentra Layanan
+              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">UT</span>
+            </div>
+          </div>
         </a>
 
         <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
@@ -319,10 +311,93 @@ function HeroBanner() {
   );
 }
 
-// === KOMPONEN BARU: BANNER KEUNGGULAN LAYANAN ===
+// === KOMPONEN DIPERBARUI: GABUNGAN CTA & ALUR PENDAFTARAN (REDESAIN DARK THEME) ===
+function CombinedCTAProcessSection() {
+  return (
+    <section id="panduan" className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12 relative z-10 border-b border-slate-100">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 md:gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+        
+        {/* Kolom Kiri: Teks & Tombol */}
+        <div className="flex min-w-0 flex-col items-start gap-5 md:gap-6 lg:pt-2">
+          <h2 className="text-[2.25rem] font-sans font-medium tracking-tight leading-[1.08] text-slate-900 md:text-5xl lg:text-[3.4rem] xl:text-5xl">
+            Kuliah Fleksibel,
+            <br />
+            Raih
+            <br />
+            Masa Depan
+            <br />
+            Bersama
+            <br />
+            SALUT Arek Malang
+          </h2>
+          <Link
+            to="/daftar"
+            className="inline-flex h-11 md:h-12 items-center justify-center rounded-full bg-[#fbd043] px-7 text-sm md:text-base font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+          >
+            Mulai Pendaftaran
+          </Link>
+        </div>
+
+        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
+        <div className="min-w-0 w-full pt-0 lg:pt-2">
+          <div className="mb-8 md:mb-10">
+            <h2 className="font-display text-xl font-black leading-tight text-[#111c38] sm:text-2xl md:text-3xl">
+              Alur Pendaftaran Sentra Layanan UT
+            </h2>
+            <div className="mt-3 h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+          </div>
+
+          {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
+          <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            {processSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <div key={step.number} className="relative mt-2">
+                  <article className="relative h-full min-h-[160px] rounded-2xl bg-[#111c38] px-4 pb-5 pt-10 text-center shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:min-h-[170px] border border-slate-800 flex flex-col items-center justify-start">
+                    {/* Nomor Step (Kuning, Border Putih) */}
+                    <span className="absolute -top-4 left-1/2 grid size-8 -translate-x-1/2 place-items-center rounded-full bg-[#facc15] text-sm font-black text-[#111c38] shadow-md lg:-left-3 lg:translate-x-0 border-4 border-white">
+                      {step.number}
+                    </span>
+                    
+                    {/* Ikon (Lingkaran Kuning, Ikon Biru Dongker) */}
+                    <div className="mb-3 grid size-12 place-items-center rounded-full bg-[#facc15] text-[#111c38] shadow-sm">
+                      <Icon className="size-6" strokeWidth={2.5} aria-hidden="true" />
+                    </div>
+                    
+                    {/* Teks */}
+                    <h3 className="mb-1 text-sm font-bold leading-tight text-white">{step.title}</h3>
+
+                    {/* Badges di bawah judul */}
+                    {step.badges ? (
+                      <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+                        {step.badges.map((badge) => (
+                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-slate-600 bg-slate-800/80 px-2 py-0.5 text-[0.65rem] font-semibold text-slate-300">
+                            <CheckCircle2 className="size-2.5 text-[#facc15]" aria-hidden="true" />
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+                  </article>
+                  
+                  {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
+                  {index % 3 !== 2 && index < processSteps.length - 1 ? (
+                    <ChevronRight className="absolute -right-3 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-slate-300 lg:block" aria-hidden="true" />
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// === KOMPONEN: BANNER KEUNGGULAN LAYANAN ===
 function KeunggulanBannerSection() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-8 mb-4 relative z-20">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-12 mb-2 relative z-20">
       <div className="bg-[#111c38] rounded-3xl p-6 md:p-8 lg:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 shadow-xl">
         
         {/* Item 1: Layanan Gratis */}
@@ -375,86 +450,6 @@ function KeunggulanBannerSection() {
   );
 }
 
-function CombinedCTAProcessSection() {
-  return (
-    <section id="panduan" className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12 relative z-10 border-b border-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 md:gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-        
-        {/* Kolom Kiri: Teks & Tombol (Sticky saat di-scroll di desktop) */}
-        <div className="flex min-w-0 flex-col items-start gap-5 md:gap-6 lg:pt-2">
-          <h2 className="text-[2.25rem] font-sans font-medium tracking-tight leading-[1.08] text-slate-900 md:text-5xl lg:text-[3.4rem] xl:text-5xl">
-            Kuliah Fleksibel,
-            <br />
-            Raih
-            <br />
-            Masa Depan
-            <br />
-            Bersama
-            <br />
-            SALUT Arek Malang
-          </h2>
-          <Link
-            to="/daftar"
-            className="inline-flex h-11 md:h-12 items-center justify-center rounded-full bg-[#fbd043] px-7 text-sm md:text-base font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-          >
-            Mulai Pendaftaran
-          </Link>
-        </div>
-
-        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
-        <div className="min-w-0 w-full pt-0 lg:pt-2">
-          <div className="mb-5 md:mb-6">
-            <h2 className="font-display text-xl font-black leading-tight text-ut-navy sm:text-2xl md:text-3xl">
-              Alur Pendaftaran Sentra Layanan UT
-            </h2>
-            <div className="mt-2 h-1 w-48 max-w-full rounded-full bg-ut-yellow" aria-hidden="true" />
-          </div>
-
-          {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {processSteps.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <div key={step.number} className="relative">
-                  <article className="relative h-full min-h-[150px] rounded-xl border border-ut-sky/40 bg-white px-3 pb-3 pt-8 text-center shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:min-h-[160px] sm:pt-9">
-                    {/* Nomor Step */}
-                    <span className="absolute -top-3 left-1/2 grid size-7 -translate-x-1/2 place-items-center rounded-full bg-ut-yellow text-xs font-black text-ut-navy shadow-md lg:-left-1.5 lg:translate-x-0">
-                      {step.number}
-                    </span>
-                    
-                    {/* Ikon */}
-                    <Icon className="mx-auto mb-2 size-7 text-ut-blue" strokeWidth={1.8} aria-hidden="true" />
-                    
-                    {/* Teks */}
-                    <h3 className="mb-1 text-xs font-black leading-tight text-ut-navy sm:text-sm">{step.title}</h3>
-
-                    {/* Badges di bawah judul */}
-                    {step.badges ? (
-                      <div className="mb-2 flex flex-wrap justify-center gap-1">
-                        {step.badges.map((badge) => (
-                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-ut-sky/40 bg-slate-50 px-1.5 py-0.5 text-[0.6rem] font-bold text-ut-blue">
-                            <CheckCircle2 className="size-2 text-ut-yellow" aria-hidden="true" />
-                            {badge}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                  </article>
-                  
-                  {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
-                  {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="absolute -right-2 top-1/2 z-10 hidden size-4 -translate-y-1/2 text-ut-blue/50 lg:block" aria-hidden="true" />
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function SmallLogo({ label, wide = false }: { label: string; wide?: boolean }) {
   return (
     <span className={`inline-flex h-9 items-center justify-center rounded-full border border-hero-foreground/70 bg-hero-foreground/15 px-2.5 text-center text-[0.6rem] font-black leading-tight sm:h-11 sm:px-3 sm:text-xs ${wide ? "min-w-24 sm:min-w-32" : "min-w-9 sm:min-w-11"}`}>
@@ -465,7 +460,7 @@ function SmallLogo({ label, wide = false }: { label: string; wide?: boolean }) {
 
 function BenefitsSection() {
   return (
-    <section id="informasi" className="scroll-mt-20 bg-section-blue px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12">
+    <section id="informasi" className="scroll-mt-20 bg-section-blue px-4 py-8 sm:px-6 md:px-8 md:py-16 lg:px-12">
       <div className="mx-auto max-w-7xl">
         <h2 className="text-center font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
           Kenapa Memilih Salute Arek Malang?
