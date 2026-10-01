@@ -173,53 +173,31 @@ function RegistrationsAdmin() {
         </div>
 
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[150rem] border-collapse text-left text-sm">
+          <table className="w-full min-w-[70rem] border-collapse text-left text-sm">
             <thead><tr className="text-xs font-black uppercase tracking-wide text-ut-navy">
               <th className="border-b p-2">Nama Lengkap</th>
-              <th className="border-b p-2">Tempat Lahir</th><th className="border-b p-2">Tanggal Lahir</th>
-              <th className="border-b p-2">Agama</th><th className="border-b p-2">Jenis Kelamin</th>
-              <th className="border-b p-2">Kewarganegaraan</th><th className="border-b p-2">Nama Ibu Kandung</th>
-              <th className="border-b p-2">Alamat Lengkap</th><th className="border-b p-2">Telepon Rumah</th>
-              <th className="border-b p-2">Nomor HP / WhatsApp</th><th className="border-b p-2">Nomor HP 2</th>
-              <th className="border-b p-2">Email</th><th className="border-b p-2">Sosial Media</th>
-              <th className="border-b p-2">Jalur Pendaftaran</th><th className="border-b p-2">Jenjang Pendidikan</th>
-              <th className="border-b p-2">Fakultas</th><th className="border-b p-2">Program Studi</th>
-              <th className="border-b p-2">Dokumen Unggahan</th><th className="border-b p-2">Status</th>
-              <th className="border-b p-2">Catatan Admin</th><th className="border-b p-2">Waktu Daftar</th><th className="border-b p-2">Aksi</th>
+              <th className="border-b p-2">Tanggal Lahir</th>
+              <th className="border-b p-2">Jenis Kelamin</th>
+              <th className="border-b p-2">Nomor HP / WhatsApp</th>
+              <th className="border-b p-2">Waktu Daftar</th>
+              <th className="border-b p-2">Status</th>
+              <th className="border-b p-2">Detail</th>
             </tr></thead>
             <tbody>
               {filtered.map((row) => (
                 <tr key={row.id} className="align-top hover:bg-section-blue/40">
                   <td className="border-b p-2 font-bold text-ut-navy">{row.nama || "-"}</td>
-                  <td className="border-b p-2">{row.tempat_lahir || "-"}</td>
                   <td className="border-b p-2 whitespace-nowrap">{row.tanggal_lahir || "-"}</td>
-                  <td className="border-b p-2">{row.agama || "-"}</td>
                   <td className="border-b p-2">{row.jenis_kelamin || "-"}</td>
-                  <td className="border-b p-2">{row.kewarganegaraan || "-"}</td>
-                  <td className="border-b p-2">{row.nama_ibu_kandung || "-"}</td>
-                  <td className="border-b p-2 min-w-56 max-w-72 whitespace-normal">{row.alamat_lengkap || "-"}</td>
-                  <td className="border-b p-2">{row.telp_rumah || "-"}</td>
                   <td className="border-b p-2 whitespace-nowrap">{row.nomor_hp || "-"}</td>
-                  <td className="border-b p-2">{row.nomor_hp_2 || "-"}</td>
-                  <td className="border-b p-2">{row.email || "-"}</td>
-                  <td className="border-b p-2 min-w-40 whitespace-normal">{Object.entries(row.sosial_media ?? {}).filter(([, value]) => Boolean(value)).map(([key, value]) => <div key={key}><span className="font-bold capitalize">{key}:</span> {value}</div>).length ? Object.entries(row.sosial_media ?? {}).filter(([, value]) => Boolean(value)).map(([key, value]) => <div key={key}><span className="font-bold capitalize">{key}:</span> {value}</div>) : "-"}</td>
-                  <td className="border-b p-2">{row.jalur || "-"}</td>
-                  <td className="border-b p-2">{row.jenjang_pendidikan || "-"}</td>
-                  <td className="border-b p-2">{row.fakultas || "-"}</td>
-                  <td className="border-b p-2">{row.jurusan || "-"}</td>
-                  <td className="border-b p-2 min-w-48"><DocumentSummary registrationId={row.id} /></td>
+                  <td className="border-b p-2 whitespace-nowrap">{new Date(row.created_at).toLocaleString("id-ID")}</td>
                   <td className="border-b p-2">
                     <select className={inputClass + " h-9 min-w-44"} value={row.status} onChange={(e) => update.mutate({ ...row, status: e.target.value })}>
                       {Array.from(new Set([...STATUS_OPTIONS, row.status])).map((status) => <option key={status}>{status}</option>)}
                     </select>
                   </td>
-                  <td className="border-b p-2 min-w-48 whitespace-normal">{row.notes || "-"}</td>
-                  <td className="border-b p-2 whitespace-nowrap">{new Date(row.created_at).toLocaleString("id-ID")}</td>
                   <td className="border-b p-2">
-                    <div className="flex gap-2">
-                      <Button variant="formOutline" className="h-9 px-3" onClick={() => openDetail(row)}><UserRound className="size-4" /> Detail</Button>
-                      {whatsappUrl(row.nomor_hp) && <a className="inline-flex h-9 items-center gap-1 rounded-full border px-3 text-xs font-bold" href={whatsappUrl(row.nomor_hp)!} target="_blank" rel="noreferrer"><MessageCircle className="size-4" /> WA</a>}
-                    </div>
+                    <Button variant="formOutline" className="h-9 px-3" onClick={() => openDetail(row)}><UserRound className="size-4" /> Detail</Button>
                   </td>
                 </tr>
               ))}
