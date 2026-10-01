@@ -3,8 +3,6 @@ import {
   BookOpenCheck,
   Building2,
   CheckCircle2,
-  ChevronDown,
-  ChevronLeft,
   ChevronRight,
   CircleUserRound,
   ClipboardPenLine,
@@ -17,23 +15,17 @@ import {
   Mail,
   Menu,
   MapPin,
-  Megaphone,
   MonitorCheck,
   Phone,
   Quote,
-  RefreshCw,
   School,
-  Send,
   ShieldCheck,
   User,
-  UserRoundPlus,
   X,
 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import campusHero from "@/assets/ut-campus-hero.jpg";
-import saluteStudent from "@/assets/salute-student.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -58,14 +50,6 @@ export const Route = createFileRoute("/")({
 });
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
-
-const formFields = [
-  { label: "Nama Lengkap", icon: User, type: "text", name: "nama" },
-  { label: "Nama Sekolah", icon: School, type: "text", name: "sekolah" },
-  { label: "Asal Kota Sekolah", icon: MapPin, type: "text", name: "kota" },
-  { label: "Alamat Email", icon: Mail, type: "email", name: "email" },
-  { label: "Nomor HP", icon: Phone, type: "tel", name: "nomor" },
-];
 
 const processSteps = [
   {
@@ -171,20 +155,10 @@ const testimonials = [
 ];
 
 function Index() {
-  const [selectedPath, setSelectedPath] = useState("Pilih Jalur Pendaftaran");
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <main className="min-h-screen overflow-hidden bg-background font-body text-foreground">
       <Header />
-      <HeroRegistration
-        selectedPath={selectedPath}
-        setSelectedPath={setSelectedPath}
-        handleSubmit={handleSubmit}
-      />
+      <HeroBanner />
       <CombinedCTAProcessSection />
       <BenefitsSection />
       <TestimonialsSection />
@@ -278,73 +252,27 @@ function Header() {
   );
 }
 
-function HeroRegistration({
-  selectedPath,
-  setSelectedPath,
-  handleSubmit,
-}: {
-  selectedPath: string;
-  setSelectedPath: (value: string) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-}) {
+function HeroBanner() {
   return (
-    <section id="home" className="relative scroll-mt-20 bg-hero-deep text-hero-foreground">
-      <img
-        src={campusHero}
-        alt="Gedung kampus modern Sentra Layanan UT"
-        width={1600}
-        height={760}
-        className="absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div className="absolute inset-0 bg-hero-overlay" aria-hidden="true" />
+    <section id="home" className="relative scroll-mt-20 overflow-hidden bg-hero-deep text-hero-foreground">
+      <div className="absolute inset-0 bg-hero-deep" aria-hidden="true" />
       <div className="absolute inset-y-0 left-0 hidden w-72 bg-side-stripes lg:block" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-16 left-0 h-44 w-full bg-wave-white" aria-hidden="true" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 md:gap-10 md:px-8 md:py-12 lg:min-h-[540px] lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8 lg:px-12 lg:py-6 xl:grid-cols-[minmax(0,1fr)_25rem]">
-        <div className="relative flex items-center pb-10 pt-2 sm:pb-12 lg:min-h-[430px] lg:pt-0">
-          <Button variant="slider" size="icon" className="absolute left-0 top-1/2 z-20 hidden -translate-y-1/2 lg:inline-flex" aria-label="Slide sebelumnya">
-            <ChevronLeft className="size-8" aria-hidden="true" />
-          </Button>
-
-          <div className="relative z-10 grid w-full gap-4 pl-0 lg:grid-cols-[12rem_minmax(0,1fr)] lg:items-center lg:gap-4 lg:pl-16">
-            <div className="hidden h-[390px] self-end lg:flex lg:items-end lg:justify-center">
-              <img
-                src={saluteStudent}
-                alt="Mahasiswa Sentra Layanan UT mengenakan jas kuning"
-                width={720}
-                height={960}
-                className="h-full w-auto scale-110 object-contain drop-shadow-student"
-              />
-            </div>
-
-            <div className="max-w-3xl">
-              <div className="mb-5 flex flex-wrap items-center gap-2.5 text-hero-foreground/95 sm:gap-3 md:mb-6">
-                <p className="font-script text-2xl font-bold leading-none drop-shadow-title sm:text-3xl md:text-4xl">Salute Arek Malang</p>
-                <SmallLogo label="UT" />
-                <SmallLogo label="MP" />
-                <SmallLogo label="DIKTISAINTEK BERDAMPAK" wide />
-              </div>
-
-              <h1 className="max-w-[52rem] origin-left font-display text-[1.9rem] font-black uppercase leading-[1.02] text-hero-foreground drop-shadow-title sm:text-4xl md:text-5xl lg:w-[132%] lg:scale-x-[0.78] lg:text-[3.3rem] lg:leading-[0.98] xl:text-[3.45rem]">
-                SENTRA LAYANAN UNIVERSITAS TERBUKA ADA DI MPP MERDEKA MALANG LHO YUK KEPOIN !!!
-              </h1>
-              <div className="mt-4 h-2 w-52 max-w-full rounded-full bg-ut-yellow shadow-yellow sm:w-72 md:mt-5" aria-hidden="true" />
-            </div>
+      <div className="relative mx-auto flex min-h-[360px] max-w-7xl items-center px-4 py-14 sm:px-6 md:min-h-[430px] md:px-8 md:py-16 lg:min-h-[500px] lg:px-12">
+        <div className="relative z-10 max-w-4xl lg:pl-16">
+          <div className="mb-5 flex flex-wrap items-center gap-2.5 text-hero-foreground/95 sm:gap-3 md:mb-6">
+            <p className="font-script text-2xl font-bold leading-none drop-shadow-title sm:text-3xl md:text-4xl">Salute Arek Malang</p>
+            <SmallLogo label="UT" />
+            <SmallLogo label="MP" />
+            <SmallLogo label="DIKTISAINTEK BERDAMPAK" wide />
           </div>
 
-          <Button variant="slider" size="icon" className="absolute right-0 top-1/2 z-20 hidden -translate-y-1/2 lg:inline-flex" aria-label="Slide berikutnya">
-            <ChevronRight className="size-8" aria-hidden="true" />
-          </Button>
-
-          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 sm:bottom-3 sm:gap-3 lg:bottom-9" aria-hidden="true">
-            <span className="size-2.5 rounded-full bg-ut-yellow sm:size-3" />
-            <span className="size-2.5 rounded-full bg-hero-foreground/80 sm:size-3" />
-            <span className="size-2.5 rounded-full bg-hero-foreground/80 sm:size-3" />
-            <span className="size-2.5 rounded-full bg-hero-foreground/80 sm:size-3" />
-          </div>
+          <h1 className="max-w-[52rem] font-display text-[1.9rem] font-black uppercase leading-[1.02] text-hero-foreground drop-shadow-title sm:text-4xl md:text-5xl lg:text-[3.3rem] lg:leading-[0.98] xl:text-[3.45rem]">
+            SENTRA LAYANAN UNIVERSITAS TERBUKA ADA DI MPP MERDEKA MALANG LHO YUK KEPOIN !!!
+          </h1>
+          <div className="mt-4 h-2 w-52 max-w-full rounded-full bg-ut-yellow shadow-yellow sm:w-72 md:mt-5" aria-hidden="true" />
         </div>
-
-        <RegistrationForm selectedPath={selectedPath} setSelectedPath={setSelectedPath} handleSubmit={handleSubmit} />
       </div>
     </section>
   );
@@ -438,74 +366,6 @@ function SmallLogo({ label, wide = false }: { label: string; wide?: boolean }) {
     <span className={`inline-flex h-9 items-center justify-center rounded-full border border-hero-foreground/70 bg-hero-foreground/15 px-2.5 text-center text-[0.6rem] font-black leading-tight sm:h-11 sm:px-3 sm:text-xs ${wide ? "min-w-24 sm:min-w-32" : "min-w-9 sm:min-w-11"}`}>
       {label}
     </span>
-  );
-}
-
-function RegistrationForm({
-  selectedPath,
-  setSelectedPath,
-  handleSubmit,
-}: {
-  selectedPath: string;
-  setSelectedPath: (value: string) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-}) {
-  return (
-    <aside className="relative z-20 mx-auto w-full max-w-md self-start overflow-hidden rounded-2xl bg-card text-card-foreground shadow-form lg:mx-0 lg:max-w-none lg:mt-4">
-      <div className="flex items-center gap-3 bg-form-header px-4 py-4 text-form-header-foreground sm:gap-4 sm:px-5">
-        <UserRoundPlus className="size-10 shrink-0 text-ut-yellow sm:size-12" aria-hidden="true" />
-        <h2 className="text-xl font-black leading-tight sm:text-2xl">Pendaftaran Sentra Layanan UT</h2>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-3 px-4 py-4 sm:px-5">
-        <p className="text-sm font-semibold leading-snug text-muted-foreground">
-          Silakan isi data diri Anda untuk melakukan pendaftaran layanan di Sentra Layanan Universitas Terbuka.
-        </p>
-        {formFields.map((field) => {
-          const Icon = field.icon;
-          return (
-            <label key={field.name} className="relative block">
-              <Icon className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ut-navy" aria-hidden="true" />
-              <input
-                type={field.type}
-                name={field.name}
-                placeholder={field.label}
-                aria-label={field.label}
-                className="h-12 w-full rounded-xl border border-input bg-background pl-12 pr-4 text-base font-semibold sm:text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/25"
-              />
-            </label>
-          );
-        })}
-        <label className="relative block">
-          <Megaphone className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-ut-navy" aria-hidden="true" />
-          <select
-            value={selectedPath}
-            onChange={(event) => setSelectedPath(event.target.value)}
-            aria-label="Jalur Pendaftaran"
-            className="h-12 w-full appearance-none rounded-xl border border-input bg-background pl-12 pr-10 text-base font-black sm:text-sm text-ut-navy outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/25"
-          >
-            <option>Pilih Jalur Pendaftaran</option>
-            <option>SIPAS</option>
-            <option>Non SIPAS</option>
-            <option>Reguler</option>
-            <option>RPL</option>
-          </select>
-          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-ut-navy" aria-hidden="true" />
-          <span className="pointer-events-none absolute left-12 top-2 text-[0.62rem] font-bold text-muted-foreground">
-            Jalur Pendaftaran
-          </span>
-        </label>
-        <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2">
-          <Button type="submit" variant="utYellow" size="form">
-            <Send className="size-5" aria-hidden="true" />
-            Daftar
-          </Button>
-          <Button type="reset" variant="formOutline" size="form" onClick={() => setSelectedPath("Pilih Jalur Pendaftaran")}>
-            <RefreshCw className="size-5" aria-hidden="true" />
-            Clear Data
-          </Button>
-        </div>
-      </form>
-    </aside>
   );
 }
 
