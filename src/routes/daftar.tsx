@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { 
-  ArrowRight, Phone, Building2, Camera, IdCard, 
-  Users, FileText, ClipboardList, Activity, 
-  CheckCircle2, XCircle, Trash2, Upload, Calendar, Mail, CheckSquare 
+import {
+  ArrowRight, Phone, Building2, Camera, IdCard,
+  Users, FileText, ClipboardList, Activity,
+  CheckCircle2, XCircle, Trash2, Upload, Calendar, Mail, CheckSquare,
+  CircleUserRound, Home, Menu, X
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/daftar")({
   head: () => ({
@@ -13,6 +15,97 @@ export const Route = createFileRoute("/daftar")({
   }),
   component: RegistrationPage,
 });
+
+const navLinks = ["Informasi", "Panduan", "Kontak"];
+
+function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
+      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
+        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
+          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
+            <Building2 className="size-6 sm:size-7" aria-hidden="true" />
+          </div>
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <div className="min-w-0 leading-none">
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">UNIVERSITAS</p>
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">TERBUKA</p>
+            </div>
+            <span className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block" aria-hidden="true" />
+            <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
+              Sentra Layanan
+              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">UT</span>
+            </div>
+          </div>
+        </Link>
+
+        <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
+          <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow lg:px-5">
+            <Home className="size-4" aria-hidden="true" />
+            Beranda
+          </Link>
+          {navLinks.map((link) => (
+            <a
+              key={link}
+              href={`/#${link.toLowerCase()}`}
+              className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            >
+              {link}
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center justify-end gap-2 md:min-w-0">
+          <Button variant="heroOutline" size="pill" className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm">
+            <CircleUserRound className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Masuk / Daftar</span>
+            <span className="sm:hidden">Masuk</span>
+          </Button>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-daftar"
+            aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+            className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 transition hover:bg-hero-foreground/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow md:hidden"
+          >
+            {menuOpen ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+          </button>
+        </div>
+      </div>
+
+      {menuOpen ? (
+        <nav id="mobile-nav-daftar" className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 md:hidden" aria-label="Navigasi mobile">
+          <ul className="grid gap-2">
+            <li>
+              <Link
+                to="/"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 rounded-xl bg-ut-yellow px-4 py-3 text-sm font-black text-ut-navy"
+              >
+                <Home className="size-4" aria-hidden="true" />
+                Beranda
+              </Link>
+            </li>
+            {navLinks.map((link) => (
+              <li key={link}>
+                <a
+                  href={`/#${link.toLowerCase()}`}
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground transition hover:bg-hero-foreground/20"
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
+    </header>
+  );
+}
 
 function RegistrationPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -74,7 +167,6 @@ function RegistrationPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Integrasi nyata ke Database & Storage Supabase
   const handleSubmit = async () => {
     if (!agreements.dataBenar || !agreements.setujuKetentuan) {
       alert("Harap centang semua pernyataan persetujuan sebelum mengirim.");
@@ -85,7 +177,6 @@ function RegistrationPage() {
     setErrorMessage("");
 
     try {
-      // 1. Simpan data teks ke tabel registrations
       const { error: dbError } = await supabase.from("registrations").insert([
         {
           nama: formData.namaLengkap,
@@ -111,7 +202,6 @@ function RegistrationPage() {
 
       if (dbError) throw dbError;
 
-      // 2. Unggah dokumen ke Storage Bucket (opsional/opsi tambahan jika file dipilih)
       for (const [key, file] of Object.entries(documents)) {
         if (file) {
           const fileExt = file.name.split(".").pop();
@@ -179,13 +269,8 @@ function RegistrationPage() {
   if (isSuccess) {
     return (
       <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
-        <header className="bg-white shadow-sm px-6 py-4 mb-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-slate-800 font-bold">
-            <Building2 className="w-6 h-6" />
-            <span>SALUT UT Arek Malang</span>
-          </Link>
-        </header>
-        <div className="max-w-4xl mx-auto px-4 md:px-6">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6">
           <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
             <h1 className="text-3xl font-extrabold text-yellow-500 mb-2">Pendaftaran Berhasil Dikirim!</h1>
             <p className="text-slate-700 font-medium mb-8">Data Anda berhasil disimpan ke database Supabase.</p>
@@ -201,15 +286,9 @@ function RegistrationPage() {
 
   return (
     <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
-      <header className="bg-white shadow-sm px-6 py-4 mb-6 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-slate-800 font-bold">
-          <Building2 className="w-6 h-6" />
-          <span>SALUT UT Arek Malang</span>
-        </Link>
-        <Link to="/" className="text-sm font-semibold text-slate-500 px-4 py-2 border rounded-full">Batal</Link>
-      </header>
+      <Header />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6">
         <h1 className="text-2xl font-bold text-slate-800 mb-4">Halaman Pendaftaran</h1>
 
         {errorMessage && (
