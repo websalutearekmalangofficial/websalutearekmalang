@@ -66,6 +66,12 @@ const AuthenticatedAdminPendaftarRoute =
     path: '/pendaftar',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSyncronRoute =
+  AuthenticatedAdminSyncronRouteImport.update({
+    id: '/syncron',
+    path: '/syncron',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/navigasi': typeof AuthenticatedAdminNavigasiRoute
   '/admin/pendaftar': typeof AuthenticatedAdminPendaftarRoute
+  '/admin/syncron': typeof AuthenticatedAdminSyncronRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
