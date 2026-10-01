@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   BookOpenCheck,
   Building2,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   CircleUserRound,
   ClipboardPenLine,
@@ -23,9 +25,10 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { fetchPublicHeroBanners } from "@/lib/hero-banners";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -231,9 +234,42 @@ function Header() {
 }
 
 function HeroBanner() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const heroBannersQuery = useQuery({
+    queryKey: ["public-hero-banners"],
+    queryFn: fetchPublicHeroBanners,
+    staleTime: 60_000,
+  });
+  const banners = heroBannersQuery.data ?? [];
+
+  useEffect(() => {
+    if (activeSlide >= banners.length) setActiveSlide(0);
+  }, [activeSlide, banners.length]);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % banners.length);
+    }, 5_500);
+    return () => window.clearInterval(timer);
+  }, [banners.length]);
+
+  const activeBanner = banners[activeSlide] ?? banners[0];
+
   return (
     <section id="home" className="relative scroll-mt-20 overflow-hidden bg-hero-deep text-hero-foreground">
       <div className="absolute inset-0 bg-hero-deep" aria-hidden="true" />
+      {activeBanner?.url ? (
+        <>
+          <div
+            key={activeBanner.id}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url("${activeBanner.url}")` }}
+            aria-label={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
+          />
+          <div className="absolute inset-0 bg-ut-navy/70" aria-hidden="true" />
+        </>
+      ) : null}
       <div className="absolute inset-y-0 left-0 hidden w-72 bg-side-stripes lg:block" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-16 left-0 h-44 w-full bg-wave-white" aria-hidden="true" />
 
@@ -251,11 +287,45 @@ function HeroBanner() {
           </h1>
           <div className="mt-4 h-2 w-52 max-w-full rounded-full bg-ut-yellow shadow-yellow sm:w-72 md:mt-5" aria-hidden="true" />
         </div>
+
+        {banners.length > 1 ? (
+          <div className="absolute inset-x-4 bottom-8 z-20 flex items-center justify-between sm:inset-x-6 md:inset-x-8 lg:inset-x-12">
+            <button
+              type="button"
+              onClick={() => setActiveSlide((current) => (current - 1 + banners.length) % banners.length)}
+              aria-label="Banner sebelumnya"
+              className="grid size-10 place-items-center rounded-full border border-white/50 bg-black/25 text-white backdrop-blur transition hover:bg-black/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            >
+              <ChevronLeft className="size-5" aria-hidden="true" />
+            </button>
+
+            <div className="flex items-center gap-1.5 rounded-full bg-black/25 px-3 py-2 backdrop-blur" aria-label="Pilihan slide">
+              {banners.map((banner, index) => (
+                <button
+                  key={banner.id}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Tampilkan slide ${index + 1}`}
+                  aria-current={index === activeSlide ? "true" : undefined}
+                  className={`h-2.5 rounded-full transition-all ${index === activeSlide ? "w-7 bg-ut-yellow" : "w-2.5 bg-white/70 hover:bg-white"}`}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setActiveSlide((current) => (current + 1) % banners.length)}
+              aria-label="Banner berikutnya"
+              className="grid size-10 place-items-center rounded-full border border-white/50 bg-black/25 text-white backdrop-blur transition hover:bg-black/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            >
+              <ChevronRight className="size-5" aria-hidden="true" />
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );
 }
-
 // === KOMPONEN BARU: GABUNGAN CTA & ALUR PENDAFTARAN ===
 function CombinedCTAProcessSection() {
   return (
