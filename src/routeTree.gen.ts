@@ -92,6 +92,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/navigasi': typeof AuthenticatedAdminNavigasiRoute
   '/admin/pendaftar': typeof AuthenticatedAdminPendaftarRoute
+  '/admin/syncron': typeof AuthenticatedAdminSyncronRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
