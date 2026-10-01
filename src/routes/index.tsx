@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
+import { fetchSiteLogoUrl } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -154,13 +155,23 @@ function Index() {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const logoQuery = useQuery({
+    queryKey: ["site-logo"],
+    queryFn: fetchSiteLogoUrl,
+    staleTime: 60_000,
+  });
+  const logoUrl = logoQuery.data;
 
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
       <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
         <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
-          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
-            <Building2 className="size-6 sm:size-7" aria-hidden="true" />
+          <div className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
+            {logoUrl ? (
+              <img src={logoUrl} alt="Logo Sentra Layanan UT Arek Malang" className="size-full object-contain p-1.5" />
+            ) : (
+              <Building2 className="size-6 sm:size-7" aria-hidden="true" />
+            )}
           </div>
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <div className="min-w-0 leading-none">
