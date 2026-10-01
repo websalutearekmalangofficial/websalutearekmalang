@@ -18,6 +18,7 @@ import { Route as AuthenticatedAdminHalamanRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin/media'
 import { Route as AuthenticatedAdminNavigasiRouteImport } from './routes/_authenticated/admin/navigasi'
 import { Route as AuthenticatedAdminPendaftarRouteImport } from './routes/_authenticated/admin/pendaftar'
+import { Route as AuthenticatedAdminSyncronRouteImport } from './routes/_authenticated/admin/syncron'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -209,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPendaftarRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/syncron': {
+      id: '/_authenticated/admin/syncron'
+      path: '/syncron'
+      fullPath: '/admin/syncron'
+      preLoaderRoute: typeof AuthenticatedAdminSyncronRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
@@ -217,6 +225,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminNavigasiRoute: typeof AuthenticatedAdminNavigasiRoute
   AuthenticatedAdminPendaftarRoute: typeof AuthenticatedAdminPendaftarRoute
+  AuthenticatedAdminSyncronRoute: typeof AuthenticatedAdminSyncronRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -225,6 +234,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminNavigasiRoute: AuthenticatedAdminNavigasiRoute,
   AuthenticatedAdminPendaftarRoute: AuthenticatedAdminPendaftarRoute,
+  AuthenticatedAdminSyncronRoute: AuthenticatedAdminSyncronRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
