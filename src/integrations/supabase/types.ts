@@ -160,43 +160,85 @@ export type Database = {
       }
       registrations: {
         Row: {
-          created_at: string
-          email: string | null
           id: string
-          jalur: string | null
-          kota: string | null
           nama: string
-          nomor_hp: string | null
-          notes: string | null
           sekolah: string | null
+          kota: string | null
+          email: string | null
+          nomor_hp: string | null
+          jalur: string | null
           status: string
+          notes: string | null
+          created_at: string
           updated_at: string
+          user_id: string | null
+          tempat_lahir: string | null
+          tanggal_lahir: string | null
+          agama: string | null
+          jenis_kelamin: string | null
+          kewarganegaraan: string | null
+          nama_ibu_kandung: string | null
+          alamat_lengkap: string | null
+          telp_rumah: string | null
+          nomor_hp_2: string | null
+          sosial_media: Json | null
+          jenjang_pendidikan: string | null
+          fakultas: string | null
+          jurusan: string | null
         }
         Insert: {
-          created_at?: string
-          email?: string | null
           id?: string
-          jalur?: string | null
-          kota?: string | null
           nama: string
-          nomor_hp?: string | null
-          notes?: string | null
           sekolah?: string | null
+          kota?: string | null
+          email?: string | null
+          nomor_hp?: string | null
+          jalur?: string | null
           status?: string
+          notes?: string | null
+          created_at?: string
           updated_at?: string
+          user_id?: string | null
+          tempat_lahir?: string | null
+          tanggal_lahir?: string | null
+          agama?: string | null
+          jenis_kelamin?: string | null
+          kewarganegaraan?: string | null
+          nama_ibu_kandung?: string | null
+          alamat_lengkap?: string | null
+          telp_rumah?: string | null
+          nomor_hp_2?: string | null
+          sosial_media?: Json | null
+          jenjang_pendidikan?: string | null
+          fakultas?: string | null
+          jurusan?: string | null
         }
         Update: {
-          created_at?: string
-          email?: string | null
           id?: string
-          jalur?: string | null
-          kota?: string | null
           nama?: string
-          nomor_hp?: string | null
-          notes?: string | null
           sekolah?: string | null
+          kota?: string | null
+          email?: string | null
+          nomor_hp?: string | null
+          jalur?: string | null
           status?: string
+          notes?: string | null
+          created_at?: string
           updated_at?: string
+          user_id?: string | null
+          tempat_lahir?: string | null
+          tanggal_lahir?: string | null
+          agama?: string | null
+          jenis_kelamin?: string | null
+          kewarganegaraan?: string | null
+          nama_ibu_kandung?: string | null
+          alamat_lengkap?: string | null
+          telp_rumah?: string | null
+          nomor_hp_2?: string | null
+          sosial_media?: Json | null
+          jenjang_pendidikan?: string | null
+          fakultas?: string | null
+          jurusan?: string | null
         }
         Relationships: []
       }
