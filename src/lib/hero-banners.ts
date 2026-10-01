@@ -48,6 +48,56 @@ export async function fetchHeroBanners(pageId: string, sectionId: string): Promi
   }));
 }
 
+
+export async function fetchPublicHeroBanners(): Promise<HeroBanner[]> {
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id")
+    .eq("slug", "beranda")
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (pageError) throw pageError;
+  if (!page?.id) return [];
+
+  const { data: section, error: sectionError } = await supabase
+    .from("sections")
+    .select("id")
+    .eq("page_id", page.id)
+    .eq("kind", "hero")
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (sectionError) throw sectionError;
+  if (!section?.id) return [];
+
+  const { data, error } = await supabase
+    .from("hero_banners")
+    .select("id, page_id, section_id, title, alt_text, storage_path, sort_order, is_active, created_at, updated_at")
+    .eq("page_id", page.id)
+    .eq("section_id", section.id)
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+
+  if (error) throw error;
+
+  const rows = (data ?? []) as HeroBannerRow[];
+  if (rows.length === 0) return [];
+
+  const { data: signed, error: signedError } = await supabase.storage
+    .from(HERO_BUCKET)
+    .createSignedUrls(rows.map((row) => row.storage_path), HERO_SIGNED_URL_TTL);
+
+  if (signedError) throw signedError;
+
+  return rows
+    .map((row, index) => ({
+      ...row,
+      url: signed?.[index]?.signedUrl ?? "",
+    }))
+    .filter((banner) => Boolean(banner.url));
+}
+
 export async function uploadHeroBanner(
   file: File,
   args: { pageId: string; sectionId: string; title?: string; altText?: string },
