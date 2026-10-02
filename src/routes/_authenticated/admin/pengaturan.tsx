@@ -115,7 +115,7 @@ function FooterSettingsAdmin() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="flex items-center gap-2 text-sm font-black text-ut-navy">
-                  <ChainIcon className="size-4" /> Layout 2 Kolom Footer
+                  <Link2 className="size-4" /> Layout 2 Kolom Footer
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
                   Atur tinggi dan posisi vertikal masing-masing kolom: Layanan Informasi Pendaftaran dan Alamat Kantor.
@@ -129,7 +129,7 @@ function FooterSettingsAdmin() {
                     layout: { ...content.layout, sync_columns: e.target.checked },
                   })}
                 />
-                <ChainIcon className="size-4" />
+                <Link2 className="size-4" />
                 Sync / Lock / Rantai
               </label>
             </div>
