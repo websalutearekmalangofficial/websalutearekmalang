@@ -18,12 +18,17 @@ export type FooterColumn = {
 export type FooterContent = {
   contact: { label: string; phone: string; phone_href: string; enabled: boolean };
   slogan: { line1: string; line2: string; enabled: boolean };
+  address: { text: string; enabled: boolean };
   columns: FooterColumn[];
 };
 
 export const defaultFooterContent: FooterContent = {
   contact: { label: "Layanan Informasi Pendaftaran", phone: "0812-3002-4264", phone_href: "tel:081230024264", enabled: true },
   slogan: { line1: "Kuliah Fleksibel,", line2: "Raih Masa Depan", enabled: true },
+  address: { 
+    text: "Mall Pelayanan Publik Merdeka Malang Lt. 3 (Ramayana Alun-Alun Kota Malang) Jl. Merdeka Timur No. 4 Malang.", 
+    enabled: true 
+  },
   columns: [],
 };
 
@@ -36,6 +41,7 @@ function parseFooter(value: string | null | undefined): FooterContent {
       ...parsed,
       contact: { ...defaultFooterContent.contact, ...(parsed.contact ?? {}) },
       slogan: { ...defaultFooterContent.slogan, ...(parsed.slogan ?? {}) },
+      address: { ...defaultFooterContent.address, ...(parsed.address ?? {}) },
       columns: Array.isArray(parsed.columns) ? parsed.columns : [],
     };
   } catch {
@@ -58,7 +64,7 @@ export async function saveFooterAdmin(content: FooterContent) {
   const { error } = await supabase.from("admin_settings").upsert({
     key: "footer_content",
     value: JSON.stringify(content),
-    description: "Konten Footer Website: kontak, slogan, dan item/kolom footer yang dikelola dari Dashboard Admin",
+    description: "Konten Footer Website: kontak, slogan, alamat, dan item/kolom footer yang dikelola dari Dashboard Admin",
     updated_by: user.user?.id ?? null,
   }, { onConflict: "key" });
   if (error) throw error;
