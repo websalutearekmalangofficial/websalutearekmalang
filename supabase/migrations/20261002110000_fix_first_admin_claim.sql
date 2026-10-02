@@ -39,4 +39,5 @@ end
 $block$;
 
 revoke all on function public.claim_first_admin() from public;
+revoke execute on function public.claim_first_admin() from anon;
 grant execute on function public.claim_first_admin() to authenticated;
