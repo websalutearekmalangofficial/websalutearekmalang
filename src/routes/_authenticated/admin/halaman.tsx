@@ -78,6 +78,8 @@ function PagesAdmin() {
 
   const selectedPage = pages.find((page) => page.id === selectedPageId) ?? null;
   const sections = sectionsQuery.data ?? [];
+  const heroSection = sections.find((section) => section.kind === "hero") ?? null;
+  const contentSections = sections.filter((section) => section.kind !== "hero");
 
   return (
     <>
@@ -173,31 +175,28 @@ function PagesAdmin() {
         </div>
 
         {selectedPage ? <PageForm page={selectedPage} onSaved={refreshPages} /> : null}
-
-        {selectedPage?.slug === "beranda" ? (
-          <HeroBannerManager
-            pageId={selectedPage.id}
-            sectionId={sections.find((section) => section.kind === "hero")?.id ?? null}
-          />
-        ) : null}
       </AdminCard>
+
+      {selectedPage?.slug === "beranda" ? (
+        <HeroBannerManager pageId={selectedPage.id} sectionId={heroSection?.id ?? null} />
+      ) : null}
 
       <AdminCard
         title="Section di Halaman Ini"
-        description="Urutan di bawah ini sama dengan urutan tampil di website."
+        description="Kelola section konten halaman. Pengaturan Hero Banner Beranda dipisahkan di bagian khusus di atas."
       >
         <div className="space-y-3">
-          {sections.map((section, index) => (
+          {contentSections.map((section, index) => (
             <SectionEditor
               key={section.id}
               section={section}
               index={index}
-              total={sections.length}
-              siblings={sections}
+              total={contentSections.length}
+              siblings={contentSections}
               onChanged={refreshSections}
             />
           ))}
-          {sections.length === 0 ? (
+          {contentSections.length === 0 ? (
             <p className="text-sm text-muted-foreground">Belum ada section di halaman ini.</p>
           ) : null}
           <Button type="button" variant="utYellow" size="form" onClick={() => addSection.mutate()} disabled={!selectedPageId}>
