@@ -973,10 +973,10 @@ function FooterBanner() {
   const addressLayout = getColumnLayout("address");
 
   return (
-    <div id="kontak" className="relative w-full pt-10 md:pt-14 lg:pt-16 scroll-mt-20" style={{ backgroundColor: footerBackground }}>
+    <div id="kontak" className="relative w-full scroll-mt-20" style={{ backgroundColor: footerBackground }}>
       
-      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
-      <footer className="w-full border-t border-[#0f1523]/20 text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
+      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak dan Alamat */}
+      <footer className="w-full text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
 
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
@@ -999,7 +999,7 @@ function FooterBanner() {
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0`} style={{ minHeight: `${addressLayout.height}px` }}>
+              <div className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`} style={{ minHeight: `${addressLayout.height}px` }}>
                 <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
