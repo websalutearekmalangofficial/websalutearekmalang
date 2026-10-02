@@ -933,13 +933,21 @@ function FooterBanner() {
     custom: Math.min(1200, Math.max(80, footer.building_image_size?.custom_width ?? 480)),
   } as const;
   const buildingImageWidth = imagePresetWidths[footer.building_image_size?.preset ?? "large"] ?? 480;
+  const footerBackground = footer.layout?.background_color || "#a7c8e1";
+  const footerColumnHeight = Math.min(800, Math.max(160, footer.layout?.column_height ?? 260));
+  const footerColumnAlignment = footer.layout?.column_alignment ?? "start";
+  const alignmentClass =
+    footerColumnAlignment === "center"
+      ? "justify-center"
+      : footerColumnAlignment === "end"
+        ? "justify-end"
+        : "justify-start";
 
   return (
-    // Layout footer 3 kolom: ketiga kolom menggunakan tinggi area yang sama dan alignment konsisten
-    <div className="relative w-full bg-[#a7c8e1] pt-24 md:pt-32 lg:pt-48">
+    <div className="relative w-full pt-24 md:pt-32 lg:pt-48" style={{ backgroundColor: footerBackground }}>
       
       {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
-      <footer className="w-full border-t border-[#0f1523]/20 bg-[#a7c8e1] text-[#0f1523]">
+      <footer className="w-full border-t border-[#0f1523]/20 text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
 
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
@@ -963,7 +971,7 @@ function FooterBanner() {
             
             {/* Kolom 1: Kontak */}
             {footer.contact?.enabled && (
-              <div className="flex min-h-[220px] w-full flex-col items-center justify-start text-center lg:min-h-[260px]">
+              <div className={`flex w-full flex-col items-center ${alignmentClass} text-center`} style={{ minHeight: `${footerColumnHeight}px` }}>
                 <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
                   <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                 </a>
@@ -978,7 +986,7 @@ function FooterBanner() {
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className="flex min-h-[220px] w-full flex-col items-center justify-start border-t border-[#0f1523]/20 pt-10 text-center lg:min-h-[260px] lg:border-l lg:border-t-0 lg:pt-0">
+              <div className={`flex w-full flex-col items-center ${alignmentClass} border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0`} style={{ minHeight: `${footerColumnHeight}px` }}>
                 <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
@@ -992,13 +1000,13 @@ function FooterBanner() {
             )}
 
             {/* Kolom 3: Image — area kolom dibuat setinggi kolom lain agar garis dasar tetap selaras */}
-            <div className="hidden min-h-[220px] w-full lg:flex lg:min-h-[260px]"></div>
+            <div className="hidden w-full lg:flex" style={{ minHeight: `${footerColumnHeight}px` }}></div>
           </div>
         </div>
       </footer>
 
       {/* Bagian copyright dengan warna latar yang sama */}
-      <div className="w-full bg-[#a7c8e1] py-5">
+      <div className="w-full py-5" style={{ backgroundColor: footerBackground }}>
         <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
