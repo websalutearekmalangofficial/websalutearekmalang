@@ -114,6 +114,7 @@ export type SectionItem = {
   document_url: string | null;
   link_url: string | null;
   link_label: string | null;
+  config: SectionConfig;
   is_published: boolean;
 };
 
