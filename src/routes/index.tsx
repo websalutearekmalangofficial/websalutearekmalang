@@ -956,18 +956,6 @@ function FooterBanner() {
   });
 
   const footer = footerQuery.data ?? defaultFooterContent;
-  const buildingImage =
-    (footer as any).building_image_url ||
-    "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-  const imagePresetWidths = {
-    thumbnail: 120,
-    small: 200,
-    medium: 320,
-    large: 480,
-    xlarge: 640,
-    custom: Math.min(1200, Math.max(80, footer.building_image_size?.custom_width ?? 480)),
-  } as const;
-  const buildingImageWidth = imagePresetWidths[footer.building_image_size?.preset ?? "large"] ?? 480;
   const footerBackground = footer.layout?.background_color || "#a7c8e1";
   const footerLayout = footer.layout;
   const getColumnLayout = (key: "contact" | "address" | "image") => {
@@ -1046,9 +1034,6 @@ function FooterBanner() {
                 </p>
               </div>
             )}
-
-            {/* Kolom 3: Image — area kolom dibuat setinggi kolom lain agar garis dasar tetap selaras */}
-            <div className={`hidden w-full ${imageLayout.alignmentClass} lg:flex`} style={{ minHeight: `${imageLayout.height}px` }}></div>
           </div>
         </div>
       </footer>
