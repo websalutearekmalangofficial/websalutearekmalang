@@ -982,30 +982,12 @@ function FooterBanner() {
   return (
     <div id="kontak" className="relative w-full pt-10 md:pt-14 lg:pt-16 scroll-mt-20" style={{ backgroundColor: footerBackground }}>
       
-      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
+      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak dan Alamat */}
       <footer className="w-full border-t border-[#0f1523]/20 text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
 
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
-          {/* --- GAMBAR SKETSA POP-OUT --- */}
-          {/* Dipindah ke dalam container max-w-7xl agar posisinya terkunci di dalam grid konten (tidak lari ke tepi layar saat di-zoom out) */}
-          {footer.address?.enabled && (
-            <div
-              className="pointer-events-none absolute right-4 z-10 w-full opacity-30 sm:right-6 sm:opacity-50 md:right-8 lg:right-12 lg:opacity-100"
-              style={{ ...imagePositionStyle, maxWidth: String(buildingImageWidth) + "px" }}
-            >
-              <img 
-                src={buildingImage} 
-                alt="Sketsa Gedung Salute Malang" 
-                className="h-auto w-full object-contain object-bottom drop-shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
-              />
-            </div>
-          )}
-
-          {/* GRID 3 KOLOM MURNI (Kiri: Kontak, Tengah: Alamat, Kanan: Ruang Kosong untuk Gambar) */}
-          <div className="relative z-20 grid grid-cols-1 items-stretch gap-12 lg:grid-cols-3 lg:gap-8">
-            
-            {/* Kolom 1: Kontak */}
+          {/* Kolom 1: Kontak */}
             {footer.contact?.enabled && (
               <div className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`} style={{ minHeight: `${contactLayout.height}px` }}>
                 <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
