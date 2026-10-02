@@ -57,7 +57,6 @@ export const Route = createFileRoute("/")({
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
 
-// Data alur pendaftaran ditambahkan deskripsi detail untuk pop-up
 const processSteps = [
   {
     number: "1",
@@ -910,7 +909,7 @@ function TestimonialsSection() {
   );
 }
 
-// === FOOTER BANNER CMS + DESAIN TERPUSAT ===
+// === DESAIN BARU: FOOTER BANNER ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -921,81 +920,72 @@ function FooterBanner() {
   });
 
   const footer = footerQuery.data ?? defaultFooterContent;
-  const columns = footer.columns?.filter((column) => column.enabled) ?? [];
+  
+  // Karena saat ini belum ada field building_image_url di database, kita siapkan variabelnya terlebih dahulu.
+  // URL placeholder ini akan diganti dengan URL gambar aslinya jika sudah diupload via admin nanti.
+  const buildingImage = (footer as any).building_image_url || "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; 
 
   return (
-    <footer className="bg-[#111c38] px-4 py-12 text-white sm:px-6 md:px-8 lg:px-12 border-t border-slate-800">
-      <div className="mx-auto max-w-7xl flex flex-col items-center text-center">
+    <footer className="w-full bg-[#f8fafc] pt-20 lg:pt-32">
+      
+      {/* Outer Container for Absolute Positioning */}
+      <div className="relative w-full border-t border-slate-800 bg-[#111c38]">
         
-        {/* Informasi Kontak & WhatsApp Terpusat */}
-        {footer.contact?.enabled && (
-          <div className="mb-10 flex flex-col items-center justify-center gap-4">
-            <a href={footer.contact.phone_href || "#"} aria-label={footer.contact.label} className="grid size-14 shrink-0 place-items-center rounded-full bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)] transition-transform hover:scale-110">
-              <Phone className="size-7" aria-hidden="true" />
-            </a>
-            <div>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">
-                {footer.contact.label}
-              </p>
-              <a href={footer.contact.phone_href || "#"} className="text-3xl font-black tracking-wide text-white hover:text-[#facc15] transition-colors sm:text-4xl">
-                {footer.contact.phone}
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Alamat Fisik & Slogan Terpusat */}
-        <div className="w-full max-w-3xl border-t border-slate-700/50 pt-10">
-          {footer.slogan?.enabled && (
-            <p className="mb-8 font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
-              {footer.slogan.line1} <span className="text-[#facc15]">{footer.slogan.line2}</span>
-            </p>
+        {/* Gambar Sketsa Gedung: Pop-Out Effect (Menonjol Keatas) */}
+        <div className="pointer-events-none absolute bottom-0 right-0 z-0 w-full max-w-[280px] opacity-10 md:max-w-[400px] md:opacity-30 lg:z-10 lg:max-w-[500px] lg:opacity-100 xl:max-w-[650px] lg:translate-x-4">
+          {footer.address?.enabled && (
+            <img 
+              src={buildingImage} 
+              alt="Sketsa Gedung Salute Malang" 
+              className="h-auto w-full object-contain object-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+            />
           )}
+        </div>
 
-          {footer.address?.enabled && footer.address?.text && (
-            <div className="flex flex-col items-center gap-3">
-              <div className="grid size-10 place-items-center rounded-full bg-white/10 text-slate-300">
-                <MapPin className="size-5" aria-hidden="true" />
+        {/* Inner Content Grid */}
+        <div className="relative z-20 mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-start">
+            
+            {/* Kolom Kiri: Kontak */}
+            {footer.contact?.enabled && (
+              <div className="flex w-full flex-col items-center text-center lg:w-1/3 lg:items-center">
+                <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#34d399] text-white shadow-lg transition-transform hover:scale-110">
+                  <Phone className="size-6" aria-hidden="true" />
+                </a>
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                  {footer.contact.label}
+                </p>
+                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-white transition-colors hover:text-[#facc15] sm:text-4xl">
+                  {footer.contact.phone}
+                </a>
               </div>
-              <p className="text-sm font-medium leading-relaxed text-slate-300 md:text-base max-w-lg">
-                {footer.address.text}
-              </p>
-            </div>
-          )}
-        </div>
+            )}
 
-        {/* Dynamic Columns / Tautan Terpusat (Jika ditambahkan dari CMS) */}
-        {columns.length > 0 && (
-          <div className="w-full mt-10 border-t border-slate-700/50 pt-10">
-            <div className="grid gap-8 sm:grid-cols-2 lg:flex lg:justify-center lg:gap-16">
-              {columns.map((column) => (
-                <div key={column.id} className="text-center">
-                  <h3 className="mb-4 text-sm font-black uppercase tracking-wider text-white">
-                    {column.title}
-                  </h3>
-                  <div className="space-y-3 flex flex-col items-center">
-                    {column.items.filter((item) => item.enabled && item.label).map((item) => (
-                      <a 
-                        key={item.id} 
-                        href={item.href || "#"} 
-                        className="block text-sm font-medium text-slate-400 transition-colors hover:text-[#facc15]" 
-                        {...(item.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
+            {/* Garis Pembatas Vertikal (Desktop) & Horizontal (Mobile) */}
+            <div className="hidden h-24 w-px bg-slate-700/50 lg:block" />
+            <div className="block h-px w-full bg-slate-700/50 lg:hidden" />
+
+            {/* Kolom Tengah: Alamat Fisik */}
+            {footer.address?.enabled && footer.address?.text && (
+              <div className="flex w-full flex-col items-center text-center lg:w-1/3 lg:items-center">
+                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white">
+                  <MapPin className="size-6" aria-hidden="true" />
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Copyright */}
-        <div className="mt-16 text-xs text-slate-500 font-medium">
-           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
-        </div>
+                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-300 sm:max-w-xs sm:text-sm">
+                  {footer.address.text}
+                </p>
+              </div>
+            )}
 
+            {/* Kolom Kanan: Spacer kosong di Desktop untuk menampung gambar Sketsa */}
+            <div className="hidden w-full lg:block lg:w-1/3"></div>
+          </div>
+          
+          {/* Copyright Area */}
+          <div className="mt-12 border-t border-slate-800/80 pt-6 text-center text-[10px] font-medium text-slate-500 sm:text-xs">
+            <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
+          </div>
+        </div>
       </div>
     </footer>
   );
