@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
+import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
@@ -912,39 +913,55 @@ function TestimonialsSection() {
 }
 
 function FooterBanner() {
+  const footerQuery = useQuery({
+    queryKey: ["public-footer"],
+    queryFn: fetchPublicFooter,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+
+  const footer = footerQuery.data ?? defaultFooterContent;
+  const columns = footer.columns.filter((column) => column.enabled);
+
   return (
     <footer className="border-t border-slate-800 bg-slate-900 px-4 py-8 text-white sm:px-6 md:px-8 md:py-10 lg:px-12">
-      <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-        <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
-          <div className="grid size-14 shrink-0 cursor-pointer place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-400">
-            <Phone
-              className="size-7"
-              aria-hidden="true"
-            />
-          </div>
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)] md:items-start">
+          {footer.contact.enabled ? (
+            <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+              <a href={footer.contact.phone_href || "#"} aria-label={footer.contact.label} className="grid size-14 shrink-0 cursor-pointer place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-400">
+                <Phone className="size-7" aria-hidden="true" />
+              </a>
+              <div>
+                <p className="mb-0.5 text-sm font-medium uppercase tracking-wider text-slate-400">{footer.contact.label}</p>
+                <a href={footer.contact.phone_href || "#"} className="text-2xl font-black tracking-wide text-white transition-colors hover:text-[#facc15] sm:text-3xl">{footer.contact.phone}</a>
+              </div>
+            </div>
+          ) : null}
 
-          <div>
-            <p className="mb-0.5 text-sm font-medium uppercase tracking-wider text-slate-400">
-              Layanan Informasi Pendaftaran
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {columns.map((column) => (
+              <div key={column.id} className="text-center md:text-left">
+                <h3 className="mb-3 text-sm font-black uppercase tracking-wider text-white">{column.title}</h3>
+                <div className="space-y-2">
+                  {column.items.filter((item) => item.enabled && item.label).map((item) => (
+                    <a key={item.id} href={item.href || "#"} className="block text-sm font-medium text-slate-300 transition-colors hover:text-[#facc15]" {...(item.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>{item.label}</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {footer.slogan.enabled ? (
+          <div className="mt-8 border-t border-slate-800 pt-6 text-center md:text-right">
+            <p className="font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
+              {footer.slogan.line1}
+              <span className="block text-[#facc15]">{footer.slogan.line2}</span>
             </p>
-
-            <a
-              href="tel:081230024264"
-              className="text-2xl font-black tracking-wide text-white transition-colors hover:text-[#facc15] sm:text-3xl"
-            >
-              0812-3002-4264
-            </a>
           </div>
-        </div>
-
-        <div className="border-t border-slate-800 pt-6 text-center md:border-t-0 md:pt-0 md:text-right">
-          <p className="font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
-            Kuliah Fleksibel,
-            <span className="block text-[#facc15]">
-              Raih Masa Depan
-            </span>
-          </p>
-        </div>
+        ) : null}
       </div>
     </footer>
   );
