@@ -23,7 +23,8 @@ import {
   Users,
   Clock,
   ArrowRight,
-  Check
+  Check,
+  Quote
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -158,9 +159,6 @@ const benefits = [
     description: "Layanan mudah dijangkau dan ramah bagi calon mahasiswa yang memiliki aktivitas padat.",
   },
 ];
-
-// Data Testimoni Diperbarui
-
 
 function Index() {
   return (
