@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2, Image as ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -54,6 +54,11 @@ function FooterSettingsAdmin() {
   if (!content.address) {
     content.address = { text: "Mall Pelayanan Publik Merdeka Malang Lt. 3 (Ramayana Alun-Alun Kota Malang) Jl. Merdeka Timur No. 4 Malang.", enabled: true };
   }
+  
+  // Fallback untuk image url jika tidak ada
+  if (content.building_image_url === undefined) {
+    content.building_image_url = "";
+  }
 
   const update = (patch: Partial<FooterContent>) => setForm({ ...content, ...patch });
   const updateColumn = (columnId: string, patch: Partial<FooterColumn>) => update({ columns: content.columns.map((column) => column.id === columnId ? { ...column, ...patch } : column) });
@@ -93,8 +98,8 @@ function FooterSettingsAdmin() {
           <Field label="Slogan baris kedua"><input className={inputClass} value={content.slogan.line2} onChange={(e) => update({ slogan: { ...content.slogan, line2: e.target.value } })} /></Field>
           <div className="md:col-span-2"><label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy"><input type="checkbox" checked={content.slogan.enabled} onChange={(e) => update({ slogan: { ...content.slogan, enabled: e.target.checked } })} />Tampilkan slogan</label></div>
 
-          {/* === BAGIAN INPUT ALAMAT BARU === */}
-          <div className="md:col-span-2">
+          {/* === BAGIAN INPUT ALAMAT FISIK === */}
+          <div className="md:col-span-2 mt-4">
             <Field label="Teks Alamat Fisik">
               <textarea 
                 className={inputClass + " min-h-[80px] resize-y py-2"} 
@@ -107,8 +112,28 @@ function FooterSettingsAdmin() {
           <div className="md:col-span-2">
             <label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy">
               <input type="checkbox" checked={content.address.enabled} onChange={(e) => update({ address: { ...content.address, enabled: e.target.checked } })} />
-              Tampilkan alamat fisik
+              Tampilkan alamat fisik & Gambar Gedung
             </label>
+          </div>
+
+          {/* === BAGIAN INPUT GAMBAR GEDUNG === */}
+          <div className="md:col-span-2 mt-2">
+            <Field label="URL Gambar Sketsa Gedung">
+              <div className="flex gap-2 items-center">
+                 <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-border bg-slate-50 text-slate-400">
+                    <ImageIcon className="size-5" />
+                 </div>
+                 <input 
+                   className={inputClass + " flex-1"} 
+                   value={content.building_image_url} 
+                   onChange={(e) => update({ building_image_url: e.target.value })} 
+                   placeholder="https://... (URL Gambar Anda)"
+                 />
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                 Upload gambar via menu <b>Media</b> di Dashboard, lalu copy URL-nya dan paste ke sini. Kosongkan untuk menggunakan gambar bawaan.
+              </p>
+            </Field>
           </div>
           {/* ================================ */}
 
