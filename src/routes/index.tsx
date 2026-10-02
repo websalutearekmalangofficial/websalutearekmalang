@@ -971,13 +971,6 @@ function FooterBanner() {
   };
   const contactLayout = getColumnLayout("contact");
   const addressLayout = getColumnLayout("address");
-  const imageLayout = getColumnLayout("image");
-  const imagePositionStyle =
-    footer.layout?.columns?.image?.alignment === "center"
-      ? { top: "50%", transform: "translateY(-50%)" }
-      : footer.layout?.columns?.image?.alignment === "end"
-        ? { bottom: "0", top: "auto", transform: "translateY(0)" }
-        : { top: "0", transform: "translateY(-45%)" };
 
   return (
     <div id="kontak" className="relative w-full pt-10 md:pt-14 lg:pt-16 scroll-mt-20" style={{ backgroundColor: footerBackground }}>
