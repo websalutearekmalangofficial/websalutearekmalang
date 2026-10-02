@@ -485,29 +485,74 @@ function RegistrationPage() {
               )}
 
               {currentStep === 4 && (
-                <div className="space-y-5">
+                <div className="space-y-6">
                   <div>
                     <p className="mb-1 text-xs font-bold uppercase tracking-wider text-yellow-600">Langkah 4 dari 4</p>
-                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Tinjau & Kirim</h2>
-                    <p className="mt-1 text-sm text-slate-500">Periksa kembali data sebelum pendaftaran dikirim.</p>
+                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Tinjau & Kirim Permohonan</h2>
+                    <p className="mt-1 text-sm leading-6 text-slate-500">Harap tinjau semua informasi Anda di bawah ini sebelum mengirim. Data yang dikirim tidak dapat diubah.</p>
                   </div>
-                  <div className="grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-2">
-                    <p><strong>Nama:</strong> {formData.namaLengkap}</p>
-                    <p><strong>Email:</strong> {formData.email}</p>
-                    <p><strong>Jenjang / Jurusan:</strong> {formData.jenjangPendidikan} - {formData.jurusan}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="flex items-start gap-2 text-sm font-semibold">
-                      <input type="checkbox" checked={agreements.dataBenar} onChange={(e) => setAgreements({...agreements, dataBenar: e.target.checked})} />
-                      <span>Data yang saya berikan adalah benar dan sah.</span>
-                    </label>
-                    <label className="flex items-start gap-2 text-sm font-semibold">
-                      <input type="checkbox" checked={agreements.setujuKetentuan} onChange={(e) => setAgreements({...agreements, setujuKetentuan: e.target.checked})} />
-                      <span>Saya menyetujui ketentuan pendaftaran.</span>
-                    </label>
-                  </div>
+
+                  <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className="text-base font-black text-slate-900">Profil Pendaftar Saat Ini</h3><span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-500">Preview Data</span></div>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      <div><p className="text-xs font-semibold text-slate-500">Nama</p><p className="mt-1 font-bold text-slate-900">{formData.namaLengkap || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Sekolah Asal</p><p className="mt-1 font-bold text-slate-900">-</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Email</p><p className="mt-1 break-all font-bold text-slate-900">{formData.email || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Nomor HP / WhatsApp</p><p className="mt-1 font-bold text-slate-900">{formData.nomorHp || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Jalur Pendaftaran</p><p className="mt-1 font-bold text-slate-900">{formData.jalurPendaftaran || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Jurusan Pendaftaran</p><p className="mt-1 font-bold text-slate-900">{formData.jurusan || "-"}</p></div>
+                    </div>
+                  </section>
+
+                  <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+                    <div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-base font-black text-slate-900">1. Ringkasan Data Diri</h3><button type="button" onClick={() => setCurrentStep(1)} className="text-sm font-bold text-yellow-700 hover:text-yellow-800">Ubah</button></div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div><p className="text-xs font-semibold text-slate-500">Nama Lengkap</p><p className="mt-1 font-semibold text-slate-900">{formData.namaLengkap || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Tempat, Tanggal Lahir</p><p className="mt-1 font-semibold text-slate-900">{[formData.tempatLahir, formData.tanggalLahir].filter(Boolean).join(", ") || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Jenis Kelamin</p><p className="mt-1 font-semibold text-slate-900">{formData.jenisKelamin || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Agama</p><p className="mt-1 font-semibold text-slate-900">{formData.agama || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Kewarganegaraan</p><p className="mt-1 font-semibold text-slate-900">{formData.kewarganegaraan || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Nama Ibu Kandung</p><p className="mt-1 font-semibold text-slate-900">{formData.namaIbuKandung || "-"}</p></div>
+                      <div className="sm:col-span-2"><p className="text-xs font-semibold text-slate-500">Alamat Lengkap</p><p className="mt-1 font-semibold text-slate-900">{formData.alamatLengkap || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Telepon Rumah</p><p className="mt-1 font-semibold text-slate-900">{formData.telpRumah || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Nomor HP / WhatsApp</p><p className="mt-1 font-semibold text-slate-900">{formData.nomorHp || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Nomor HP Alternatif</p><p className="mt-1 font-semibold text-slate-900">{formData.nomorHp2 || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Email Aktif</p><p className="mt-1 break-all font-semibold text-slate-900">{formData.email || "-"}</p></div>
+                    </div>
+                  </section>
+
+                  <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+                    <div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-base font-black text-slate-900">2. Pilihan Program & Jalur</h3><button type="button" onClick={() => setCurrentStep(2)} className="text-sm font-bold text-yellow-700 hover:text-yellow-800">Ubah</button></div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div><p className="text-xs font-semibold text-slate-500">Jalur Pendaftaran</p><p className="mt-1 font-semibold text-slate-900">{formData.jalurPendaftaran || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Program Pendidikan / Jenjang</p><p className="mt-1 font-semibold text-slate-900">{formData.jenjangPendidikan || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Fakultas</p><p className="mt-1 font-semibold text-slate-900">{formData.fakultas || "-"}</p></div>
+                      <div><p className="text-xs font-semibold text-slate-500">Jurusan / Program Studi</p><p className="mt-1 font-semibold text-slate-900">{formData.jurusan || "-"}</p></div>
+                    </div>
+                  </section>
+
+                  <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+                    <div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-base font-black text-slate-900">3. Ringkasan Dokumen Diunggah</h3><button type="button" onClick={() => setCurrentStep(3)} className="text-sm font-bold text-yellow-700 hover:text-yellow-800">Ubah</button></div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      []
+                      {[["Pas Foto","pasFoto"],["KTP","ktp"],["KK","kk"],["Ijazah Terakhir","ijazah"],["Transkrip Nilai","transkrip"],["Surat Keterangan Sehat","suratSehat"]].map(([label,key]) => {
+                        const file = uploadedFiles[key as keyof typeof uploadedFiles];
+                        return <div key={key} className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="mt-0.5 text-emerald-600">✓</span><div className="min-w-0"><p className="text-sm font-bold text-slate-900">{label}</p><p className="truncate text-xs text-slate-500">{file?.name || "Belum diunggah"}</p></div></div>;
+                      })}
+                    </div>
+                  </section>
+
+                  <section className="rounded-2xl border border-yellow-200 bg-yellow-50 p-4 sm:p-5">
+                    <h3 className="text-base font-black text-slate-900">Pernyataan Persetujuan</h3>
+                    <div className="mt-4 space-y-4">
+                      <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-700"><input type="checkbox" className="mt-1 h-4 w-4 shrink-0" checked={agreements.dataBenar} onChange={(e) => setAgreements({...agreements, dataBenar: e.target.checked})} /><span>Saya menyatakan bahwa semua data dan dokumen yang saya berikan adalah benar dan sah.</span></label>
+                      <label className="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-700"><input type="checkbox" className="mt-1 h-4 w-4 shrink-0" checked={agreements.setujuKetentuan} onChange={(e) => setAgreements({...agreements, setujuKetentuan: e.target.checked})} /><span>Saya mengerti dan menyetujui ketentuan pendaftaran Sentra Layanan Universitas Terbuka.</span></label>
+                    </div>
+                  </section>
+                  <p className="text-center text-xs font-medium leading-5 text-slate-500">Periksa kembali data Anda sebelum menekan tombol Kirim.</p>
                 </div>
               )}
+
             </div>
           </div>
 
