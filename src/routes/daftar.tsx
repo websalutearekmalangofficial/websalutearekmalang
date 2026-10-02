@@ -4,7 +4,7 @@ import {
   ArrowRight, Phone, Building2, Camera, IdCard,
   Users, FileText, ClipboardList, Activity,
   CheckCircle2, XCircle, Trash2, Upload, Calendar, Mail, CheckSquare,
-  CircleUserRound, Home, Menu, X
+  CircleUserRound, Home, Menu, X, Printer, Eye
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -112,6 +112,8 @@ function RegistrationPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  // Menyimpan ID Referensi Pendaftaran setelah berhasil
+  const [registrationRefId, setRegistrationRefId] = useState("");
 
   const [formData, setFormData] = useState({
     namaLengkap: "",
@@ -239,6 +241,10 @@ function RegistrationPage() {
         uploadedPaths.push(filePath);
       }
 
+      // Generate random ID semu untuk referensi (Karena UUID terlalu panjang untuk end user)
+      const fakeRefId = `SALUT-${new Date().getFullYear()}-${Math.floor(10000000 + Math.random() * 90000000)}`;
+      setRegistrationRefId(fakeRefId);
+
       setIsSubmitting(false);
       setIsSuccess(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -295,18 +301,84 @@ function RegistrationPage() {
     return [];
   };
 
+  // HALAMAN SUKSES (REDESAIN MENGKUTI MOCKUP)
   if (isSuccess) {
     return (
       <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
         <Header />
-        <div className="max-w-4xl mx-auto px-4 md:px-6 pt-6">
-          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
-            <h1 className="text-3xl font-extrabold text-yellow-500 mb-2">Pendaftaran Berhasil Dikirim!</h1>
-            <p className="text-slate-700 font-medium mb-8">Data Anda berhasil disimpan ke database Supabase.</p>
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl mb-8">
-              <p className="text-lg text-slate-800 font-bold mb-2">Status: <span className="bg-yellow-200 text-yellow-900 px-3 py-1 rounded-full text-sm ml-2">Menunggu Verifikasi</span></p>
+        <div className="mx-auto w-full max-w-4xl px-4 pt-6 sm:px-6 md:pt-10">
+          <div className="mb-6 rounded-t-2xl bg-white p-6 md:p-10 shadow-sm border border-slate-200">
+            <h1 className="text-3xl font-extrabold text-[#d2a32c] sm:text-4xl mb-3 tracking-tight">Pendaftaran Berhasil Dikirim!</h1>
+            <p className="text-slate-600 font-medium md:text-lg mb-8">Terima kasih atas pendaftaran Anda. Informasi pendaftaran Anda telah kami terima dan akan segera diproses.</p>
+            
+            {/* Box Status Warna Kuning */}
+            <div className="rounded-xl border border-yellow-200 bg-yellow-50 overflow-hidden mb-8 shadow-sm">
+              <div className="p-5 md:p-6 border-b border-yellow-200 bg-[#fdf8e7]">
+                <p className="text-sm md:text-base text-slate-800">Nomor Referensi Pendaftaran: <span className="font-extrabold text-lg md:text-xl text-slate-900 ml-1">{registrationRefId || 'SALUT-2026-TUNDA'}</span></p>
+              </div>
+              <div className="p-5 md:p-6 bg-white">
+                <p className="text-sm md:text-base text-slate-800">Status Pendaftaran: <span className="font-extrabold text-[#d2a32c] ml-1">Menunggu Verifikasi</span></p>
+              </div>
             </div>
-            <Link to="/" className="bg-slate-900 text-white font-bold py-3 px-8 rounded-full">Kembali ke Beranda</Link>
+
+            {/* Box Langkah Selanjutnya Abu-abu dengan Image/Icon Background */}
+            <div className="relative rounded-2xl bg-slate-100 p-6 md:p-8 overflow-hidden mb-8 border border-slate-200">
+              {/* Gambar/Icon Background Abstrak (Sebagai ganti gambar mahasiswa) */}
+              <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-10 translate-y-10">
+                <Users className="w-64 h-64 text-slate-900" />
+              </div>
+
+              <div className="relative z-10 flex items-start gap-4 mb-4">
+                <Calendar className="w-6 h-6 text-slate-700 mt-1 shrink-0" />
+                <div>
+                  <h3 className="font-extrabold text-slate-900 text-lg mb-2">Langkah Selanjutnya</h3>
+                  <p className="text-slate-700 font-medium mb-4 leading-relaxed">1. Tim Admin kami akan memverifikasi dokumen Anda dalam waktu 3-5 hari kerja.</p>
+                </div>
+              </div>
+              
+              <div className="relative z-10 flex items-start gap-4 mb-4">
+                <Mail className="w-6 h-6 text-slate-700 mt-1 shrink-0" />
+                <div>
+                  <p className="text-slate-700 font-medium mb-4 leading-relaxed">2. Nomor Induk Mahasiswa (NIM) sementara dan panduan pembayaran akan dikirimkan ke email pendaftar: '<strong className="text-slate-900">{formData.email}</strong>'.</p>
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-start gap-4">
+                <CheckSquare className="w-6 h-6 text-slate-700 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-slate-700 font-medium leading-relaxed">3. Mohon cek email Anda secara berkala, termasuk folder spam.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-extrabold text-slate-900 mb-8">Periksa email Anda secara berkala.</h3>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-center">
+              <button 
+                onClick={() => window.print()}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-[#facc15] px-6 py-3 text-sm font-black text-slate-900 shadow-sm transition hover:bg-yellow-400"
+              >
+                Cetak Bukti Pendaftaran (PDF) <CheckCircle2 className="w-4 h-4 ml-1" />
+              </button>
+              
+              <Link 
+                to="/"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border-2 border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:border-slate-300"
+              >
+                Lihat Status Pendaftaran
+              </Link>
+              
+              <Link 
+                to="/"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full border-2 border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:border-slate-300"
+              >
+                Kembali ke Beranda
+              </Link>
+            </div>
+          </div>
+          <div className="px-4 md:px-0 mt-6 pb-12">
+             <p className="text-slate-600 font-medium">Selamat bergabung di Universitas Terbuka!</p>
           </div>
         </div>
       </main>
@@ -535,7 +607,8 @@ function RegistrationPage() {
                     <div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-base font-black text-slate-900">3. Ringkasan Dokumen Diunggah</h3><button type="button" onClick={() => setCurrentStep(3)} className="text-sm font-bold text-yellow-700 hover:text-yellow-800">Ubah</button></div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {[["Pas Foto","pasFoto"],["KTP","ktp"],["KK","kk"],["Ijazah Terakhir","ijazah"],["Transkrip Nilai","transkrip"],["Surat Keterangan Sehat","suratSehat"]].map(([label,key]) => {
-                        const file = uploadedFiles[key as keyof typeof uploadedFiles];
+                        // Perbaikan Akses file
+                        const file = documents[key as keyof typeof documents];
                         return <div key={key} className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="mt-0.5 text-emerald-600">✓</span><div className="min-w-0"><p className="text-sm font-bold text-slate-900">{label}</p><p className="truncate text-xs text-slate-500">{file?.name || "Belum diunggah"}</p></div></div>;
                       })}
                     </div>
