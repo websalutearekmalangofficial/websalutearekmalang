@@ -24,7 +24,9 @@ import {
   Clock,
   ArrowRight,
   Check,
-  MapPin
+  MapPin,
+  UserRound,
+  LogOut
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -179,6 +181,61 @@ function Index() {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!mounted) return;
+
+      const user = data.user;
+      if (!user) {
+        setCurrentUser(null);
+        return;
+      }
+
+      const metadata = user.user_metadata ?? {};
+      const name =
+        (typeof metadata.full_name === "string" && metadata.full_name.trim()) ||
+        (typeof metadata.name === "string" && metadata.name.trim()) ||
+        user.email?.split("@")[0] ||
+        "Pengguna";
+
+      setCurrentUser({ name, email: user.email ?? "" });
+    };
+
+    void loadUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const user = session?.user;
+      if (!user) {
+        setCurrentUser(null);
+        return;
+      }
+
+      const metadata = user.user_metadata ?? {};
+      const name =
+        (typeof metadata.full_name === "string" && metadata.full_name.trim()) ||
+        (typeof metadata.name === "string" && metadata.name.trim()) ||
+        user.email?.split("@")[0] ||
+        "Pengguna";
+
+      setCurrentUser({ name, email: user.email ?? "" });
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setCurrentUser(null);
+    setMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
@@ -236,24 +293,39 @@ function Header() {
         </nav>
 
         <div className="flex items-center justify-end gap-2 md:min-w-0">
-          <div className="flex items-center gap-2">
-            <Link
-              to="/auth"
-              aria-label="Masuk"
-              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
-            >
-              <CircleUserRound className="size-3.5 sm:size-4" aria-hidden="true" />
-              <span>Masuk</span>
-            </Link>
-            <Link
-              to="/daftar"
-              aria-label="Daftar"
-              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
-            >
-              <ClipboardPenLine className="size-3.5 sm:size-4" aria-hidden="true" />
-              <span>Daftar</span>
-            </Link>
-          </div>
+          {currentUser ? (
+            <div className="flex items-center gap-2">
+              <div className="hidden items-center gap-2 rounded-full border border-hero-foreground/40 bg-hero-foreground/10 px-3 py-1.5 text-hero-foreground sm:flex">
+                <div className="grid size-8 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
+                  <UserRound className="size-4" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 max-w-[180px] text-left leading-tight">
+                  <p className="truncate text-xs font-black">{currentUser.name}</p>
+                  <p className="truncate text-[10px] text-hero-foreground/70">{currentUser.email}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                aria-label="Keluar"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+              >
+                <LogOut className="size-3.5 sm:size-4" aria-hidden="true" />
+                <span>Keluar</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link to="/auth" aria-label="Masuk" className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm">
+                <CircleUserRound className="size-3.5 sm:size-4" aria-hidden="true" />
+                <span>Masuk</span>
+              </Link>
+              <Link to="/daftar" aria-label="Daftar" className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm">
+                <ClipboardPenLine className="size-3.5 sm:size-4" aria-hidden="true" />
+                <span>Daftar</span>
+              </Link>
+            </div>
+          )}
 
           <button
             type="button"
