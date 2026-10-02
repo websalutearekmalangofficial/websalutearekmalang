@@ -949,6 +949,12 @@ function FooterBanner() {
   const contactLayout = getColumnLayout("contact");
   const addressLayout = getColumnLayout("address");
   const imageLayout = getColumnLayout("image");
+  const imagePositionStyle =
+    footer.layout?.columns?.image?.alignment === "center"
+      ? { top: "50%", transform: "translateY(-50%)" }
+      : footer.layout?.columns?.image?.alignment === "end"
+        ? { bottom: "0", top: "auto", transform: "translateY(0)" }
+        : { top: "0", transform: "translateY(-45%)" };
 
   return (
     <div className="relative w-full pt-24 md:pt-32 lg:pt-48" style={{ backgroundColor: footerBackground }}>
@@ -962,8 +968,8 @@ function FooterBanner() {
           {/* Dipindah ke dalam container max-w-7xl agar posisinya terkunci di dalam grid konten (tidak lari ke tepi layar saat di-zoom out) */}
           {footer.address?.enabled && (
             <div
-              className="pointer-events-none absolute right-4 top-0 z-10 w-full -translate-y-[45%] opacity-30 sm:right-6 sm:opacity-50 md:right-8 lg:right-12 lg:opacity-100"
-              style={{ maxWidth: String(buildingImageWidth) + "px" }}
+              className="pointer-events-none absolute right-4 z-10 w-full opacity-30 sm:right-6 sm:opacity-50 md:right-8 lg:right-12 lg:opacity-100"
+              style={{ ...imagePositionStyle, maxWidth: String(buildingImageWidth) + "px" }}
             >
               <img 
                 src={buildingImage} 
