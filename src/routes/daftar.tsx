@@ -534,7 +534,6 @@ function RegistrationPage() {
                   <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
                     <div className="mb-4 flex items-center justify-between gap-3"><h3 className="text-base font-black text-slate-900">3. Ringkasan Dokumen Diunggah</h3><button type="button" onClick={() => setCurrentStep(3)} className="text-sm font-bold text-yellow-700 hover:text-yellow-800">Ubah</button></div>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      []
                       {[["Pas Foto","pasFoto"],["KTP","ktp"],["KK","kk"],["Ijazah Terakhir","ijazah"],["Transkrip Nilai","transkrip"],["Surat Keterangan Sehat","suratSehat"]].map(([label,key]) => {
                         const file = uploadedFiles[key as keyof typeof uploadedFiles];
                         return <div key={key} className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="mt-0.5 text-emerald-600">✓</span><div className="min-w-0"><p className="text-sm font-bold text-slate-900">{label}</p><p className="truncate text-xs text-slate-500">{file?.name || "Belum diunggah"}</p></div></div>;
