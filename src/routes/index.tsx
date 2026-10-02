@@ -936,10 +936,10 @@ function FooterBanner() {
 
   return (
     // Wrapper putih untuk memberikan ruang background atas gambar agar terlihat menonjol/pop-out
-    <div className="relative w-full bg-white pt-24 md:pt-32 lg:pt-48">
+    <div className="relative w-full bg-[#a7c8e1] pt-24 md:pt-32 lg:pt-48">
       
-      {/* 1. BAGIAN ATAS (NAVY #0f1523) - Tempat Kontak, Alamat, Gambar */}
-      <footer className="w-full border-t border-slate-700 bg-[#0f1523] text-white">
+      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
+      <footer className="w-full border-t border-[#0f1523]/20 bg-[#a7c8e1] text-[#0f1523]">
 
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
@@ -964,13 +964,13 @@ function FooterBanner() {
             {/* Kolom 1: Kontak */}
             {footer.contact?.enabled && (
               <div className="flex w-full flex-col items-center justify-start text-center">
-                <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#34d399] text-white shadow-lg transition-transform hover:scale-110">
+                <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
                   <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                 </a>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                   {footer.contact.label}
                 </p>
-                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-white transition-colors hover:text-[#facc15] lg:text-4xl">
+                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-[#0f1523] transition-colors hover:text-[#334155] lg:text-4xl">
                   {footer.contact.phone}
                 </a>
               </div>
@@ -978,14 +978,14 @@ function FooterBanner() {
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className="flex w-full flex-col items-center justify-start border-t border-slate-700/50 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0">
-                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white">
+              <div className="flex w-full flex-col items-center justify-start border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0">
+                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
                   Alamat Kantor
                 </p>
-                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-300 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
+                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-800 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
                   {footer.address.text}
                 </p>
               </div>
@@ -997,7 +997,7 @@ function FooterBanner() {
         </div>
       </footer>
 
-      {/* 2. BAGIAN BAWAH (BIRU MUDA #a7c8e1) - Tempat Copyright */}
+      {/* Bagian copyright dengan warna latar yang sama */}
       <div className="w-full bg-[#a7c8e1] py-5">
         <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
