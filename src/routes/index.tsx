@@ -977,7 +977,7 @@ function FooterBanner() {
           )}
         </div>
 
-        <div className="mt-12 border-t border-white/15 pt-6 text-center text-[10px] font-medium text-slate-400 sm:text-xs lg:text-left">
+        <div className="mt-12 border-t border-[#0f1523]/20 pt-6 text-center text-[10px] font-medium text-[#0f1523] sm:text-xs lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
         </div>
