@@ -317,8 +317,12 @@ function RegistrationPage() {
     <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
       <Header />
 
-      <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-4">Halaman Pendaftaran</h1>
+      <div className="mx-auto w-full max-w-6xl px-3 pb-6 pt-4 sm:px-5 sm:pt-6 lg:px-8">
+        <div className="mb-5 text-center sm:mb-7 sm:text-left">
+          <p className="mb-1 text-xs font-extrabold uppercase tracking-[0.18em] text-yellow-600">Sentra Layanan UT Arek Malang</p>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Formulir Pendaftaran</h1>
+          <p className="mt-1 text-sm text-slate-500 sm:text-base">Lengkapi data secara bertahap. Anda dapat kembali ke langkah sebelumnya kapan saja.</p>
+        </div>
 
         {errorMessage && (
           <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl font-bold text-sm">
@@ -326,24 +330,24 @@ function RegistrationPage() {
           </div>
         )}
 
-        <div className="flex flex-wrap md:flex-nowrap items-center gap-1 bg-[#fde047] p-1 rounded-lg mb-6 overflow-hidden shadow-sm">
+        <div className="mb-5 grid grid-cols-2 gap-1.5 rounded-2xl border border-yellow-200 bg-yellow-50 p-1.5 shadow-sm sm:grid-cols-4 sm:gap-1 md:mb-6">
           {steps.map((step) => {
             const isActive = currentStep === step.id;
             const isPast = currentStep > step.id;
             return (
-              <div key={step.id} className={`flex-1 min-w-[120px] text-center py-2.5 px-4 text-sm font-bold ${isActive ? "bg-[#1e293b] text-white rounded-md" : isPast ? "text-[#1e293b] opacity-70" : "text-[#1e293b] opacity-50"}`}>
+              <div key={step.id} className={`min-w-0 rounded-xl px-2 py-2.5 text-center text-[11px] font-extrabold leading-tight transition sm:px-3 sm:text-sm ${isActive ? "bg-slate-900 text-white shadow-sm" : isPast ? "bg-white text-slate-800" : "text-slate-500"}`}>
                 {step.label}
               </div>
             );
           })}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden relative min-h-[550px] flex flex-col">
-          <div className="flex flex-col lg:flex-row w-full flex-grow relative z-10">
+        <div className="relative flex min-h-[560px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)] sm:rounded-3xl">
+          <div className="relative z-10 flex w-full flex-1 flex-col lg:flex-row">
             {currentStep >= 3 && (
-              <aside className="w-full lg:w-[30%] bg-slate-50/95 border-r border-slate-200 p-6 shrink-0">
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sticky top-6">
-                  <h3 className="font-extrabold text-slate-800 border-b pb-3 mb-4 text-lg">Profil Pendaftar</h3>
+              <aside className="w-full shrink-0 border-b border-slate-200 bg-slate-50/90 p-4 sm:p-5 lg:w-[30%] lg:border-b-0 lg:border-r lg:p-6">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-24 sm:p-5">
+                  <h3 className="mb-4 border-b border-slate-100 pb-3 text-base font-black text-slate-900 sm:text-lg">Profil Pendaftar</h3>
                   <div className="space-y-2 text-sm text-slate-700">
                     <p><span className="text-xs text-slate-500 block">Nama:</span> <strong className="text-slate-900">{formData.namaLengkap || "-"}</strong></p>
                     <p><span className="text-xs text-slate-500 block">Email:</span> <strong className="text-slate-900">{formData.email || "-"}</strong></p>
@@ -353,14 +357,18 @@ function RegistrationPage() {
               </aside>
             )}
 
-            <div className={`p-6 md:p-8 lg:p-10 ${currentStep >= 3 ? 'w-full lg:w-[70%]' : 'w-full md:w-3/5'}`}>
+            <div className={`w-full min-w-0 p-4 sm:p-6 lg:p-8 ${currentStep >= 3 ? 'lg:w-[70%]' : 'lg:w-full'}`}>
               {currentStep === 1 && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Langkah 1: Data Diri Calon Mahasiswa</h2>
-                  <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
-                    <h3 className="font-extrabold text-slate-800 border-b pb-2">1. Data Diri</h3>
+                <div className="space-y-5 sm:space-y-6">
+                  <div>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-wider text-yellow-600">Langkah 1 dari 4</p>
+                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Data Diri Calon Mahasiswa</h2>
+                    <p className="mt-1 text-sm text-slate-500">Isi identitas dan informasi kontak yang aktif.</p>
+                  </div>
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+                    <h3 className="mb-4 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">1. Data Diri</h3>
                     <input type="text" placeholder="Nama Lengkap" value={formData.namaLengkap} onChange={(e) => setFormData({ ...formData, namaLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <input type="text" placeholder="Tempat Lahir" value={formData.tempatLahir} onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
                       <input type="date" value={formData.tanggalLahir} onChange={(e) => setFormData({ ...formData, tanggalLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
                     </div>
@@ -381,7 +389,7 @@ function RegistrationPage() {
                   </div>
 
                   <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
-                    <h3 className="font-extrabold text-slate-800 border-b pb-2">2. Kontak & Domisili</h3>
+                    <h3 className="mb-4 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">2. Kontak & Domisili</h3>
                     <textarea placeholder="Alamat Lengkap" rows={2} value={formData.alamatLengkap} onChange={(e) => setFormData({ ...formData, alamatLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
                     <input type="email" placeholder="Email Aktif" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
                     <input type="tel" placeholder="Nomor HP / WhatsApp" value={formData.nomorHp} onChange={(e) => setFormData({ ...formData, nomorHp: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
@@ -390,8 +398,13 @@ function RegistrationPage() {
               )}
 
               {currentStep === 2 && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Langkah 2: Jalur & Program Studi</h2>
+                <div className="space-y-5 sm:space-y-6">
+                  <div>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-wider text-yellow-600">Langkah 2 dari 4</p>
+                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Jalur & Program Studi</h2>
+                    <p className="mt-1 text-sm text-slate-500">Tentukan jalur, jenjang, fakultas, dan program studi yang dipilih.</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <select value={formData.jalurPendaftaran} onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })} className="w-full px-4 py-3 rounded-lg border bg-white">
                     <option value="Reguler">Reguler</option>
                     <option value="RPL">RPL</option>
@@ -411,21 +424,30 @@ function RegistrationPage() {
                       <option value="FHISIP">Fakultas Hukum, Ilmu Sosial, dan Ilmu Politik (FHISIP)</option>
                     </select>
                   )}
+                  <div className="sm:col-span-2">
                   <select value={formData.jurusan} onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })} className="w-full px-4 py-3 rounded-lg border bg-white">
                     <option value="" disabled>-- Pilih Program Studi --</option>
                     {getJurusanOptions().map(opt => <option key={opt} value={opt}>{opt}</option>)}
                   </select>
+                  </div>
                 </div>
               )}
 
               {currentStep === 3 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-5">
+                  <div>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-wider text-yellow-600">Langkah 3 dari 4</p>
+                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Unggah Dokumen</h2>
+                    <p className="mt-1 text-sm text-slate-500">Gunakan file PDF, JPG, atau JPEG dengan ukuran maksimal 10 MB per dokumen.</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {requiredDocs.map(doc => {
                     const file = documents[doc.id];
                     const isUploaded = !!file;
                     return (
-                      <div key={doc.id} className="border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center relative bg-white">
-                        <span className="text-xs font-bold mb-2">{doc.label}</span>
+                      <div key={doc.id} className="relative flex min-h-36 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 p-4 text-center transition hover:border-yellow-400 hover:bg-yellow-50/30">
+                        <doc.icon className="mb-2 size-7 text-slate-400" aria-hidden="true" />
+                        <span className="text-xs font-bold leading-5 text-slate-700 sm:text-sm">{doc.label}</span>
                         {!isUploaded ? (
                           <>
                             <input type="file" accept=".pdf,.jpg,.jpeg" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFileUpload(doc.id, e)} />
@@ -444,9 +466,13 @@ function RegistrationPage() {
               )}
 
               {currentStep === 4 && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Langkah 4: Tinjau & Kirim</h2>
-                  <div className="bg-slate-100 p-4 rounded-xl text-sm space-y-1">
+                <div className="space-y-5">
+                  <div>
+                    <p className="mb-1 text-xs font-bold uppercase tracking-wider text-yellow-600">Langkah 4 dari 4</p>
+                    <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Tinjau & Kirim</h2>
+                    <p className="mt-1 text-sm text-slate-500">Periksa kembali data sebelum pendaftaran dikirim.</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm sm:grid-cols-2">
                     <p><strong>Nama:</strong> {formData.namaLengkap}</p>
                     <p><strong>Email:</strong> {formData.email}</p>
                     <p><strong>Jenjang / Jurusan:</strong> {formData.jenjangPendidikan} - {formData.jurusan}</p>
@@ -466,12 +492,12 @@ function RegistrationPage() {
             </div>
           </div>
 
-          <div className="border-t bg-white p-5 flex justify-between items-center mt-auto">
-            {currentStep > 1 ? <button onClick={handlePrev} className="bg-white border px-6 py-2.5 rounded-full font-bold">← Sebelumnya</button> : <div/>}
+          <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-200 bg-white p-4 sm:p-5">
+            {currentStep > 1 ? <button onClick={handlePrev} className="rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:px-6">← Sebelumnya</button> : <div/>}
             {currentStep < 4 ? (
-              <button onClick={handleNext} className="bg-[#fde047] px-8 py-2.5 rounded-full font-bold shadow">Selanjutnya →</button>
+              <button onClick={handleNext} className="rounded-full bg-yellow-300 px-5 py-2.5 text-sm font-black text-slate-900 shadow-sm transition hover:bg-yellow-400 sm:px-8">Selanjutnya →</button>
             ) : (
-              <button disabled={isSubmitting} onClick={handleSubmit} className="bg-[#fde047] px-8 py-2.5 rounded-full font-bold shadow">
+              <button disabled={isSubmitting} onClick={handleSubmit} className="rounded-full bg-yellow-300 px-5 py-2.5 text-sm font-black text-slate-900 shadow-sm transition hover:bg-yellow-400 disabled:cursor-not-allowed disabled:opacity-60 sm:px-8">
                 {isSubmitting ? "Mengirim ke Database..." : "✓ Kirim Pendaftaran"}
               </button>
             )}
