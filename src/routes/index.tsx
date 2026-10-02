@@ -935,7 +935,7 @@ function FooterBanner() {
   const buildingImageWidth = imagePresetWidths[footer.building_image_size?.preset ?? "large"] ?? 480;
 
   return (
-    // Wrapper putih untuk memberikan ruang background atas gambar agar terlihat menonjol/pop-out
+    // Layout footer 3 kolom: ketiga kolom menggunakan tinggi area yang sama dan alignment konsisten
     <div className="relative w-full bg-[#a7c8e1] pt-24 md:pt-32 lg:pt-48">
       
       {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
@@ -959,11 +959,11 @@ function FooterBanner() {
           )}
 
           {/* GRID 3 KOLOM MURNI (Kiri: Kontak, Tengah: Alamat, Kanan: Ruang Kosong untuk Gambar) */}
-          <div className="relative z-20 grid grid-cols-1 items-start gap-12 lg:grid-cols-3 lg:gap-8">
+          <div className="relative z-20 grid grid-cols-1 items-stretch gap-12 lg:grid-cols-3 lg:gap-8">
             
             {/* Kolom 1: Kontak */}
             {footer.contact?.enabled && (
-              <div className="flex w-full flex-col items-center justify-start text-center">
+              <div className="flex min-h-[220px] w-full flex-col items-center justify-start text-center lg:min-h-[260px]">
                 <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
                   <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                 </a>
@@ -978,11 +978,11 @@ function FooterBanner() {
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className="flex w-full flex-col items-center justify-start border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0">
+              <div className="flex min-h-[220px] w-full flex-col items-center justify-start border-t border-[#0f1523]/20 pt-10 text-center lg:min-h-[260px] lg:border-l lg:border-t-0 lg:pt-0">
                 <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                   Alamat Kantor
                 </p>
                 <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-800 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
@@ -991,8 +991,8 @@ function FooterBanner() {
               </div>
             )}
 
-            {/* Kolom 3: Penyeimbang Kosong */}
-            <div className="hidden w-full lg:block"></div>
+            {/* Kolom 3: Image — area kolom dibuat setinggi kolom lain agar garis dasar tetap selaras */}
+            <div className="hidden min-h-[220px] w-full lg:flex lg:min-h-[260px]"></div>
           </div>
         </div>
       </footer>
