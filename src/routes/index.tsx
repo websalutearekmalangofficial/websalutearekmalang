@@ -57,6 +57,7 @@ export const Route = createFileRoute("/")({
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
 
+// Data alur pendaftaran ditambahkan deskripsi detail untuk pop-up
 const processSteps = [
   {
     number: "1",
@@ -909,7 +910,7 @@ function TestimonialsSection() {
   );
 }
 
-// === DESAIN BARU: FOOTER PRESISI POP-OUT ===
+// === DESAIN BARU: FOOTER PRESISI POP-OUT (RATA TENGAH & GRID 3 KOLOM) ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -932,8 +933,7 @@ function FooterBanner() {
       <footer className="relative w-full border-t border-slate-700 bg-[#111c38] text-white">
 
         {/* --- GAMBAR SKETSA POP-OUT 50% --- */}
-        {/* Menggunakan top-0 dan -translate-y-1/2 agar persis setengah di atas (putih) dan setengah di bawah (navy) */}
-        <div className="pointer-events-none absolute right-0 top-0 z-10 w-[70%] max-w-[320px] -translate-y-1/2 sm:max-w-[400px] md:max-w-[480px] lg:max-w-[550px] xl:max-w-[650px] 2xl:max-w-[750px]">
+        <div className="pointer-events-none absolute right-0 top-0 z-10 w-[70%] max-w-[320px] -translate-y-[45%] sm:max-w-[400px] md:max-w-[480px] lg:max-w-[550px] xl:max-w-[650px] 2xl:max-w-[750px]">
           {footer.address?.enabled && (
             <img 
               src={buildingImage} 
@@ -946,38 +946,43 @@ function FooterBanner() {
         {/* Inner Content Grid */}
         <div className="relative z-20 mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
-          {/* GRID 3 KOLOM */}
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-3 lg:gap-8">
+          {/* GRID 3 KOLOM MURNI UNTUK PRESISI */}
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-3 lg:gap-8">
             
             {/* Kolom Kiri: Kontak */}
             {footer.contact?.enabled && (
-              <div className="flex w-full flex-col items-center justify-center text-center">
+              <div className="flex h-full w-full flex-col items-center justify-start text-center">
                 <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#34d399] text-white shadow-lg transition-transform hover:scale-110">
                   <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                 </a>
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
                   {footer.contact.label}
                 </p>
-                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-white transition-colors hover:text-[#facc15] sm:text-4xl">
+                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-white transition-colors hover:text-[#facc15] lg:text-4xl">
                   {footer.contact.phone}
                 </a>
               </div>
             )}
 
-            {/* Kolom Tengah: Alamat Fisik */}
+            {/* Kolom Tengah: Alamat Fisik (Letaknya dijamin 100% presisi di tengah layar desktop) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className="flex w-full flex-col items-center justify-center text-center">
+              <div className="flex h-full w-full flex-col items-center justify-start border-t border-slate-700/50 pt-12 text-center lg:border-l lg:border-t-0 lg:pt-0">
                 <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
-                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-300 sm:max-w-[320px] sm:text-sm">
+                {/* Menyamakan hierarki visual dengan kolom kiri agar seimbang */}
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                  Alamat Kantor
+                </p>
+                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-300 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
                   {footer.address.text}
                 </p>
               </div>
             )}
 
-            {/* Kolom Kanan: Spacer Kosong di Desktop agar text tidak tertutup Gambar */}
+            {/* Kolom Kanan: Kosong, hanya sebagai penyeimbang grid agar alamat tetap terdorong ke tengah */}
             <div className="hidden w-full lg:block"></div>
+
           </div>
           
           {/* Copyright Area */}
