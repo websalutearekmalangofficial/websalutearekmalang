@@ -431,6 +431,7 @@ function RegistrationPage() {
                   </select>
                   </div>
                 </div>
+                </div>
               )}
 
               {currentStep === 3 && (
@@ -462,6 +463,7 @@ function RegistrationPage() {
                       </div>
                     );
                   })}
+                </div>
                 </div>
               )}
 
