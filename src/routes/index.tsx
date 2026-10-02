@@ -945,7 +945,7 @@ function TestimonialsSection() {
   );
 }
 
-// === FOOTER RESPONSIF: KONTAK, ALAMAT, DAN GAMBAR SKETSA POP-OUT ===
+// === FOOTER RESPONSIF: KONTAK DAN ALAMAT ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -958,7 +958,7 @@ function FooterBanner() {
   const footer = footerQuery.data ?? defaultFooterContent;
   const footerBackground = footer.layout?.background_color || "#a7c8e1";
   const footerLayout = footer.layout;
-  const getColumnLayout = (key: "contact" | "address" | "image") => {
+  const getColumnLayout = (key: "contact" | "address") => {
     const settings = footerLayout?.columns?.[key] ?? { height: 300, alignment: "start" as const };
     const height = Math.min(800, Math.max(160, settings.height ?? 300));
     const alignmentClass =
@@ -975,12 +975,14 @@ function FooterBanner() {
   return (
     <div id="kontak" className="relative w-full pt-10 md:pt-14 lg:pt-16 scroll-mt-20" style={{ backgroundColor: footerBackground }}>
       
-      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak dan Alamat */}
+      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
       <footer className="w-full border-t border-[#0f1523]/20 text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
 
         <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
           
-          {/* Kolom 1: Kontak */}
+          <div className="relative z-20 grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-8">
+            
+            {/* Kolom 1: Kontak */}
             {footer.contact?.enabled && (
               <div className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`} style={{ minHeight: `${contactLayout.height}px` }}>
                 <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
@@ -1009,6 +1011,7 @@ function FooterBanner() {
                 </p>
               </div>
             )}
+
           </div>
         </div>
       </footer>
