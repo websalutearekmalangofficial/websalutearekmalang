@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
+import { fetchPublicTestimonials } from "@/lib/testimonials";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -159,44 +160,7 @@ const benefits = [
 ];
 
 // Data Testimoni Diperbarui
-const testimonials = [
-  {
-    name: "ZARETHA UNGU ALEGRA",
-    role: "Mahasiswa Jurusan S1 Ilmu Komunikasi",
-    quote: "Gabung Salut jadi lebih mudah dapat banyak informasi soal perkuliahan dan ngerjain tugas",
-    image: "https://ui-avatars.com/api/?name=Zaretha+Ungu&background=f3f4f6&color=111c38&size=256"
-  },
-  {
-    name: "Shanata Shakinah",
-    role: "Mahasiswa Jurusan S1 Administrasi Publik",
-    quote: "Gabung di Salut ternyata nggak cuma soal belajar, tapi juga dapat pelayanan maksimal",
-    image: "https://ui-avatars.com/api/?name=Shanata+Shakinah&background=f3f4f6&color=111c38&size=256"
-  },
-  {
-    name: "Reysita Karina",
-    role: "Mahasiswa Jurusan S1 PGSD (Inservice)",
-    quote: "Kakak-kakak admin di Salute Malang ramah dan helpfull banget, dan selalu ngingetin kita kalo ada tugas",
-    image: "https://ui-avatars.com/api/?name=Reysita+Karina&background=f3f4f6&color=111c38&size=256"
-  },
-  {
-    name: "Maulana Ekky Sahertian",
-    role: "Mahasiswa Jurusan S1 Administrasi Publik/Negara",
-    quote: "Bangga bisa jadi bagian dari Salute Malang! Semoga bisa terus belajar, berkembang, dan sukses",
-    image: "https://ui-avatars.com/api/?name=Maulana+Ekky&background=f3f4f6&color=111c38&size=256"
-  },
-  {
-    name: "SYIHABUDDIN",
-    role: "Mahasiswa Jurusan S1 Ilmu Hukum",
-    quote: "Senang bisa punya kesempatan bergabung di Sentra Layanan UT Malang. Banyak pengalaman yang pastinya bakal berguna ke depannya.",
-    image: "https://ui-avatars.com/api/?name=Syihabuddin&background=f3f4f6&color=111c38&size=256"
-  },
-  {
-    name: "RAFFI TIMOR ALI AKBAR",
-    role: "Mahasiswa Jurusan S1 Manajemen",
-    quote: "Pokoknya bersyukur banget bisa jadi bagian dari keluarga besar Salute Arek Malang!",
-    image: "https://ui-avatars.com/api/?name=Raffi+Timor&background=f3f4f6&color=111c38&size=256"
-  }
-];
+
 
 function Index() {
   return (
@@ -604,41 +568,48 @@ function BenefitsSection() {
 
 // === DESAIN BARU: TESTIMONI APA KATA MEREKA ===
 function TestimonialsSection() {
+  const testimonialsQuery = useQuery({
+    queryKey: ["public-testimonials"],
+    queryFn: fetchPublicTestimonials,
+    staleTime: 60_000,
+  });
+  const testimonials = testimonialsQuery.data ?? [];
+
   return (
-    <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 lg:px-12 relative overflow-hidden">
-      {/* Elemen Dekorasi Background */}
+    <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative overflow-hidden">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-900/30 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400/10 blur-3xl"></div>
-
       <div className="mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl md:text-5xl">Apa Kata Mereka?</h2>
+          <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Apa Kata Mereka?</h2>
           <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
         </div>
-        
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-          {testimonials.map((item, index) => (
-            <article key={index} className="flex flex-col items-center text-center group">
-              <div className="mb-5 flex aspect-[3/4] w-3/4 max-w-[160px] items-end overflow-hidden rounded-t-[100px] bg-white sm:w-full transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-[0_10px_30px_-10px_rgba(250,204,21,0.3)]">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-full w-full object-cover pt-2"
-                  loading="lazy"
-                />
-              </div>
-              <h3 className="mb-2 text-sm font-bold uppercase leading-tight text-white xl:text-base">
-                {item.name}
-              </h3>
-              <p className="mb-3 text-xs font-medium text-[#facc15]">
-                {item.role}
-              </p>
-              <p className="text-xs italic leading-relaxed text-slate-300">
-                &quot;{item.quote}&quot;
-              </p>
-            </article>
-          ))}
-        </div>
+        {testimonialsQuery.isLoading ? (
+          <div className="rounded-3xl border border-slate-700 bg-slate-800/50 p-8 text-center text-slate-300">Memuat testimoni...</div>
+        ) : testimonials.length === 0 ? (
+          <div className="rounded-3xl border border-slate-700 bg-slate-800/50 p-8 text-center text-slate-300">Belum ada testimoni yang ditayangkan.</div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {testimonials.map((item) => {
+              const initials = item.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "ST";
+              return (
+                <article key={item.id} className="flex h-full flex-col rounded-3xl border border-slate-700 bg-slate-800/50 backdrop-blur-sm p-6 shadow-xl transition duration-300 hover:-translate-y-2 hover:border-slate-500 sm:p-8">
+                  {item.imageUrl ? (
+                    <img src={item.imageUrl} alt={item.name} className="mb-5 size-16 rounded-full object-cover ring-2 ring-[#facc15]/70" />
+                  ) : (
+                    <div className="mb-5 grid size-16 place-items-center rounded-full bg-[#facc15] text-lg font-black text-[#111c38] shadow-md">{initials}</div>
+                  )}
+                  <Quote className="mb-4 size-10 fill-current text-[#facc15]/80" aria-hidden="true" />
+                  <p className="flex-1 text-base italic leading-relaxed text-slate-300">"{item.quote}"</p>
+                  <div className="mt-8 min-w-0">
+                    <h3 className="truncate text-base font-extrabold text-white">{item.name}</h3>
+                    <span className="text-sm font-medium text-slate-400">{[item.degree, item.role].filter(Boolean).join(" • ")}</span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
