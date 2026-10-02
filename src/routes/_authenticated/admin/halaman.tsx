@@ -646,7 +646,22 @@ function SectionEditor({
   );
 }
 
-function ItemEditor({
+function ItemEditor(props: {
+  sectionKind: string;
+  item: SectionItem;
+  index: number;
+  total: number;
+  siblings: SectionItem[];
+  onChanged: () => void;
+}) {
+  if (props.sectionKind === "testimonials") {
+    return <TestimonialItemEditor {...props} />;
+  }
+
+  return <GenericItemEditor {...props} />;
+}
+
+function GenericItemEditor({
   sectionKind,
   item,
   index,
@@ -661,10 +676,6 @@ function ItemEditor({
   siblings: SectionItem[];
   onChanged: () => void;
 }) {
-  if (sectionKind === "testimonials") {
-    return <TestimonialItemEditor item={item} index={index} total={total} siblings={siblings} onChanged={onChanged} />;
-  }
-
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(item);
   const [badgeText, setBadgeText] = useState((item.badges ?? []).join(", "));
