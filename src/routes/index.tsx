@@ -240,17 +240,17 @@ function Header() {
             <Link
               to="/auth"
               aria-label="Masuk"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
             >
-              <CircleUserRound className="size-4" aria-hidden="true" />
+              <CircleUserRound className="size-3.5 sm:size-4" aria-hidden="true" />
               <span>Masuk</span>
             </Link>
             <Link
               to="/daftar"
               aria-label="Daftar"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-ut-yellow px-3 py-2 text-[0.7rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
             >
-              <ClipboardPenLine className="size-4" aria-hidden="true" />
+              <ClipboardPenLine className="size-3.5 sm:size-4" aria-hidden="true" />
               <span>Daftar</span>
             </Link>
           </div>
@@ -413,21 +413,31 @@ function CombinedCTAProcessSection() {
     useState<(typeof processSteps)[0] | null>(null);
 
   useEffect(() => {
-    if (selectedStep) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (!selectedStep) {
       document.body.style.overflow = "unset";
+      return;
     }
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedStep(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedStep]);
 
   return (
     <section
       id="panduan"
-      className="relative z-10 px-4 pb-12 pt-16 sm:px-6 md:px-8 md:pb-16 md:pt-24 lg:px-12"
+      className="relative z-10 px-4 pb-10 pt-12 sm:px-6 md:px-8 md:pb-14 md:pt-20 lg:px-12"
     >
       {selectedStep && (
         <div
@@ -435,7 +445,10 @@ function CombinedCTAProcessSection() {
           onClick={() => setSelectedStep(null)}
         >
           <div
-            className="flex w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="process-step-dialog-title"
+            className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative flex items-center justify-between overflow-hidden bg-[#111c38] p-6 text-white">
@@ -453,7 +466,7 @@ function CombinedCTAProcessSection() {
                   <p className="mb-0.5 text-xs font-black uppercase tracking-wider text-[#facc15]">
                     Langkah {selectedStep.number}
                   </p>
-                  <h3 className="text-xl font-extrabold">
+                  <h3 id="process-step-dialog-title" className="text-xl font-extrabold">
                     {selectedStep.title}
                   </h3>
                 </div>
@@ -469,7 +482,7 @@ function CombinedCTAProcessSection() {
               </button>
             </div>
 
-            <div className="p-6 md:p-8">
+            <div className="overflow-y-auto p-6 md:p-8">
               <p className="mb-5 font-medium text-slate-600">
                 {selectedStep.description}
               </p>
@@ -495,6 +508,7 @@ function CombinedCTAProcessSection() {
 
             <div className="flex justify-end border-t border-slate-100 bg-slate-50 p-4 px-6 md:px-8">
               <button
+                type="button"
                 onClick={() => setSelectedStep(null)}
                 className="rounded-full bg-slate-200 px-6 py-2.5 text-sm font-bold text-slate-800 transition-colors hover:bg-slate-300"
               >
@@ -570,9 +584,13 @@ function CombinedCTAProcessSection() {
                       />
                     </div>
 
-                    <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
+                    <h3 className="mb-2 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
                       {step.title}
                     </h3>
+
+                    <p className="mb-4 max-w-[17rem] text-sm leading-relaxed text-slate-500 transition-colors duration-500 group-hover:text-slate-200">
+                      {step.description}
+                    </p>
 
                     {step.badges ? (
                       <div className="mt-auto flex flex-wrap justify-center gap-2">
@@ -590,8 +608,8 @@ function CombinedCTAProcessSection() {
                         ))}
                       </div>
                     ) : (
-                      <div className="mt-auto text-xs font-semibold text-blue-500 opacity-0 transition-opacity duration-500 group-hover:text-[#facc15] group-hover:opacity-100">
-                        Klik untuk info detail
+                      <div className="mt-auto text-xs font-bold text-blue-600 transition-colors duration-500 group-hover:text-[#facc15]">
+                        Lihat detail →
                       </div>
                     )}
                   </button>
@@ -615,7 +633,7 @@ function CombinedCTAProcessSection() {
 
 function KeunggulanBannerSection() {
   return (
-    <section className="relative z-20 mx-auto max-w-7xl px-4 pb-16 sm:px-6 md:px-8">
+    <section className="relative z-20 mx-auto max-w-7xl px-4 pb-14 sm:px-6 md:px-8">
       <div className="flex flex-col items-start justify-between gap-10 rounded-3xl bg-[#111c38] p-6 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)] md:flex-row md:items-center md:p-10 lg:p-12">
         <div className="flex w-full flex-1 items-center gap-5">
           <div className="shrink-0 rounded-full bg-[#facc15] p-4 text-[#111c38] shadow-inner">
@@ -704,7 +722,7 @@ function BenefitsSection() {
             return (
               <article
                 key={benefit.title}
-                className="rounded-3xl border border-slate-100 bg-[#f8fafc] p-6 text-center shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-8"
+                className="rounded-3xl border border-slate-100 bg-[#f8fafc] p-6 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-8"
               >
                 <div className="mx-auto mb-6 grid size-16 rotate-3 place-items-center rounded-2xl bg-[#facc15] text-[#111c38] shadow-sm transition-transform hover:rotate-0">
                   <Icon
@@ -828,7 +846,7 @@ function TestimonialsSection() {
 
   return (
     <section
-      id="kontak"
+      id="testimoni"
       className="relative scroll-mt-20 overflow-hidden bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12"
     >
       <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl" />
@@ -877,13 +895,13 @@ function TestimonialsSection() {
             Belum ada testimoni yang dipublikasikan.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-4 xl:gap-6">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10">
             {testimonials.map((item) => (
               <article
                 key={item.id}
                 className="group flex cursor-default flex-col items-center text-center transition-all duration-500 hover:-translate-y-4"
               >
-                <div className="mb-6 h-48 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)] sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-36 lg:w-28 xl:h-44 xl:w-36">
+                <div className="mb-6 h-52 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)] sm:h-56 sm:w-44 md:h-60 md:w-48">
                   <img
                     src={item.image}
                     alt={`Foto ${item.name}`}
@@ -905,11 +923,11 @@ function TestimonialsSection() {
                   {item.name}
                 </h3>
 
-                <p className="mb-3 flex min-h-10 items-start justify-center text-[11px] font-medium text-blue-200 md:text-xs">
+                <p className="mb-3 flex min-h-10 max-w-sm items-start justify-center text-xs font-medium leading-relaxed text-blue-200">
                   {item.role}
                 </p>
 
-                <p className="px-2 text-[11px] italic leading-relaxed text-slate-300 md:text-xs">
+                <p className="max-w-sm px-2 text-xs italic leading-relaxed text-slate-300 sm:text-sm">
                   &quot;{item.quote}&quot;
                 </p>
               </article>
