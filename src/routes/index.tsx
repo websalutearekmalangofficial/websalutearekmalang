@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -538,88 +539,153 @@ function BenefitsSection() {
   );
 }
 
-// === DESAIN BARU: TESTIMONI APA KATA MEREKA DENGAN KONTEN FOTO ARCH ===
-const staticTestimonialsData = [
-  {
-    name: "ZARETHA UNGU ALEGRA",
-    role: "Mahasiswa Jurusan S1 Ilmu Komunikasi",
-    quote: "Gabung Salut jadi lebih mudah dapat banyak informasi soal perkuliahan dan ngerjain tugas",
-    image: "https://ui-avatars.com/api/?name=Zaretha+Ungu&background=random&color=fff&size=256" // Ganti URL ini dengan foto Zaretha
-  },
-  {
-    name: "Shanata Shakinah",
-    role: "Mahasiswa Jurusan S1 Administrasi Publik",
-    quote: "Gabung di Salut ternyata nggak cuma soal belajar, tapi juga dapat pelayanan maksimal",
-    image: "https://ui-avatars.com/api/?name=Shanata+Shakinah&background=random&color=fff&size=256" // Ganti URL ini dengan foto Shanata
-  },
-  {
-    name: "Reysita Karina",
-    role: "Mahasiswa Jurusan S1 PGSD (Inservice)",
-    quote: "Kakak-kakak admin di Salute Malang ramah dan helpfull banget, dan selalu ngingetin kita kalo ada tugas",
-    image: "https://ui-avatars.com/api/?name=Reysita+Karina&background=random&color=fff&size=256" // Ganti URL ini dengan foto Reysita
-  },
-  {
-    name: "Maulana Ekky Sahertian",
-    role: "Mahasiswa Jurusan S1 Administrasi Publik/Negara",
-    quote: "Bangga bisa jadi bagian dari Salute Malang! Semoga bisa terus belajar, berkembang, dan sukses",
-    image: "https://ui-avatars.com/api/?name=Maulana+Ekky&background=random&color=fff&size=256" // Ganti URL ini dengan foto Maulana
-  },
-  {
-    name: "SYIHABUDDIN",
-    role: "Mahasiswa Jurusan S1 Ilmu Hukum",
-    quote: "Senang bisa punya kesempatan bergabung di Sentra Layanan UT Malang. Banyak pengalaman yang pastinya bakal berguna ke depannya.",
-    image: "https://ui-avatars.com/api/?name=Syihabuddin&background=random&color=fff&size=256" // Ganti URL ini dengan foto Syihabuddin
-  },
-  {
-    name: "RAFFI TIMOR ALI AKBAR",
-    role: "Mahasiswa Jurusan S1 Manajemen",
-    quote: "Pokoknya bersyukur banget bisa jadi bagian dari keluarga besar Salute Arek Malang!",
-    image: "https://ui-avatars.com/api/?name=Raffi+Timor&background=random&color=fff&size=256" // Ganti URL ini dengan foto Raffi
-  }
-];
+// === TESTIMONI CMS: SUMBER DATA DARI SUPABASE / DASHBOARD ADMIN ===
+type PublicTestimonial = {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  image: string;
+};
+
+async function fetchPublicTestimonials(): Promise<PublicTestimonial[]> {
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id")
+    .eq("slug", "beranda")
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (pageError) throw pageError;
+  if (!page?.id) return [];
+
+  const { data: section, error: sectionError } = await supabase
+    .from("sections")
+    .select("id, title")
+    .eq("page_id", page.id)
+    .eq("kind", "testimonials")
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (sectionError) throw sectionError;
+  if (!section?.id) return [];
+
+  const { data: items, error: itemsError } = await supabase
+    .from("section_items")
+    .select("id, title, subtitle, body, media_url, config, sort_order, is_published")
+    .eq("section_id", section.id)
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+
+  if (itemsError) throw itemsError;
+
+  return (items ?? [])
+    .map((item) => {
+      const config =
+        item.config && typeof item.config === "object" && !Array.isArray(item.config)
+          ? (item.config as Record<string, unknown>)
+          : {};
+
+      const name = item.title?.trim() || "Mahasiswa SALUT Arek Malang";
+      const role =
+        item.subtitle?.trim() ||
+        (typeof config.role === "string" ? config.role.trim() : "") ||
+        "Mahasiswa Universitas Terbuka";
+      const quote = item.body?.trim() || "";
+      const image =
+        item.media_url?.trim() ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111c38&color=fff&size=256`;
+
+      return {
+        id: item.id,
+        name,
+        role,
+        quote,
+        image,
+      };
+    })
+    .filter((item) => item.quote.length > 0);
+}
 
 function TestimonialsSection() {
+  const testimonialsQuery = useQuery({
+    queryKey: ["public-testimonials", "beranda"],
+    queryFn: fetchPublicTestimonials,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+
+  const testimonials = testimonialsQuery.data ?? [];
+
   return (
     <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative overflow-hidden">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-900/30 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400/10 blur-3xl"></div>
-      
+
       <div className="mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16">
           <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Apa Kata Mereka?</h2>
           <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6">
-          {staticTestimonialsData.map((item, index) => (
-            <article 
-              key={index} 
-              className="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-4 cursor-default"
-            >
-              {/* Arch Image Container */}
-              <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 bg-white rounded-t-full overflow-hidden mb-6 shadow-xl border-[5px] border-white transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)]">
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110" 
-                />
+        {testimonialsQuery.isPending ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6" aria-label="Memuat testimoni">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="flex flex-col items-center text-center animate-pulse" aria-hidden="true">
+                <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 rounded-t-full bg-white/10 mb-6" />
+                <div className="h-3 w-28 rounded bg-white/10 mb-3" />
+                <div className="h-8 w-32 rounded bg-white/10 mb-3" />
+                <div className="h-12 w-full max-w-[150px] rounded bg-white/10" />
               </div>
+            ))}
+          </div>
+        ) : testimonialsQuery.isError ? (
+          <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/5 px-6 py-5 text-center text-sm text-slate-300">
+            Testimoni belum dapat dimuat saat ini.
+          </div>
+        ) : testimonials.length === 0 ? (
+          <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/5 px-6 py-5 text-center text-sm text-slate-300">
+            Belum ada testimoni yang dipublikasikan.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6">
+            {testimonials.map((item) => (
+              <article
+                key={item.id}
+                className="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-4 cursor-default"
+              >
+                <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 bg-white rounded-t-full overflow-hidden mb-6 shadow-xl border-[5px] border-white transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)]">
+                  <img
+                    src={item.image}
+                    alt={`Foto ${item.name}`}
+                    loading="lazy"
+                    className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                    onError={(event) => {
+                      const target = event.currentTarget;
+                      target.onerror = null;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=111c38&color=fff&size=256`;
+                    }}
+                  />
+                </div>
 
-              {/* Text Content */}
-              <h3 className="text-[13px] md:text-sm font-extrabold text-white uppercase tracking-wide mb-2 transition-colors group-hover:text-[#facc15]">
-                {item.name}
-              </h3>
-              
-              <p className="text-[11px] md:text-xs text-blue-200 font-medium mb-3 h-10 flex items-start justify-center">
-                {item.role}
-              </p>
-              
-              <p className="text-[11px] md:text-xs text-slate-300 italic leading-relaxed px-2">
-                "{item.quote}"
-              </p>
-            </article>
-          ))}
-        </div>
+                <h3 className="text-[13px] md:text-sm font-extrabold text-white uppercase tracking-wide mb-2 transition-colors group-hover:text-[#facc15]">
+                  {item.name}
+                </h3>
+
+                <p className="text-[11px] md:text-xs text-blue-200 font-medium mb-3 min-h-10 flex items-start justify-center">
+                  {item.role}
+                </p>
+
+                <p className="text-[11px] md:text-xs text-slate-300 italic leading-relaxed px-2">
+                  &quot;{item.quote}&quot;
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
