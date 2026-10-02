@@ -241,8 +241,6 @@ function Header() {
             aria-label="Masuk atau daftar"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
           >
-            className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm"
-          >
             <CircleUserRound className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Masuk / Daftar</span>
             <span className="sm:hidden">Masuk</span>
