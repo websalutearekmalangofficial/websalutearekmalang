@@ -1078,7 +1078,7 @@ function FooterBanner() {
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                   Alamat Kantor
                 </p>
-                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-800 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
+                <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[420px] lg:text-[15px]">
                   {footer.address.text}
                 </p>
               </div>
