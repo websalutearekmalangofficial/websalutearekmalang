@@ -344,20 +344,7 @@ function RegistrationPage() {
 
         <div className="relative flex min-h-[560px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)] sm:rounded-3xl">
           <div className="relative z-10 flex w-full flex-1 flex-col lg:flex-row">
-            {currentStep >= 3 && (
-              <aside className="w-full shrink-0 border-b border-slate-200 bg-slate-50/90 p-4 sm:p-5 lg:w-[30%] lg:border-b-0 lg:border-r lg:p-6">
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:sticky lg:top-24 sm:p-5">
-                  <h3 className="mb-4 border-b border-slate-100 pb-3 text-base font-black text-slate-900 sm:text-lg">Profil Pendaftar</h3>
-                  <div className="space-y-2 text-sm text-slate-700">
-                    <p><span className="text-xs text-slate-500 block">Nama:</span> <strong className="text-slate-900">{formData.namaLengkap || "-"}</strong></p>
-                    <p><span className="text-xs text-slate-500 block">Email:</span> <strong className="text-slate-900">{formData.email || "-"}</strong></p>
-                    <p><span className="text-xs text-slate-500 block">No HP:</span> <strong className="text-slate-900">{formData.nomorHp || "-"}</strong></p>
-                  </div>
-                </div>
-              </aside>
-            )}
-
-            <div className={`w-full min-w-0 p-4 sm:p-6 lg:p-8 ${currentStep >= 3 ? 'lg:w-[70%]' : 'lg:w-full'}`}>
+            <div className="w-full min-w-0 p-4 sm:p-6 lg:p-8">
               {currentStep === 1 && (
                 <div className="space-y-5 sm:space-y-6">
                   <div>
