@@ -50,6 +50,11 @@ function FooterSettingsAdmin() {
     return <AdminCard title="Footer Website" description="Kelola konten Footer yang tampil di halaman publik."><p className="text-sm text-muted-foreground">{query.isLoading ? "Memuat pengaturan Footer…" : "Pengaturan Footer belum dapat dimuat."}</p></AdminCard>;
   }
 
+  // Fallback agar tidak error jika data address belum ada di database lama
+  if (!content.address) {
+    content.address = { text: "Mall Pelayanan Publik Merdeka Malang Lt. 3 (Ramayana Alun-Alun Kota Malang) Jl. Merdeka Timur No. 4 Malang.", enabled: true };
+  }
+
   const update = (patch: Partial<FooterContent>) => setForm({ ...content, ...patch });
   const updateColumn = (columnId: string, patch: Partial<FooterColumn>) => update({ columns: content.columns.map((column) => column.id === columnId ? { ...column, ...patch } : column) });
   const updateItem = (columnId: string, itemId: string, patch: Partial<FooterItem>) => update({
@@ -83,9 +88,30 @@ function FooterSettingsAdmin() {
           }} /></Field>
           <Field label="Link telepon"><input className={inputClass} value={content.contact.phone_href} onChange={(e) => update({ contact: { ...content.contact, phone_href: e.target.value } })} /></Field>
           <div className="flex items-end"><label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy"><input type="checkbox" checked={content.contact.enabled} onChange={(e) => update({ contact: { ...content.contact, enabled: e.target.checked } })} />Tampilkan informasi kontak</label></div>
+          
           <Field label="Slogan baris pertama"><input className={inputClass} value={content.slogan.line1} onChange={(e) => update({ slogan: { ...content.slogan, line1: e.target.value } })} /></Field>
           <Field label="Slogan baris kedua"><input className={inputClass} value={content.slogan.line2} onChange={(e) => update({ slogan: { ...content.slogan, line2: e.target.value } })} /></Field>
           <div className="md:col-span-2"><label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy"><input type="checkbox" checked={content.slogan.enabled} onChange={(e) => update({ slogan: { ...content.slogan, enabled: e.target.checked } })} />Tampilkan slogan</label></div>
+
+          {/* === BAGIAN INPUT ALAMAT BARU === */}
+          <div className="md:col-span-2">
+            <Field label="Teks Alamat Fisik">
+              <textarea 
+                className={inputClass + " min-h-[80px] resize-y py-2"} 
+                value={content.address.text} 
+                onChange={(e) => update({ address: { ...content.address, text: e.target.value } })} 
+                placeholder="Contoh: Jl. Merdeka Timur No. 4 Malang..."
+              />
+            </Field>
+          </div>
+          <div className="md:col-span-2">
+            <label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy">
+              <input type="checkbox" checked={content.address.enabled} onChange={(e) => update({ address: { ...content.address, enabled: e.target.checked } })} />
+              Tampilkan alamat fisik
+            </label>
+          </div>
+          {/* ================================ */}
+
         </div>
         <div className="mt-5 flex justify-end"><Button type="button" variant="utYellow" size="form" onClick={() => save.mutate()} disabled={save.isPending}><Save className="size-4" />{save.isPending ? "Menyimpan…" : "Simpan Footer"}</Button></div>
       </AdminCard>
