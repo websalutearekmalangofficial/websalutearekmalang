@@ -1019,8 +1019,8 @@ function FooterBanner() {
       </footer>
 
       {/* Bagian copyright dengan warna latar yang sama */}
-      <div className="w-full py-5" style={{ backgroundColor: footerBackground }}>
-        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
+      <div className="w-full py-2" style={{ backgroundColor: footerBackground }}>
+        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
       </div>
