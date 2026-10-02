@@ -21,6 +21,12 @@ export type FooterContent = {
   address: { text: string; enabled: boolean };
   building_image_url: string; // Tambahan field untuk URL Gambar Sketsa
   building_image_size: { preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" | "custom"; custom_width: number };
+  layout: {
+    background_color: string;
+    column_height: number;
+    column_alignment: "start" | "center" | "end";
+    sync_columns: boolean;
+  };
   columns: FooterColumn[];
 };
 
@@ -33,6 +39,12 @@ export const defaultFooterContent: FooterContent = {
   },
   building_image_url: "", // Default kosong, akan diisi via CMS
   building_image_size: { preset: "large", custom_width: 480 },
+  layout: {
+    background_color: "#a7c8e1",
+    column_height: 260,
+    column_alignment: "start",
+    sync_columns: true,
+  },
   columns: [],
 };
 
@@ -50,6 +62,10 @@ function parseFooter(value: string | null | undefined): FooterContent {
       building_image_size: {
         ...defaultFooterContent.building_image_size,
         ...(parsed.building_image_size ?? {}),
+      },
+      layout: {
+        ...defaultFooterContent.layout,
+        ...(parsed.layout ?? {}),
       },
       columns: Array.isArray(parsed.columns) ? parsed.columns : [],
     };
