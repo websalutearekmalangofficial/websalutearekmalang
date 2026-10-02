@@ -23,14 +23,12 @@ import {
   Users,
   Clock,
   ArrowRight,
-  Check,
-  Quote
+  Check
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
-import { fetchPublicTestimonials } from "@/lib/testimonials";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -335,11 +333,9 @@ function HeroBanner() {
   );
 }
 
-// === REDESAIN: ALUR PENDAFTARAN DENGAN MODAL INTERAKTIF ===
 function CombinedCTAProcessSection() {
   const [selectedStep, setSelectedStep] = useState<typeof processSteps[0] | null>(null);
 
-  // Mencegah scroll pada body saat modal terbuka
   useEffect(() => {
     if (selectedStep) {
       document.body.style.overflow = 'hidden';
@@ -351,15 +347,12 @@ function CombinedCTAProcessSection() {
 
   return (
     <section id="panduan" className="px-4 pt-16 pb-12 sm:px-6 md:px-8 md:pt-24 md:pb-16 lg:px-12 relative z-10">
-      
-      {/* --- MODAL POP-UP --- */}
       {selectedStep && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedStep(null)}>
           <div 
             className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()} // Mencegah modal tertutup saat area dalam di klik
+            onClick={(e) => e.stopPropagation()} 
           >
-            {/* Header Modal */}
             <div className="bg-[#111c38] p-6 text-white flex items-center justify-between relative overflow-hidden">
               <div className="absolute right-0 top-0 w-32 h-32 bg-[#facc15]/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
               <div className="flex items-center gap-4 relative z-10">
@@ -378,8 +371,6 @@ function CombinedCTAProcessSection() {
                 <X className="size-4" />
               </button>
             </div>
-            
-            {/* Body Modal */}
             <div className="p-6 md:p-8">
               <p className="text-slate-600 font-medium mb-5">{selectedStep.description}</p>
               <ul className="space-y-3">
@@ -393,8 +384,6 @@ function CombinedCTAProcessSection() {
                 ))}
               </ul>
             </div>
-            
-            {/* Footer Modal */}
             <div className="bg-slate-50 p-4 px-6 md:px-8 border-t border-slate-100 flex justify-end">
               <button 
                 onClick={() => setSelectedStep(null)}
@@ -408,8 +397,6 @@ function CombinedCTAProcessSection() {
       )}
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[40%_60%] xl:gap-16">
-        
-        {/* Kolom Kiri: Teks & Tombol */}
         <div className="flex flex-col items-start gap-6">
           <h2 className="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-[#111c38] leading-[1.15] tracking-tight">
             Kuliah Fleksibel, <br className="hidden md:block"/>
@@ -426,8 +413,6 @@ function CombinedCTAProcessSection() {
             Mulai Pendaftaran <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
-
-        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
         <div className="w-full">
           <div className="mb-10 border-b-2 border-slate-100 pb-4">
             <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
@@ -435,7 +420,6 @@ function CombinedCTAProcessSection() {
             </h2>
             <div className="mt-3 h-1.5 w-20 rounded-full bg-[#facc15]" aria-hidden="true" />
           </div>
-
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
@@ -445,20 +429,13 @@ function CombinedCTAProcessSection() {
                     onClick={() => setSelectedStep(step)}
                     className="w-full text-left relative flex h-full min-h-[200px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all duration-500 hover:-translate-y-3 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
                   >
-                    {/* Nomor Step Melayang */}
                     <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:border-[#111c38]">
                       {step.number}
                     </div>
-                    
-                    {/* Ikon Container */}
                     <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all duration-500 group-hover:bg-[#facc15] group-hover:text-[#111c38] group-hover:scale-110 group-hover:-rotate-3 shadow-sm">
                       <Icon className="size-8" strokeWidth={2.5} aria-hidden="true" />
                     </div>
-                    
-                    {/* Teks */}
                     <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">{step.title}</h3>
-
-                    {/* Badges */}
                     {step.badges ? (
                       <div className="flex flex-wrap justify-center gap-2 mt-auto">
                         {step.badges.map((badge) => (
@@ -474,8 +451,6 @@ function CombinedCTAProcessSection() {
                       </div>
                     )}
                   </button>
-                  
-                  {/* Chevron Penunjuk Arah */}
                   {index % 3 !== 2 && index < processSteps.length - 1 ? (
                     <ChevronRight className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:text-[#facc15] group-hover:translate-x-2 lg:block" aria-hidden="true" />
                   ) : null}
@@ -489,7 +464,6 @@ function CombinedCTAProcessSection() {
   );
 }
 
-// === BANNER KEUNGGULAN LAYANAN ===
 function KeunggulanBannerSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-16 relative z-20">
@@ -564,50 +538,88 @@ function BenefitsSection() {
   );
 }
 
-// === DESAIN BARU: TESTIMONI APA KATA MEREKA ===
-function TestimonialsSection() {
-  const testimonialsQuery = useQuery({
-    queryKey: ["public-testimonials"],
-    queryFn: fetchPublicTestimonials,
-    staleTime: 60_000,
-  });
-  const testimonials = testimonialsQuery.data ?? [];
+// === DESAIN BARU: TESTIMONI APA KATA MEREKA DENGAN KONTEN FOTO ARCH ===
+const staticTestimonialsData = [
+  {
+    name: "ZARETHA UNGU ALEGRA",
+    role: "Mahasiswa Jurusan S1 Ilmu Komunikasi",
+    quote: "Gabung Salut jadi lebih mudah dapat banyak informasi soal perkuliahan dan ngerjain tugas",
+    image: "https://ui-avatars.com/api/?name=Zaretha+Ungu&background=random&color=fff&size=256" // Ganti URL ini dengan foto Zaretha
+  },
+  {
+    name: "Shanata Shakinah",
+    role: "Mahasiswa Jurusan S1 Administrasi Publik",
+    quote: "Gabung di Salut ternyata nggak cuma soal belajar, tapi juga dapat pelayanan maksimal",
+    image: "https://ui-avatars.com/api/?name=Shanata+Shakinah&background=random&color=fff&size=256" // Ganti URL ini dengan foto Shanata
+  },
+  {
+    name: "Reysita Karina",
+    role: "Mahasiswa Jurusan S1 PGSD (Inservice)",
+    quote: "Kakak-kakak admin di Salute Malang ramah dan helpfull banget, dan selalu ngingetin kita kalo ada tugas",
+    image: "https://ui-avatars.com/api/?name=Reysita+Karina&background=random&color=fff&size=256" // Ganti URL ini dengan foto Reysita
+  },
+  {
+    name: "Maulana Ekky Sahertian",
+    role: "Mahasiswa Jurusan S1 Administrasi Publik/Negara",
+    quote: "Bangga bisa jadi bagian dari Salute Malang! Semoga bisa terus belajar, berkembang, dan sukses",
+    image: "https://ui-avatars.com/api/?name=Maulana+Ekky&background=random&color=fff&size=256" // Ganti URL ini dengan foto Maulana
+  },
+  {
+    name: "SYIHABUDDIN",
+    role: "Mahasiswa Jurusan S1 Ilmu Hukum",
+    quote: "Senang bisa punya kesempatan bergabung di Sentra Layanan UT Malang. Banyak pengalaman yang pastinya bakal berguna ke depannya.",
+    image: "https://ui-avatars.com/api/?name=Syihabuddin&background=random&color=fff&size=256" // Ganti URL ini dengan foto Syihabuddin
+  },
+  {
+    name: "RAFFI TIMOR ALI AKBAR",
+    role: "Mahasiswa Jurusan S1 Manajemen",
+    quote: "Pokoknya bersyukur banget bisa jadi bagian dari keluarga besar Salute Arek Malang!",
+    image: "https://ui-avatars.com/api/?name=Raffi+Timor&background=random&color=fff&size=256" // Ganti URL ini dengan foto Raffi
+  }
+];
 
+function TestimonialsSection() {
   return (
     <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative overflow-hidden">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-900/30 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400/10 blur-3xl"></div>
+      
       <div className="mx-auto max-w-7xl relative z-10">
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Apa Kata Mereka?</h2>
           <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
         </div>
-        {testimonialsQuery.isLoading ? (
-          <div className="rounded-3xl border border-slate-700 bg-slate-800/50 p-8 text-center text-slate-300">Memuat testimoni...</div>
-        ) : testimonials.length === 0 ? (
-          <div className="rounded-3xl border border-slate-700 bg-slate-800/50 p-8 text-center text-slate-300">Belum ada testimoni yang ditayangkan.</div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            {testimonials.map((item) => {
-              const initials = item.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "ST";
-              return (
-                <article key={item.id} className="flex h-full flex-col rounded-3xl border border-slate-700 bg-slate-800/50 backdrop-blur-sm p-6 shadow-xl transition duration-300 hover:-translate-y-2 hover:border-slate-500 sm:p-8">
-                  {item.imageUrl ? (
-                    <img src={item.imageUrl} alt={item.name} className="mb-5 size-16 rounded-full object-cover ring-2 ring-[#facc15]/70" />
-                  ) : (
-                    <div className="mb-5 grid size-16 place-items-center rounded-full bg-[#facc15] text-lg font-black text-[#111c38] shadow-md">{initials}</div>
-                  )}
-                  <Quote className="mb-4 size-10 fill-current text-[#facc15]/80" aria-hidden="true" />
-                  <p className="flex-1 text-base italic leading-relaxed text-slate-300">"{item.quote}"</p>
-                  <div className="mt-8 min-w-0">
-                    <h3 className="truncate text-base font-extrabold text-white">{item.name}</h3>
-                    <span className="text-sm font-medium text-slate-400">{[item.degree, item.role].filter(Boolean).join(" • ")}</span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6">
+          {staticTestimonialsData.map((item, index) => (
+            <article 
+              key={index} 
+              className="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-4 cursor-default"
+            >
+              {/* Arch Image Container */}
+              <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 bg-white rounded-t-full overflow-hidden mb-6 shadow-xl border-[5px] border-white transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)]">
+                <img 
+                  src={item.image} 
+                  alt={item.name} 
+                  className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110" 
+                />
+              </div>
+
+              {/* Text Content */}
+              <h3 className="text-[13px] md:text-sm font-extrabold text-white uppercase tracking-wide mb-2 transition-colors group-hover:text-[#facc15]">
+                {item.name}
+              </h3>
+              
+              <p className="text-[11px] md:text-xs text-blue-200 font-medium mb-3 h-10 flex items-start justify-center">
+                {item.role}
+              </p>
+              
+              <p className="text-[11px] md:text-xs text-slate-300 italic leading-relaxed px-2">
+                "{item.quote}"
+              </p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
