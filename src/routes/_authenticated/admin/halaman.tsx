@@ -103,14 +103,14 @@ function PagesAdmin() {
                 }}
                 placeholder="Ketik untuk mencari halaman..."
                 autoComplete="off"
-                className={\`\${inputClass} pl-10 pr-10\`}
+                className={`${inputClass} pl-10 pr-10`}
                 role="combobox"
                 aria-expanded={pagePickerOpen}
                 aria-controls="admin-page-options"
                 aria-autocomplete="list"
               />
               <ChevronDown
-                className={\`pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-ut-navy transition \${pagePickerOpen ? "rotate-180" : ""}\`}
+                className={`pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-ut-navy transition ${pagePickerOpen ? "rotate-180" : ""}`}
                 aria-hidden="true"
               />
             </div>
@@ -138,7 +138,7 @@ function PagesAdmin() {
                         setPageSearch("");
                         setPagePickerOpen(false);
                       }}
-                      className={\`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition hover:bg-section-blue \${page.id === selectedPageId ? "bg-ut-yellow/20 text-ut-navy" : "text-ut-navy"}\`}
+                      className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition hover:bg-section-blue ${page.id === selectedPageId ? "bg-ut-yellow/20 text-ut-navy" : "text-ut-navy"}`}
                       role="option"
                       aria-selected={page.id === selectedPageId}
                     >
