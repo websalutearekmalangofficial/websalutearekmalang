@@ -910,7 +910,7 @@ function TestimonialsSection() {
   );
 }
 
-// === DESAIN BARU: FOOTER PRESISI POP-OUT (RATA TENGAH & GRID 3 KOLOM) ===
+// === FOOTER RESPONSIF: KONTAK, ALAMAT, DAN GAMBAR DALAM SATU GRID ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -921,76 +921,65 @@ function FooterBanner() {
   });
 
   const footer = footerQuery.data ?? defaultFooterContent;
-  
-  // URL Gambar Sketsa dari CMS Supabase
-  const buildingImage = (footer as any).building_image_url || "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; 
+  const buildingImage =
+    (footer as any).building_image_url ||
+    "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   return (
-    // Wrapper putih untuk memberikan ruang agar gambar yang pop-out tetap terlihat jelas
-    <div className="relative w-full bg-white pt-24 md:pt-32 lg:pt-48">
-      
-      {/* Container utama Footer berwarna Navy */}
-      <footer className="relative w-full border-t border-slate-700 bg-[#111c38] text-white">
+    <footer className="w-full border-t border-slate-700 bg-[#111c38] text-white">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
+        <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-8 xl:gap-12">
+          {footer.contact?.enabled && (
+            <div className="flex min-w-0 flex-col items-center justify-start text-center">
+              <a
+                href={footer.contact.phone_href || "#"}
+                aria-label={`Hubungi ${footer.contact.label}`}
+                className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#34d399] text-white shadow-lg transition-transform hover:scale-110"
+              >
+                <Phone className="size-6" fill="currentColor" aria-hidden="true" />
+              </a>
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                {footer.contact.label}
+              </p>
+              <a
+                href={footer.contact.phone_href || "#"}
+                className="max-w-full break-words font-display text-2xl font-black tracking-wide text-white transition-colors hover:text-[#facc15] sm:text-3xl lg:text-2xl xl:text-3xl"
+              >
+                {footer.contact.phone}
+              </a>
+            </div>
+          )}
 
-        {/* --- GAMBAR SKETSA POP-OUT 50% --- */}
-        <div className="pointer-events-none absolute right-0 top-0 z-10 w-[70%] max-w-[320px] -translate-y-[45%] sm:max-w-[400px] md:max-w-[480px] lg:max-w-[550px] xl:max-w-[650px] 2xl:max-w-[750px]">
+          {footer.address?.enabled && footer.address?.text && (
+            <div className="flex min-w-0 flex-col items-center justify-start border-t border-slate-700/50 pt-8 text-center sm:border-l sm:border-t-0 sm:pt-0 lg:border-l lg:pl-6">
+              <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400">
+                <MapPin className="size-6" aria-hidden="true" />
+              </div>
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                Alamat Kantor
+              </p>
+              <p className="max-w-sm break-words text-xs font-medium leading-relaxed text-slate-300 sm:text-sm lg:text-[13px]">
+                {footer.address.text}
+              </p>
+            </div>
+          )}
+
           {footer.address?.enabled && (
-            <img 
-              src={buildingImage} 
-              alt="Sketsa Gedung Salute Malang" 
-              className="h-auto w-full object-contain object-bottom drop-shadow-[0_10px_25px_rgba(0,0,0,0.3)]"
-            />
+            <div className="flex min-w-0 items-center justify-center border-t border-slate-700/50 pt-8 sm:col-span-2 lg:col-span-1 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+              <img
+                src={buildingImage}
+                alt="Sketsa Gedung Salute Malang"
+                loading="lazy"
+                className="block h-auto max-h-64 w-full max-w-[360px] object-contain object-center drop-shadow-[0_10px_25px_rgba(0,0,0,0.3)] sm:max-h-72 lg:max-h-56 xl:max-h-64"
+              />
+            </div>
           )}
         </div>
 
-        {/* Inner Content Grid */}
-        <div className="relative z-20 mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
-          
-          {/* GRID 3 KOLOM MURNI UNTUK PRESISI */}
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-3 lg:gap-8">
-            
-            {/* Kolom Kiri: Kontak */}
-            {footer.contact?.enabled && (
-              <div className="flex h-full w-full flex-col items-center justify-start text-center">
-                <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#34d399] text-white shadow-lg transition-transform hover:scale-110">
-                  <Phone className="size-6" fill="currentColor" aria-hidden="true" />
-                </a>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
-                  {footer.contact.label}
-                </p>
-                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-white transition-colors hover:text-[#facc15] lg:text-4xl">
-                  {footer.contact.phone}
-                </a>
-              </div>
-            )}
-
-            {/* Kolom Tengah: Alamat Fisik (Letaknya dijamin 100% presisi di tengah layar desktop) */}
-            {footer.address?.enabled && footer.address?.text && (
-              <div className="flex h-full w-full flex-col items-center justify-start border-t border-slate-700/50 pt-12 text-center lg:border-l lg:border-t-0 lg:pt-0">
-                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white">
-                  <MapPin className="size-6" aria-hidden="true" />
-                </div>
-                {/* Menyamakan hierarki visual dengan kolom kiri agar seimbang */}
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
-                  Alamat Kantor
-                </p>
-                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-300 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
-                  {footer.address.text}
-                </p>
-              </div>
-            )}
-
-            {/* Kolom Kanan: Kosong, hanya sebagai penyeimbang grid agar alamat tetap terdorong ke tengah */}
-            <div className="hidden w-full lg:block"></div>
-
-          </div>
-          
-          {/* Copyright Area */}
-          <div className="mt-12 border-t border-slate-800/80 pt-6 text-center text-[10px] font-medium text-slate-500 sm:text-xs lg:text-left">
-            <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
-          </div>
+        <div className="mt-12 border-t border-slate-800/80 pt-6 text-center text-[10px] font-medium text-slate-500 sm:text-xs lg:text-left">
+          <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 }
