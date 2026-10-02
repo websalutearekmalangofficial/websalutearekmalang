@@ -185,37 +185,65 @@ function Header() {
           <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
             <Building2 className="size-6 sm:size-7" aria-hidden="true" />
           </div>
+
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <div className="min-w-0 leading-none">
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">UNIVERSITAS</p>
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">TERBUKA</p>
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">
+                UNIVERSITAS
+              </p>
+              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">
+                TERBUKA
+              </p>
             </div>
-            <span className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block" aria-hidden="true" />
+
+            <span
+              className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block"
+              aria-hidden="true"
+            />
+
             <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
               Sentra Layanan
-              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">UT</span>
+              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">
+                UT
+              </span>
             </div>
           </div>
         </a>
 
-        <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
-          <a href="#home" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow lg:px-5">
+        <nav
+          className="hidden items-center justify-center gap-3 md:flex lg:gap-9"
+          aria-label="Navigasi utama"
+        >
+          <a
+            href="#home"
+            className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow lg:px-5"
+          >
             <Home className="size-4" aria-hidden="true" />
             Beranda
           </a>
+
           {navLinks.map((link) => (
-            <a key={link} href={`#${link.toLowerCase()}`} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">
+            <a
+              key={link}
+              href={`#${link.toLowerCase()}`}
+              className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            >
               {link}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center justify-end gap-2 md:min-w-0">
-          <Button variant="heroOutline" size="pill" className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm">
+          <Button
+            variant="heroOutline"
+            size="pill"
+            className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm"
+          >
             <CircleUserRound className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Masuk / Daftar</span>
             <span className="sm:hidden">Masuk</span>
           </Button>
+
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
@@ -224,13 +252,21 @@ function Header() {
             aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
             className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 transition hover:bg-hero-foreground/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow md:hidden"
           >
-            {menuOpen ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
+            {menuOpen ? (
+              <X className="size-5" aria-hidden="true" />
+            ) : (
+              <Menu className="size-5" aria-hidden="true" />
+            )}
           </button>
         </div>
       </div>
 
       {menuOpen ? (
-        <nav id="mobile-nav" className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 md:hidden" aria-label="Navigasi mobile">
+        <nav
+          id="mobile-nav"
+          className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 md:hidden"
+          aria-label="Navigasi mobile"
+        >
           <ul className="grid gap-2">
             <li>
               <a
@@ -242,6 +278,7 @@ function Header() {
                 Beranda
               </a>
             </li>
+
             {navLinks.map((link) => (
               <li key={link}>
                 <a
@@ -262,29 +299,39 @@ function Header() {
 
 function HeroBanner() {
   const [activeSlide, setActiveSlide] = useState(0);
+
   const heroBannersQuery = useQuery({
     queryKey: ["public-hero-banners"],
     queryFn: fetchPublicHeroBanners,
     staleTime: 60_000,
   });
+
   const banners = heroBannersQuery.data ?? [];
 
   useEffect(() => {
-    if (activeSlide >= banners.length) setActiveSlide(0);
+    if (activeSlide >= banners.length) {
+      setActiveSlide(0);
+    }
   }, [activeSlide, banners.length]);
 
   useEffect(() => {
     if (banners.length <= 1) return;
+
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % banners.length);
     }, 3_000);
+
     return () => window.clearInterval(timer);
   }, [banners.length]);
 
   const activeBanner = banners[activeSlide] ?? banners[0];
 
   return (
-    <section id="home" aria-label="Hero Banner" className="relative scroll-mt-20 h-[clamp(220px,38vw,620px)] overflow-hidden bg-hero-deep">
+    <section
+      id="home"
+      aria-label="Hero Banner"
+      className="relative scroll-mt-20 h-[clamp(220px,38vw,620px)] overflow-hidden bg-hero-deep"
+    >
       {activeBanner?.url ? (
         <img
           key={activeBanner.id}
@@ -293,21 +340,31 @@ function HeroBanner() {
           className="absolute inset-0 z-10 block h-full w-full object-contain object-center"
         />
       ) : (
-        <div className="absolute inset-0 bg-hero-deep" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-hero-deep"
+          aria-hidden="true"
+        />
       )}
 
       {banners.length > 1 ? (
         <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between sm:inset-x-6 md:inset-x-8">
           <button
             type="button"
-            onClick={() => setActiveSlide((current) => (current - 1 + banners.length) % banners.length)}
+            onClick={() =>
+              setActiveSlide(
+                (current) => (current - 1 + banners.length) % banners.length,
+              )
+            }
             aria-label="Banner sebelumnya"
             className="grid size-10 place-items-center rounded-full border border-white/60 bg-black/40 text-white backdrop-blur transition hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
           >
             <ChevronLeft className="size-5" aria-hidden="true" />
           </button>
 
-          <div className="flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-2 backdrop-blur" aria-label="Pilihan slide">
+          <div
+            className="flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-2 backdrop-blur"
+            aria-label="Pilihan slide"
+          >
             {banners.map((banner, index) => (
               <button
                 key={banner.id}
@@ -315,14 +372,20 @@ function HeroBanner() {
                 onClick={() => setActiveSlide(index)}
                 aria-label={`Tampilkan slide ${index + 1}`}
                 aria-current={index === activeSlide ? "true" : undefined}
-                className={`h-2.5 rounded-full transition-all ${index === activeSlide ? "w-7 bg-ut-yellow" : "w-2.5 bg-white/70 hover:bg-white"}`}
+                className={`h-2.5 rounded-full transition-all ${
+                  index === activeSlide
+                    ? "w-7 bg-ut-yellow"
+                    : "w-2.5 bg-white/70 hover:bg-white"
+                }`}
               />
             ))}
           </div>
 
           <button
             type="button"
-            onClick={() => setActiveSlide((current) => (current + 1) % banners.length)}
+            onClick={() =>
+              setActiveSlide((current) => (current + 1) % banners.length)
+            }
             aria-label="Banner berikutnya"
             className="grid size-10 place-items-center rounded-full border border-white/60 bg-black/40 text-white backdrop-blur transition hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
           >
@@ -335,60 +398,92 @@ function HeroBanner() {
 }
 
 function CombinedCTAProcessSection() {
-  const [selectedStep, setSelectedStep] = useState<typeof processSteps[0] | null>(null);
+  const [selectedStep, setSelectedStep] =
+    useState<(typeof processSteps)[0] | null>(null);
 
   useEffect(() => {
     if (selectedStep) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
-    return () => { document.body.style.overflow = 'unset'; };
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [selectedStep]);
 
   return (
-    <section id="panduan" className="px-4 pt-16 pb-12 sm:px-6 md:px-8 md:pt-24 md:pb-16 lg:px-12 relative z-10">
+    <section
+      id="panduan"
+      className="relative z-10 px-4 pb-12 pt-16 sm:px-6 md:px-8 md:pb-16 md:pt-24 lg:px-12"
+    >
       {selectedStep && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedStep(null)}>
-          <div 
-            className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()} 
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setSelectedStep(null)}
+        >
+          <div
+            className="flex w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-[#111c38] p-6 text-white flex items-center justify-between relative overflow-hidden">
-              <div className="absolute right-0 top-0 w-32 h-32 bg-[#facc15]/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-              <div className="flex items-center gap-4 relative z-10">
+            <div className="relative flex items-center justify-between overflow-hidden bg-[#111c38] p-6 text-white">
+              <div className="absolute right-0 top-0 -mr-10 -mt-10 h-32 w-32 rounded-full bg-[#facc15]/10 blur-2xl" />
+
+              <div className="relative z-10 flex items-center gap-4">
                 <div className="grid size-12 place-items-center rounded-full bg-[#facc15] text-[#111c38]">
-                  <selectedStep.icon className="size-6" strokeWidth={2.5} />
+                  <selectedStep.icon
+                    className="size-6"
+                    strokeWidth={2.5}
+                  />
                 </div>
+
                 <div>
-                  <p className="text-[#facc15] text-xs font-black uppercase tracking-wider mb-0.5">Langkah {selectedStep.number}</p>
-                  <h3 className="text-xl font-extrabold">{selectedStep.title}</h3>
+                  <p className="mb-0.5 text-xs font-black uppercase tracking-wider text-[#facc15]">
+                    Langkah {selectedStep.number}
+                  </p>
+                  <h3 className="text-xl font-extrabold">
+                    {selectedStep.title}
+                  </h3>
                 </div>
               </div>
-              <button 
+
+              <button
                 onClick={() => setSelectedStep(null)}
-                className="relative z-10 grid size-8 place-items-center rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+                className="relative z-10 grid size-8 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               >
                 <X className="size-4" />
               </button>
             </div>
+
             <div className="p-6 md:p-8">
-              <p className="text-slate-600 font-medium mb-5">{selectedStep.description}</p>
+              <p className="mb-5 font-medium text-slate-600">
+                {selectedStep.description}
+              </p>
+
               <ul className="space-y-3">
                 {selectedStep.details.map((detail, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm text-slate-700">
+                  <li
+                    key={idx}
+                    className="flex items-start gap-3 text-sm text-slate-700"
+                  >
                     <div className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
-                      <Check className="size-3.5" strokeWidth={3} />
+                      <Check
+                        className="size-3.5"
+                        strokeWidth={3}
+                      />
                     </div>
+
                     <span className="leading-snug">{detail}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-slate-50 p-4 px-6 md:px-8 border-t border-slate-100 flex justify-end">
-              <button 
+
+            <div className="flex justify-end border-t border-slate-100 bg-slate-50 p-4 px-6 md:px-8">
+              <button
                 onClick={() => setSelectedStep(null)}
-                className="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-bold rounded-full transition-colors"
+                className="rounded-full bg-slate-200 px-6 py-2.5 text-sm font-bold text-slate-800 transition-colors hover:bg-slate-300"
               >
                 Tutup Pemandu
               </button>
@@ -399,61 +494,101 @@ function CombinedCTAProcessSection() {
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[40%_60%] xl:gap-16">
         <div className="flex flex-col items-start gap-6">
-          <h2 className="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-[#111c38] leading-[1.15] tracking-tight">
-            Kuliah Fleksibel, <br className="hidden md:block"/>
-            Raih Masa Depan <br className="hidden md:block"/>
-            Bersama <span className="text-[#facc15]">SALUT Arek Malang</span>
+          <h2 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-[#111c38] md:text-5xl lg:text-[3.25rem]">
+            Kuliah Fleksibel,{" "}
+            <br className="hidden md:block" />
+            Raih Masa Depan{" "}
+            <br className="hidden md:block" />
+            Bersama{" "}
+            <span className="text-[#facc15]">
+              SALUT Arek Malang
+            </span>
           </h2>
-          <p className="text-slate-500 text-lg md:text-xl max-w-md leading-relaxed">
-            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak jauh yang inovatif dan terjangkau. Klik setiap alur untuk info lebih lanjut!
+
+          <p className="max-w-md text-lg leading-relaxed text-slate-500 md:text-xl">
+            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak
+            jauh yang inovatif dan terjangkau. Klik setiap alur untuk info
+            lebih lanjut!
           </p>
+
           <Link
             to="/daftar"
-            className="group mt-2 inline-flex h-12 md:h-14 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:bg-yellow-400 hover:-translate-y-1"
+            className="group mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:-translate-y-1 hover:bg-yellow-400 md:h-14"
           >
-            Mulai Pendaftaran <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+            Mulai Pendaftaran
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
+
         <div className="w-full">
           <div className="mb-10 border-b-2 border-slate-100 pb-4">
             <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
               Alur Pendaftaran Sentra Layanan UT
             </h2>
-            <div className="mt-3 h-1.5 w-20 rounded-full bg-[#facc15]" aria-hidden="true" />
+
+            <div
+              className="mt-3 h-1.5 w-20 rounded-full bg-[#facc15]"
+              aria-hidden="true"
+            />
           </div>
+
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
+
               return (
-                <div key={step.number} className="group relative mt-2">
-                  <button 
+                <div
+                  key={step.number}
+                  className="group relative mt-2"
+                >
+                  <button
                     onClick={() => setSelectedStep(step)}
-                    className="w-full text-left relative flex h-full min-h-[200px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all duration-500 hover:-translate-y-3 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
+                    className="relative flex h-full min-h-[200px] w-full cursor-pointer flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-3 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
                   >
-                    <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:border-[#111c38]">
+                    <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:rotate-12 group-hover:scale-110 group-hover:border-[#111c38]">
                       {step.number}
                     </div>
-                    <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all duration-500 group-hover:bg-[#facc15] group-hover:text-[#111c38] group-hover:scale-110 group-hover:-rotate-3 shadow-sm">
-                      <Icon className="size-8" strokeWidth={2.5} aria-hidden="true" />
+
+                    <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-sm transition-all duration-500 group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-[#facc15] group-hover:text-[#111c38]">
+                      <Icon
+                        className="size-8"
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                      />
                     </div>
-                    <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">{step.title}</h3>
+
+                    <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
+                      {step.title}
+                    </h3>
+
                     {step.badges ? (
-                      <div className="flex flex-wrap justify-center gap-2 mt-auto">
+                      <div className="mt-auto flex flex-wrap justify-center gap-2">
                         {step.badges.map((badge) => (
-                          <span key={badge} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200">
-                            <CheckCircle2 className="size-3.5 text-[#facc15]" aria-hidden="true" />
+                          <span
+                            key={badge}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200"
+                          >
+                            <CheckCircle2
+                              className="size-3.5 text-[#facc15]"
+                              aria-hidden="true"
+                            />
                             {badge}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <div className="mt-auto text-xs font-semibold text-blue-500 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:text-[#facc15]">
+                      <div className="mt-auto text-xs font-semibold text-blue-500 opacity-0 transition-opacity duration-500 group-hover:text-[#facc15] group-hover:opacity-100">
                         Klik untuk info detail
                       </div>
                     )}
                   </button>
-                  {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:text-[#facc15] group-hover:translate-x-2 lg:block" aria-hidden="true" />
+
+                  {index % 3 !== 2 &&
+                  index < processSteps.length - 1 ? (
+                    <ChevronRight
+                      className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:translate-x-2 group-hover:text-[#facc15] lg:block"
+                      aria-hidden="true"
+                    />
                   ) : null}
                 </div>
               );
@@ -467,39 +602,61 @@ function CombinedCTAProcessSection() {
 
 function KeunggulanBannerSection() {
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-16 relative z-20">
-      <div className="bg-[#111c38] rounded-3xl p-6 md:p-10 lg:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-10 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)]">
-        <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Gift className="w-8 h-8" strokeWidth={2.5} />
+    <section className="relative z-20 mx-auto max-w-7xl px-4 pb-16 sm:px-6 md:px-8">
+      <div className="flex flex-col items-start justify-between gap-10 rounded-3xl bg-[#111c38] p-6 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)] md:flex-row md:items-center md:p-10 lg:p-12">
+        <div className="flex w-full flex-1 items-center gap-5">
+          <div className="shrink-0 rounded-full bg-[#facc15] p-4 text-[#111c38] shadow-inner">
+            <Gift
+              className="h-8 w-8"
+              strokeWidth={2.5}
+            />
           </div>
+
           <div>
-            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Layanan Gratis</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+            <h3 className="mb-1.5 text-lg font-extrabold tracking-wide text-white md:text-xl">
+              Layanan Gratis
+            </h3>
+            <p className="text-sm leading-relaxed text-slate-300 md:text-base">
               Seluruh proses pendampingan diurus tanpa biaya tambahan.
             </p>
           </div>
         </div>
-        <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
-        <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Users className="w-8 h-8" strokeWidth={2.5} />
+
+        <div className="hidden h-20 w-px rounded-full bg-slate-700/60 md:block" />
+
+        <div className="flex w-full flex-1 items-center gap-5">
+          <div className="shrink-0 rounded-full bg-[#facc15] p-4 text-[#111c38] shadow-inner">
+            <Users
+              className="h-8 w-8"
+              strokeWidth={2.5}
+            />
           </div>
+
           <div>
-            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Pendampingan</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+            <h3 className="mb-1.5 text-lg font-extrabold tracking-wide text-white md:text-xl">
+              Pendampingan
+            </h3>
+            <p className="text-sm leading-relaxed text-slate-300 md:text-base">
               Tim akademik membantu selama masa perkuliahan.
             </p>
           </div>
         </div>
-        <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
-        <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Clock className="w-8 h-8" strokeWidth={2.5} />
+
+        <div className="hidden h-20 w-px rounded-full bg-slate-700/60 md:block" />
+
+        <div className="flex w-full flex-1 items-center gap-5">
+          <div className="shrink-0 rounded-full bg-[#facc15] p-4 text-[#111c38] shadow-inner">
+            <Clock
+              className="h-8 w-8"
+              strokeWidth={2.5}
+            />
           </div>
+
           <div>
-            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Waktu Fleksibel</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+            <h3 className="mb-1.5 text-lg font-extrabold tracking-wide text-white md:text-xl">
+              Waktu Fleksibel
+            </h3>
+            <p className="text-sm leading-relaxed text-slate-300 md:text-base">
               Sistem belajar yang bisa diakses kapan saja dan di mana saja.
             </p>
           </div>
@@ -511,25 +668,46 @@ function KeunggulanBannerSection() {
 
 function BenefitsSection() {
   return (
-    <section id="informasi" className="scroll-mt-20 bg-white px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:px-12 border-t border-slate-100">
+    <section
+      id="informasi"
+      className="scroll-mt-20 border-t border-slate-100 bg-white px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:px-12"
+    >
       <div className="mx-auto max-w-7xl">
-        <div className="text-center mb-12">
+        <div className="mb-12 text-center">
           <h2 className="font-display text-3xl font-extrabold leading-tight text-[#111c38] sm:text-4xl">
             Kenapa Memilih Salute Arek Malang?
           </h2>
-          <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+
+          <div
+            className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-[#facc15]"
+            aria-hidden="true"
+          />
         </div>
-        
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map((benefit) => {
             const Icon = benefit.icon;
+
             return (
-              <article key={benefit.title} className="rounded-3xl border border-slate-100 bg-[#f8fafc] p-6 sm:p-8 text-center shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
-                <div className="mx-auto mb-6 grid size-16 place-items-center rounded-2xl bg-[#facc15] text-[#111c38] shadow-sm rotate-3 hover:rotate-0 transition-transform">
-                  <Icon className="size-8" strokeWidth={2} aria-hidden="true" />
+              <article
+                key={benefit.title}
+                className="rounded-3xl border border-slate-100 bg-[#f8fafc] p-6 text-center shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl sm:p-8"
+              >
+                <div className="mx-auto mb-6 grid size-16 rotate-3 place-items-center rounded-2xl bg-[#facc15] text-[#111c38] shadow-sm transition-transform hover:rotate-0">
+                  <Icon
+                    className="size-8"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  />
                 </div>
-                <h3 className="text-lg font-extrabold leading-tight text-[#111c38] mb-3">{benefit.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500">{benefit.description}</p>
+
+                <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38]">
+                  {benefit.title}
+                </h3>
+
+                <p className="text-sm leading-relaxed text-slate-500">
+                  {benefit.description}
+                </p>
               </article>
             );
           })}
@@ -540,6 +718,7 @@ function BenefitsSection() {
 }
 
 // === TESTIMONI CMS: SUMBER DATA DARI SUPABASE / DASHBOARD ADMIN ===
+
 type PublicTestimonial = {
   id: string;
   name: string;
@@ -548,7 +727,9 @@ type PublicTestimonial = {
   image: string;
 };
 
-async function fetchPublicTestimonials(): Promise<PublicTestimonial[]> {
+async function fetchPublicTestimonials(): Promise<
+  PublicTestimonial[]
+> {
   const { data: page, error: pageError } = await supabase
     .from("pages")
     .select("id")
@@ -574,7 +755,9 @@ async function fetchPublicTestimonials(): Promise<PublicTestimonial[]> {
 
   const { data: items, error: itemsError } = await supabase
     .from("section_items")
-    .select("id, title, subtitle, body, media_url, config, sort_order, is_published")
+    .select(
+      "id, title, subtitle, body, media_url, config, sort_order, is_published",
+    )
     .eq("section_id", section.id)
     .eq("is_published", true)
     .order("sort_order", { ascending: true });
@@ -584,19 +767,30 @@ async function fetchPublicTestimonials(): Promise<PublicTestimonial[]> {
   return (items ?? [])
     .map((item) => {
       const config =
-        item.config && typeof item.config === "object" && !Array.isArray(item.config)
+        item.config &&
+        typeof item.config === "object" &&
+        !Array.isArray(item.config)
           ? (item.config as Record<string, unknown>)
           : {};
 
-      const name = item.title?.trim() || "Mahasiswa SALUT Arek Malang";
+      const name =
+        item.title?.trim() ||
+        "Mahasiswa SALUT Arek Malang";
+
       const role =
         item.subtitle?.trim() ||
-        (typeof config.role === "string" ? config.role.trim() : "") ||
+        (typeof config.role === "string"
+          ? config.role.trim()
+          : "") ||
         "Mahasiswa Universitas Terbuka";
+
       const quote = item.body?.trim() || "";
+
       const image =
         item.media_url?.trim() ||
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111c38&color=fff&size=256`;
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          name,
+        )}&background=111c38&color=fff&size=256`;
 
       return {
         id: item.id,
@@ -621,23 +815,43 @@ function TestimonialsSection() {
   const testimonials = testimonialsQuery.data ?? [];
 
   return (
-    <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative overflow-hidden">
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-900/30 blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400/10 blur-3xl"></div>
+    <section
+      id="kontak"
+      className="relative scroll-mt-20 overflow-hidden bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12"
+    >
+      <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl" />
 
-      <div className="mx-auto max-w-7xl relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Apa Kata Mereka?</h2>
-          <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-64 w-64 rounded-full bg-yellow-400/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="mb-16 text-center">
+          <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">
+            Apa Kata Mereka?
+          </h2>
+
+          <div
+            className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-[#facc15]"
+            aria-hidden="true"
+          />
         </div>
 
         {testimonialsQuery.isPending ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6" aria-label="Memuat testimoni">
+          <div
+            className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-4 xl:gap-6"
+            aria-label="Memuat testimoni"
+          >
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="flex flex-col items-center text-center animate-pulse" aria-hidden="true">
-                <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 rounded-t-full bg-white/10 mb-6" />
-                <div className="h-3 w-28 rounded bg-white/10 mb-3" />
-                <div className="h-8 w-32 rounded bg-white/10 mb-3" />
+              <div
+                key={index}
+                className="flex animate-pulse flex-col items-center text-center"
+                aria-hidden="true"
+              >
+                <div className="mb-6 h-48 w-40 rounded-t-full bg-white/10 sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-36 lg:w-28 xl:h-44 xl:w-36" />
+
+                <div className="mb-3 h-3 w-28 rounded bg-white/10" />
+
+                <div className="mb-3 h-8 w-32 rounded bg-white/10" />
+
                 <div className="h-12 w-full max-w-[150px] rounded bg-white/10" />
               </div>
             ))}
@@ -651,13 +865,14 @@ function TestimonialsSection() {
             Belum ada testimoni yang dipublikasikan.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-6 lg:gap-4 xl:gap-6">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-4 xl:gap-6">
             {testimonials.map((item) => (
               <article
                 key={item.id}
-                className="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-4 cursor-default"
+                className="group flex cursor-default flex-col items-center text-center transition-all duration-500 hover:-translate-y-4"
               >
-                <div className="w-40 h-48 sm:w-36 sm:h-44 md:w-40 md:h-52 lg:w-28 lg:h-36 xl:w-36 xl:h-44 bg-white rounded-t-full overflow-hidden mb-6 shadow-xl border-[5px] border-white transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)]">
+                {/* Arch Image Container */}
+                <div className="mb-6 h-48 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)] sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-36 lg:w-28 xl:h-44 xl:w-36">
                   <img
                     src={item.image}
                     alt={`Foto ${item.name}`}
@@ -665,21 +880,26 @@ function TestimonialsSection() {
                     className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
                     onError={(event) => {
                       const target = event.currentTarget;
+
                       target.onerror = null;
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=111c38&color=fff&size=256`;
+
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        item.name,
+                      )}&background=111c38&color=fff&size=256`;
                     }}
                   />
                 </div>
 
-                <h3 className="text-[13px] md:text-sm font-extrabold text-white uppercase tracking-wide mb-2 transition-colors group-hover:text-[#facc15]">
+                {/* Text Content */}
+                <h3 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide text-white transition-colors group-hover:text-[#facc15] md:text-sm">
                   {item.name}
                 </h3>
 
-                <p className="text-[11px] md:text-xs text-blue-200 font-medium mb-3 min-h-10 flex items-start justify-center">
+                <p className="mb-3 flex min-h-10 items-start justify-center text-[11px] font-medium text-blue-200 md:text-xs">
                   {item.role}
                 </p>
 
-                <p className="text-[11px] md:text-xs text-slate-300 italic leading-relaxed px-2">
+                <p className="px-2 text-[11px] italic leading-relaxed text-slate-300 md:text-xs">
                   &quot;{item.quote}&quot;
                 </p>
               </article>
@@ -693,23 +913,36 @@ function TestimonialsSection() {
 
 function FooterBanner() {
   return (
-    <footer className="bg-slate-900 px-4 py-8 text-white sm:px-6 md:px-8 md:py-10 lg:px-12 border-t border-slate-800">
+    <footer className="border-t border-slate-800 bg-slate-900 px-4 py-8 text-white sm:px-6 md:px-8 md:py-10 lg:px-12">
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
         <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
-          <div className="grid size-14 shrink-0 place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 hover:bg-green-400 transition-colors cursor-pointer">
-            <Phone className="size-7" aria-hidden="true" />
+          <div className="grid size-14 shrink-0 cursor-pointer place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-400">
+            <Phone
+              className="size-7"
+              aria-hidden="true"
+            />
           </div>
+
           <div>
-            <p className="text-sm text-slate-400 font-medium uppercase tracking-wider mb-0.5">Layanan Informasi Pendaftaran</p>
-            <a href="tel:081230024264" className="text-2xl font-black tracking-wide text-white hover:text-[#facc15] transition-colors sm:text-3xl">
+            <p className="mb-0.5 text-sm font-medium uppercase tracking-wider text-slate-400">
+              Layanan Informasi Pendaftaran
+            </p>
+
+            <a
+              href="tel:081230024264"
+              className="text-2xl font-black tracking-wide text-white transition-colors hover:text-[#facc15] sm:text-3xl"
+            >
               0812-3002-4264
             </a>
           </div>
         </div>
-        <div className="text-center md:text-right border-t border-slate-800 pt-6 md:border-t-0 md:pt-0">
+
+        <div className="border-t border-slate-800 pt-6 text-center md:border-t-0 md:pt-0 md:text-right">
           <p className="font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
             Kuliah Fleksibel,
-            <span className="block text-[#facc15]">Raih Masa Depan</span>
+            <span className="block text-[#facc15]">
+              Raih Masa Depan
+            </span>
           </p>
         </div>
       </div>
