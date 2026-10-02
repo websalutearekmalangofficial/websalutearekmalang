@@ -236,15 +236,24 @@ function Header() {
         </nav>
 
         <div className="flex items-center justify-end gap-2 md:min-w-0">
-          <Link
-            to="/daftar"
-            aria-label="Masuk atau daftar"
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
-          >
-            <CircleUserRound className="size-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Masuk / Daftar</span>
-            <span className="sm:hidden">Masuk</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/auth"
+              aria-label="Masuk"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+            >
+              <CircleUserRound className="size-4" aria-hidden="true" />
+              <span>Masuk</span>
+            </Link>
+            <Link
+              to="/daftar"
+              aria-label="Daftar"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-ut-yellow px-3 py-2 text-[0.7rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+            >
+              <ClipboardPenLine className="size-4" aria-hidden="true" />
+              <span>Daftar</span>
+            </Link>
+          </div>
 
           <button
             type="button"
