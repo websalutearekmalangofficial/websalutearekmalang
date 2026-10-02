@@ -895,43 +895,49 @@ function TestimonialsSection() {
             Belum ada testimoni yang dipublikasikan.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10">
-            {testimonials.map((item) => (
-              <article
-                key={item.id}
-                className="group flex cursor-default flex-col items-center text-center transition-all duration-500 hover:-translate-y-4"
-              >
-                <div className="mb-6 h-52 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)] sm:h-56 sm:w-44 md:h-60 md:w-48">
-                  <img
-                    src={item.image}
-                    alt={`Foto ${item.name}`}
-                    loading="lazy"
-                    className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
-                    onError={(event) => {
-                      const target = event.currentTarget;
+          <div className="relative">
+            <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6 scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {testimonials.map((item) => (
+                <article
+                  key={item.id}
+                  className="group flex w-[82vw] shrink-0 snap-center cursor-default flex-col items-center text-center sm:w-[360px] md:w-[400px] lg:w-[430px]"
+                >
+                  <div className="mb-6 h-52 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#facc15] sm:h-56 sm:w-44 md:h-60 md:w-48">
+                    <img
+                      src={item.image}
+                      alt={`Foto ${item.name}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      onError={(event) => {
+                        const target = event.currentTarget;
+                        target.onerror = null;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          item.name,
+                        )}&background=111c38&color=fff&size=256`;
+                      }}
+                    />
+                  </div>
 
-                      target.onerror = null;
+                  <h3 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide text-white md:text-sm">
+                    {item.name}
+                  </h3>
 
-                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        item.name,
-                      )}&background=111c38&color=fff&size=256`;
-                    }}
-                  />
-                </div>
+                  <p className="mb-3 flex min-h-10 max-w-sm items-start justify-center text-xs font-medium leading-relaxed text-blue-200">
+                    {item.role}
+                  </p>
 
-                <h3 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide text-white transition-colors group-hover:text-[#facc15] md:text-sm">
-                  {item.name}
-                </h3>
+                  <p className="max-w-[380px] px-2 text-xs italic leading-relaxed text-slate-300 sm:text-sm">
+                    &quot;{item.quote}&quot;
+                  </p>
+                </article>
+              ))}
+            </div>
 
-                <p className="mb-3 flex min-h-10 max-w-sm items-start justify-center text-xs font-medium leading-relaxed text-blue-200">
-                  {item.role}
-                </p>
-
-                <p className="max-w-sm px-2 text-xs italic leading-relaxed text-slate-300 sm:text-sm">
-                  &quot;{item.quote}&quot;
-                </p>
-              </article>
-            ))}
+            {testimonials.length > 1 && (
+              <p className="mt-2 text-center text-[11px] font-semibold text-slate-400">
+                Geser untuk melihat testimoni lainnya →
+              </p>
+            )}
           </div>
         )}
       </div>
