@@ -212,7 +212,7 @@ function RegistrationPage() {
           jurusan: formData.jurusan,
           status: "Menunggu Verifikasi",
         })
-        .select("id")
+        .select("id, registration_reference")
         .single();
 
       if (dbError) throw dbError;
@@ -241,9 +241,8 @@ function RegistrationPage() {
         uploadedPaths.push(filePath);
       }
 
-      // Generate random ID semu untuk referensi (Karena UUID terlalu panjang untuk end user)
-      const fakeRefId = `SALUT-${new Date().getFullYear()}-${Math.floor(10000000 + Math.random() * 90000000)}`;
-      setRegistrationRefId(fakeRefId);
+      // Referensi dibuat oleh database dan menjadi identitas tetap pendaftaran.
+      setRegistrationRefId(registration.registration_reference || "");
 
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -314,7 +313,7 @@ function RegistrationPage() {
             {/* Box Status Warna Kuning */}
             <div className="rounded-xl border border-yellow-200 bg-yellow-50 overflow-hidden mb-8 shadow-sm">
               <div className="p-5 md:p-6 border-b border-yellow-200 bg-[#fdf8e7]">
-                <p className="text-sm md:text-base text-slate-800">Nomor Referensi Pendaftaran: <span className="font-extrabold text-lg md:text-xl text-slate-900 ml-1">{registrationRefId || 'SALUT-2026-TUNDA'}</span></p>
+                <p className="text-sm md:text-base text-slate-800">Nomor Referensi Pendaftaran: <span className="font-extrabold text-lg md:text-xl text-slate-900 ml-1">{registrationRefId || "Menyiapkan..."}</span></p>
               </div>
               <div className="p-5 md:p-6 bg-white">
                 <p className="text-sm md:text-base text-slate-800">Status Pendaftaran: <span className="font-extrabold text-[#d2a32c] ml-1">Menunggu Verifikasi</span></p>
