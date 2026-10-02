@@ -926,8 +926,9 @@ function FooterBanner() {
     "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   return (
-    <footer className="w-full border-t border-slate-700 bg-[#111c38] text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
+    <footer className="w-full border-t border-slate-700 bg-[#a7c8e1] text-[#0f1523]">
+      <div className="bg-[#0f1523] text-white">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
         <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-8 xl:gap-12">
           {footer.contact?.enabled && (
             <div className="flex min-w-0 flex-col items-center justify-start text-center">
@@ -951,7 +952,7 @@ function FooterBanner() {
           )}
 
           {footer.address?.enabled && footer.address?.text && (
-            <div className="flex min-w-0 flex-col items-center justify-start border-t border-slate-700/50 pt-8 text-center sm:border-l sm:border-t-0 sm:pt-0 lg:border-l lg:pl-6">
+            <div className="flex min-w-0 flex-col items-center justify-start border-t border-white/15 pt-8 text-center sm:border-l sm:border-t-0 sm:pt-0 lg:border-l lg:pl-6">
               <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-slate-800 text-slate-400">
                 <MapPin className="size-6" aria-hidden="true" />
               </div>
@@ -965,7 +966,7 @@ function FooterBanner() {
           )}
 
           {footer.address?.enabled && (
-            <div className="flex min-w-0 items-center justify-center border-t border-slate-700/50 pt-8 sm:col-span-2 lg:col-span-1 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            <div className="flex min-w-0 items-center justify-center border-t border-white/15 pt-8 sm:col-span-2 lg:col-span-1 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
               <img
                 src={buildingImage}
                 alt="Sketsa Gedung Salute Malang"
@@ -976,8 +977,9 @@ function FooterBanner() {
           )}
         </div>
 
-        <div className="mt-12 border-t border-slate-800/80 pt-6 text-center text-[10px] font-medium text-slate-500 sm:text-xs lg:text-left">
+        <div className="mt-12 border-t border-white/15 pt-6 text-center text-[10px] font-medium text-slate-400 sm:text-xs lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
+        </div>
         </div>
       </div>
     </footer>
