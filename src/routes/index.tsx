@@ -241,6 +241,8 @@ function Header() {
             aria-label="Masuk atau daftar"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
           >
+            className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm"
+          >
             <CircleUserRound className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Masuk / Daftar</span>
             <span className="sm:hidden">Masuk</span>
@@ -819,7 +821,7 @@ function TestimonialsSection() {
 
   return (
     <section
-      id="testimoni"
+      id="kontak"
       className="relative scroll-mt-20 overflow-hidden bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12"
     >
       <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl" />
@@ -1000,3 +1002,33 @@ function FooterBanner() {
             )}
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
+            {footer.address?.enabled && footer.address?.text && (
+              <div className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0`} style={{ minHeight: `${addressLayout.height}px` }}>
+                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
+                  <MapPin className="size-6" aria-hidden="true" />
+                </div>
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                  Alamat Kantor
+                </p>
+                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-800 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
+                  {footer.address.text}
+                </p>
+              </div>
+            )}
+
+            {/* Kolom 3: Image — area kolom dibuat setinggi kolom lain agar garis dasar tetap selaras */}
+            <div className={`hidden w-full ${imageLayout.alignmentClass} lg:flex`} style={{ minHeight: `${imageLayout.height}px` }}></div>
+          </div>
+        </div>
+      </footer>
+
+      {/* Bagian copyright dengan warna latar yang sama */}
+      <div className="w-full py-2" style={{ backgroundColor: footerBackground }}>
+        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
+          <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
+        </div>
+      </div>
+      
+    </div>
+  );
+}
