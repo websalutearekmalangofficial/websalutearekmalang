@@ -236,15 +236,17 @@ function Header() {
         </nav>
 
         <div className="flex items-center justify-end gap-2 md:min-w-0">
-          <Button
-            variant="heroOutline"
-            size="pill"
+          <Link
+            to="/daftar"
+            aria-label="Masuk atau daftar"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-hero-foreground/60 bg-transparent px-3 py-2 text-[0.7rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+          >
             className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm"
           >
             <CircleUserRound className="size-4" aria-hidden="true" />
             <span className="hidden sm:inline">Masuk / Daftar</span>
             <span className="sm:hidden">Masuk</span>
-          </Button>
+          </Link>
 
           <button
             type="button"
@@ -339,7 +341,7 @@ function HeroBanner() {
           key={activeBanner.id}
           src={activeBanner.url}
           alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
-          className="absolute inset-0 z-10 block h-full w-full object-contain object-center"
+          className="absolute inset-0 z-10 block h-full w-full object-cover object-center"
         />
       ) : (
         <div
@@ -451,7 +453,9 @@ function CombinedCTAProcessSection() {
               </div>
 
               <button
+                type="button"
                 onClick={() => setSelectedStep(null)}
+                aria-label="Tutup detail langkah"
                 className="relative z-10 grid size-8 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               >
                 <X className="size-4" />
@@ -817,7 +821,7 @@ function TestimonialsSection() {
 
   return (
     <section
-      id="kontak"
+      id="testimoni"
       className="relative scroll-mt-20 overflow-hidden bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12"
     >
       <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl" />
@@ -838,7 +842,7 @@ function TestimonialsSection() {
 
         {testimonialsQuery.isPending ? (
           <div
-            className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-6 lg:gap-4 xl:gap-6"
+            className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3"
             aria-label="Memuat testimoni"
           >
             {Array.from({ length: 6 }).map((_, index) => (
@@ -847,7 +851,7 @@ function TestimonialsSection() {
                 className="flex animate-pulse flex-col items-center text-center"
                 aria-hidden="true"
               >
-                <div className="mb-6 h-48 w-40 rounded-t-full bg-white/10 sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-36 lg:w-28 xl:h-44 xl:w-36" />
+                <div className="mb-6 h-48 w-40 rounded-t-full bg-white/10 sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-52 lg:w-40" />
 
                 <div className="mb-3 h-3 w-28 rounded bg-white/10" />
 
@@ -936,8 +940,8 @@ function FooterBanner() {
   const footerBackground = footer.layout?.background_color || "#a7c8e1";
   const footerLayout = footer.layout;
   const getColumnLayout = (key: "contact" | "address" | "image") => {
-    const settings = footerLayout?.columns?.[key] ?? { height: 260, alignment: "start" as const };
-    const height = Math.min(800, Math.max(160, settings.height ?? 260));
+    const settings = footerLayout?.columns?.[key] ?? { height: 300, alignment: "start" as const };
+    const height = Math.min(800, Math.max(160, settings.height ?? 300));
     const alignmentClass =
       settings.alignment === "center"
         ? "justify-center"
@@ -957,7 +961,7 @@ function FooterBanner() {
         : { top: "0", transform: "translateY(-45%)" };
 
   return (
-    <div className="relative w-full pt-24 md:pt-32 lg:pt-48" style={{ backgroundColor: footerBackground }}>
+    <div id="kontak" className="relative w-full pt-10 md:pt-14 lg:pt-16 scroll-mt-20" style={{ backgroundColor: footerBackground }}>
       
       {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak, Alamat, dan Gambar */}
       <footer className="w-full border-t border-[#0f1523]/20 text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
@@ -998,33 +1002,3 @@ function FooterBanner() {
             )}
 
             {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
-            {footer.address?.enabled && footer.address?.text && (
-              <div className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} border-t border-[#0f1523]/20 pt-10 text-center lg:border-l lg:border-t-0 lg:pt-0`} style={{ minHeight: `${addressLayout.height}px` }}>
-                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
-                  <MapPin className="size-6" aria-hidden="true" />
-                </div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                  Alamat Kantor
-                </p>
-                <p className="max-w-[280px] text-xs font-medium leading-relaxed text-slate-800 sm:max-w-[320px] sm:text-sm lg:text-[13px]">
-                  {footer.address.text}
-                </p>
-              </div>
-            )}
-
-            {/* Kolom 3: Image — area kolom dibuat setinggi kolom lain agar garis dasar tetap selaras */}
-            <div className={`hidden w-full ${imageLayout.alignmentClass} lg:flex`} style={{ minHeight: `${imageLayout.height}px` }}></div>
-          </div>
-        </div>
-      </footer>
-
-      {/* Bagian copyright dengan warna latar yang sama */}
-      <div className="w-full py-2" style={{ backgroundColor: footerBackground }}>
-        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
-          <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
-        </div>
-      </div>
-      
-    </div>
-  );
-}
