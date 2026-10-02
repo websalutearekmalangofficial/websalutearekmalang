@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2, Image as ImageIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2, Image as ImageIcon, Link as ChainIcon, Palette } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -181,6 +181,121 @@ function FooterSettingsAdmin() {
             <div className="sm:col-span-2 rounded-lg border border-dashed border-slate-300 bg-white p-3 text-xs text-slate-500">
               Pengaturan ukuran disimpan bersama URL gambar ke database dan digunakan pada Footer website. Ukuran adalah lebar maksimum tampilan, bukan mengubah file gambar asli.
             </div>
+          </div>
+          <div className="md:col-span-2 mt-2 rounded-2xl border border-border bg-white p-4 shadow-sm">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="flex items-center gap-2 text-sm font-black text-ut-navy">
+                  <ChainIcon className="size-4" /> Layout 3 Kolom Footer
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Atur tinggi dan posisi vertikal masing-masing kolom: Layanan Informasi Pendaftaran, Alamat Kantor, dan Image Gedung.
+                </p>
+              </div>
+              <label className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ut-navy/10 bg-slate-50 px-4 py-2 text-sm font-bold text-ut-navy">
+                <input
+                  type="checkbox"
+                  checked={content.layout.sync_columns}
+                  onChange={(e) => update({
+                    layout: { ...content.layout, sync_columns: e.target.checked },
+                  })}
+                />
+                <ChainIcon className="size-4" />
+                Sync / Lock / Rantai
+              </label>
+            </div>
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-3">
+              {([
+                ["contact", "Layanan Informasi Pendaftaran"],
+                ["address", "Alamat Kantor"],
+                ["image", "Image Gedung"],
+              ] as const).map(([key, label]) => (
+                <div key={key} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="mb-3 text-sm font-black text-ut-navy">{label}</p>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <Field label="Tinggi kolom (px)">
+                      <input
+                        className={inputClass}
+                        type="number"
+                        min={160}
+                        max={800}
+                        step={10}
+                        value={content.layout.columns[key].height}
+                        onChange={(e) => {
+                          const height = Math.min(800, Math.max(160, Number(e.target.value) || 160));
+                          const columns = content.layout.sync_columns
+                            ? {
+                                contact: { ...content.layout.columns.contact, height },
+                                address: { ...content.layout.columns.address, height },
+                                image: { ...content.layout.columns.image, height },
+                              }
+                            : {
+                                ...content.layout.columns,
+                                [key]: { ...content.layout.columns[key], height },
+                              };
+                          update({ layout: { ...content.layout, columns } });
+                        }}
+                      />
+                    </Field>
+                    <Field label="Alignment vertikal">
+                      <select
+                        className={inputClass}
+                        value={content.layout.columns[key].alignment}
+                        onChange={(e) => {
+                          const alignment = e.target.value as FooterContent["layout"]["columns"]["contact"]["alignment"];
+                          const columns = content.layout.sync_columns
+                            ? {
+                                contact: { ...content.layout.columns.contact, alignment },
+                                address: { ...content.layout.columns.address, alignment },
+                                image: { ...content.layout.columns.image, alignment },
+                              }
+                            : {
+                                ...content.layout.columns,
+                                [key]: { ...content.layout.columns[key], alignment },
+                              };
+                          update({ layout: { ...content.layout, columns } });
+                        }}
+                      >
+                        <option value="start">Atas</option>
+                        <option value="center">Tengah</option>
+                        <option value="end">Bawah</option>
+                      </select>
+                    </Field>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 p-3 text-xs text-slate-600">
+              <b>Mode Sync aktif:</b> ubah tinggi atau alignment pada satu kolom → dua kolom lainnya otomatis mengikuti nilai yang sama. Matikan Sync untuk mengatur setiap kolom secara independen.
+            </div>
+          </div>
+
+          <div className="md:col-span-2 rounded-2xl border border-border bg-white p-4 shadow-sm">
+            <Field label="Warna Background Footer">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    aria-label="Pilih warna background Footer"
+                    className="h-11 w-16 cursor-pointer rounded-lg border border-border bg-white p-1"
+                    value={content.layout.background_color}
+                    onChange={(e) => update({ layout: { ...content.layout, background_color: e.target.value } })}
+                  />
+                  <input
+                    className={inputClass + " max-w-[180px]"}
+                    value={content.layout.background_color}
+                    onChange={(e) => update({ layout: { ...content.layout, background_color: e.target.value } })}
+                    placeholder="#a7c8e1"
+                  />
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <Palette className="size-4" />
+                  Warna ini diterapkan ke seluruh area Footer dan Copyright setelah disimpan.
+                </div>
+              </div>
+            </Field>
           </div>
           {/* ================================ */}
 
