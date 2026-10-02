@@ -268,6 +268,7 @@ function RegistrationsAdmin() {
                   <table className="w-full min-w-[1050px] border-collapse text-left text-sm">
                     <thead className="bg-slate-50">
                       <tr className="text-[11px] font-black uppercase tracking-wider text-slate-500">
+                        <th className="border-b px-5 py-4">No. Referensi</th>
                         <th className="border-b px-5 py-4">Nama Lengkap</th>
                         <th className="border-b px-4 py-4">Tanggal Lahir</th>
                         <th className="border-b px-4 py-4">Jenis Kelamin</th>
@@ -280,6 +281,7 @@ function RegistrationsAdmin() {
                     <tbody>
                       {filtered.map((row) => (
                         <tr key={row.id} className="align-middle transition hover:bg-slate-50">
+                          <td className="whitespace-nowrap border-b px-5 py-4 font-black text-slate-900">{row.registration_reference || "-"}</td>
                           <td className="border-b px-5 py-4">
                             <button
                               type="button"
