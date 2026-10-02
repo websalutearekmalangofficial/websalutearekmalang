@@ -5,7 +5,6 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -77,7 +76,13 @@ function AuthPage() {
 
   const handleGoogle = async () => {
     try {
-      await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth" });
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/auth",
+        },
+      });
+      if (error) throw error;
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Masuk dengan Google gagal.");
     }
