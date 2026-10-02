@@ -413,6 +413,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      },
+      claim_first_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
