@@ -23,9 +23,12 @@ export type FooterContent = {
   building_image_size: { preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" | "custom"; custom_width: number };
   layout: {
     background_color: string;
-    column_height: number;
-    column_alignment: "start" | "center" | "end";
     sync_columns: boolean;
+    columns: {
+      contact: { height: number; alignment: "start" | "center" | "end" };
+      address: { height: number; alignment: "start" | "center" | "end" };
+      image: { height: number; alignment: "start" | "center" | "end" };
+    };
   };
   columns: FooterColumn[];
 };
@@ -41,9 +44,12 @@ export const defaultFooterContent: FooterContent = {
   building_image_size: { preset: "large", custom_width: 480 },
   layout: {
     background_color: "#a7c8e1",
-    column_height: 260,
-    column_alignment: "start",
     sync_columns: true,
+    columns: {
+      contact: { height: 260, alignment: "start" },
+      address: { height: 260, alignment: "start" },
+      image: { height: 260, alignment: "start" },
+    },
   },
   columns: [],
 };
@@ -66,6 +72,13 @@ function parseFooter(value: string | null | undefined): FooterContent {
       layout: {
         ...defaultFooterContent.layout,
         ...(parsed.layout ?? {}),
+        columns: {
+          ...defaultFooterContent.layout.columns,
+          ...(parsed.layout?.columns ?? {}),
+          contact: { ...defaultFooterContent.layout.columns.contact, ...(parsed.layout?.columns?.contact ?? {}) },
+          address: { ...defaultFooterContent.layout.columns.address, ...(parsed.layout?.columns?.address ?? {}) },
+          image: { ...defaultFooterContent.layout.columns.image, ...(parsed.layout?.columns?.image ?? {}) },
+        },
       },
       columns: Array.isArray(parsed.columns) ? parsed.columns : [],
     };
