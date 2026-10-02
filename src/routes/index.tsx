@@ -14,19 +14,16 @@ import {
   Home,
   IdCard,
   Info,
-  Mail,
   Menu,
-  MapPin,
   MonitorCheck,
   Phone,
   Quote,
-  School,
   ShieldCheck,
-  User,
   X,
   Gift,
   Users,
-  Clock
+  Clock,
+  ArrowRight
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -140,11 +137,14 @@ const testimonials = [
 
 function Index() {
   return (
-    <main className="min-h-screen overflow-hidden bg-background font-body text-foreground">
+    <main className="min-h-screen overflow-hidden bg-[#f8fafc] font-body text-foreground">
       <Header />
       <HeroBanner />
-      <CombinedCTAProcessSection />
-      <KeunggulanBannerSection />
+      {/* Wrapper Putih untuk CTA & Alur Pendaftaran */}
+      <div className="bg-white">
+        <CombinedCTAProcessSection />
+        <KeunggulanBannerSection />
+      </div>
       <BenefitsSection />
       <TestimonialsSection />
       <FooterBanner />
@@ -311,68 +311,62 @@ function HeroBanner() {
   );
 }
 
-// === KOMPONEN DIPERBARUI: GABUNGAN CTA & ALUR PENDAFTARAN (REDESAIN DARK THEME) ===
+// === REDESAIN: GABUNGAN CTA & ALUR PENDAFTARAN ===
 function CombinedCTAProcessSection() {
   return (
-    <section id="panduan" className="bg-white px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12 relative z-10 border-b border-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 md:gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+    <section id="panduan" className="px-4 pt-16 pb-12 sm:px-6 md:px-8 md:pt-24 md:pb-16 lg:px-12 relative z-10">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[45%_55%] xl:gap-16">
         
         {/* Kolom Kiri: Teks & Tombol */}
-        <div className="flex min-w-0 flex-col items-start gap-5 md:gap-6 lg:pt-2">
-          <h2 className="text-[2.25rem] font-sans font-medium tracking-tight leading-[1.08] text-slate-900 md:text-5xl lg:text-[3.4rem] xl:text-5xl">
-            Kuliah Fleksibel,
-            <br />
-            Raih
-            <br />
-            Masa Depan
-            <br />
-            Bersama
-            <br />
-            SALUT Arek Malang
+        <div className="flex flex-col items-start gap-6">
+          <h2 className="text-4xl md:text-5xl lg:text-[3.25rem] font-extrabold text-[#111c38] leading-[1.15] tracking-tight">
+            Kuliah Fleksibel, <br className="hidden md:block"/>
+            Raih Masa Depan <br className="hidden md:block"/>
+            Bersama <span className="text-[#facc15]">SALUT Arek Malang</span>
           </h2>
+          <p className="text-slate-500 text-lg md:text-xl max-w-md leading-relaxed">
+            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak jauh yang inovatif dan terjangkau.
+          </p>
           <Link
             to="/daftar"
-            className="inline-flex h-11 md:h-12 items-center justify-center rounded-full bg-[#fbd043] px-7 text-sm md:text-base font-bold text-slate-900 shadow-md transition hover:bg-yellow-400 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+            className="mt-2 inline-flex h-12 md:h-14 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:bg-yellow-400 hover:-translate-y-1"
           >
-            Mulai Pendaftaran
+            Mulai Pendaftaran <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
 
-        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
-        <div className="min-w-0 w-full pt-0 lg:pt-2">
-          <div className="mb-8 md:mb-10">
-            <h2 className="font-display text-xl font-black leading-tight text-[#111c38] sm:text-2xl md:text-3xl">
+        {/* Kolom Kanan: Kartu Alur Pendaftaran (Desain Estetik Putih) */}
+        <div className="w-full">
+          <div className="mb-8 border-b-2 border-slate-100 pb-4">
+            <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
               Alur Pendaftaran Sentra Layanan UT
             </h2>
-            <div className="mt-3 h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+            <div className="mt-3 h-1 w-16 rounded-full bg-[#facc15]" aria-hidden="true" />
           </div>
 
-          {/* Grid responsif: 1 kolom di HP, 2 kolom di tablet, 3 kolom di desktop */}
-          <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
               return (
-                <div key={step.number} className="relative mt-2">
-                  <article className="relative h-full min-h-[160px] rounded-2xl bg-[#111c38] px-4 pb-5 pt-10 text-center shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:min-h-[170px] border border-slate-800 flex flex-col items-center justify-start">
-                    {/* Nomor Step (Kuning, Border Putih) */}
-                    <span className="absolute -top-4 left-1/2 grid size-8 -translate-x-1/2 place-items-center rounded-full bg-[#facc15] text-sm font-black text-[#111c38] shadow-md lg:-left-3 lg:translate-x-0 border-4 border-white">
+                <div key={step.number} className="relative mt-3">
+                  <article className="relative flex h-full min-h-[160px] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
+                    {/* Nomor Step Melayang */}
+                    <div className="absolute -left-3 -top-3 flex size-8 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-sm font-black text-[#111c38] shadow-sm">
                       {step.number}
-                    </span>
-                    
-                    {/* Ikon (Lingkaran Kuning, Ikon Biru Dongker) */}
-                    <div className="mb-3 grid size-12 place-items-center rounded-full bg-[#facc15] text-[#111c38] shadow-sm">
-                      <Icon className="size-6" strokeWidth={2.5} aria-hidden="true" />
                     </div>
                     
+                    {/* Ikon */}
+                    <Icon className="mb-4 size-9 text-[#111c38]" strokeWidth={1.8} aria-hidden="true" />
+                    
                     {/* Teks */}
-                    <h3 className="mb-1 text-sm font-bold leading-tight text-white">{step.title}</h3>
+                    <h3 className="mb-2 text-sm font-extrabold leading-tight text-[#111c38]">{step.title}</h3>
 
-                    {/* Badges di bawah judul */}
+                    {/* Badges */}
                     {step.badges ? (
-                      <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+                      <div className="flex flex-wrap justify-center gap-1.5 mt-auto">
                         {step.badges.map((badge) => (
-                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-slate-600 bg-slate-800/80 px-2 py-0.5 text-[0.65rem] font-semibold text-slate-300">
-                            <CheckCircle2 className="size-2.5 text-[#facc15]" aria-hidden="true" />
+                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[0.65rem] font-bold text-slate-600">
+                            <CheckCircle2 className="size-3 text-[#facc15]" aria-hidden="true" />
                             {badge}
                           </span>
                         ))}
@@ -380,9 +374,9 @@ function CombinedCTAProcessSection() {
                     ) : null}
                   </article>
                   
-                  {/* Chevron Penunjuk Arah (Hanya muncul di desktop, bukan di kartu paling kanan) */}
+                  {/* Chevron Penunjuk Arah (Desktop) */}
                   {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="absolute -right-3 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-slate-300 lg:block" aria-hidden="true" />
+                    <ChevronRight className="absolute -right-4 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-slate-300 lg:block" aria-hidden="true" />
                   ) : null}
                 </div>
               );
@@ -394,53 +388,54 @@ function CombinedCTAProcessSection() {
   );
 }
 
-// === KOMPONEN: BANNER KEUNGGULAN LAYANAN ===
+// === REDESAIN: BANNER KEUNGGULAN LAYANAN ===
 function KeunggulanBannerSection() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-12 mb-2 relative z-20">
-      <div className="bg-[#111c38] rounded-3xl p-6 md:p-8 lg:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 shadow-xl">
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-16 relative z-20">
+      {/* Floating Banner Effect */}
+      <div className="bg-[#111c38] rounded-3xl p-6 md:p-10 lg:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-10 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)]">
         
-        {/* Item 1: Layanan Gratis */}
+        {/* Item 1 */}
         <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
-            <Gift className="w-8 h-8" strokeWidth={2.5} />
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
+            <Gift className="w-8 h-8" strokeWidth={2} />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Layanan Gratis</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-snug">
-              Seluruh proses pendampingan tanpa biaya tambahan.
+            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Layanan Gratis</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+              Seluruh proses pendampingan diurus tanpa biaya tambahan.
             </p>
           </div>
         </div>
 
-        {/* Garis Pemisah (Hanya di Desktop) */}
-        <div className="hidden md:block w-px h-16 bg-slate-700"></div>
+        {/* Pemisah Vertikal */}
+        <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
 
-        {/* Item 2: Pendampingan Akademik */}
+        {/* Item 2 */}
         <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
-            <Users className="w-8 h-8" strokeWidth={2.5} />
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
+            <Users className="w-8 h-8" strokeWidth={2} />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Pendampingan Akademik</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-snug">
-              Tim kami siap membantu selama masa perkuliahan.
+            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Pendampingan</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+              Tim akademik siap membantu selama masa perkuliahan.
             </p>
           </div>
         </div>
 
-        {/* Garis Pemisah (Hanya di Desktop) */}
-        <div className="hidden md:block w-px h-16 bg-slate-700"></div>
+        {/* Pemisah Vertikal */}
+        <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
 
-        {/* Item 3: Waktu Fleksibel */}
+        {/* Item 3 */}
         <div className="flex items-center gap-5 flex-1 w-full">
-          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-sm">
-            <Clock className="w-8 h-8" strokeWidth={2.5} />
+          <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
+            <Clock className="w-8 h-8" strokeWidth={2} />
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg md:text-xl mb-1">Waktu Fleksibel</h3>
-            <p className="text-slate-300 text-sm md:text-base leading-snug">
-              Belajar kapan saja dan di mana saja.
+            <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Waktu Fleksibel</h3>
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed">
+              Sistem belajar yang bisa diakses kapan saja dan di mana saja.
             </p>
           </div>
         </div>
@@ -450,31 +445,27 @@ function KeunggulanBannerSection() {
   );
 }
 
-function SmallLogo({ label, wide = false }: { label: string; wide?: boolean }) {
-  return (
-    <span className={`inline-flex h-9 items-center justify-center rounded-full border border-hero-foreground/70 bg-hero-foreground/15 px-2.5 text-center text-[0.6rem] font-black leading-tight sm:h-11 sm:px-3 sm:text-xs ${wide ? "min-w-24 sm:min-w-32" : "min-w-9 sm:min-w-11"}`}>
-      {label}
-    </span>
-  );
-}
-
 function BenefitsSection() {
   return (
-    <section id="informasi" className="scroll-mt-20 bg-section-blue px-4 py-8 sm:px-6 md:px-8 md:py-16 lg:px-12">
+    <section id="informasi" className="scroll-mt-20 bg-white px-4 py-12 sm:px-6 md:px-8 md:py-20 lg:px-12 border-t border-slate-100">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-center font-display text-2xl font-black leading-tight text-ut-navy sm:text-3xl md:text-4xl">
-          Kenapa Memilih Salute Arek Malang?
-        </h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-4 md:mt-10">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-3xl font-extrabold leading-tight text-[#111c38] sm:text-4xl">
+            Kenapa Memilih Salute Arek Malang?
+          </h2>
+          <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+        </div>
+        
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map((benefit) => {
             const Icon = benefit.icon;
             return (
-              <article key={benefit.title} className="rounded-2xl bg-card p-5 text-center shadow-benefit sm:p-6 transition duration-300 hover:-translate-y-1 hover:shadow-form">
-                <div className="mx-auto mb-4 grid size-14 place-items-center sm:mb-5 sm:size-16 rounded-full bg-ut-yellow text-ut-navy shadow-yellow">
-                  <Icon className="size-7 sm:size-8" aria-hidden="true" />
+              <article key={benefit.title} className="rounded-3xl border border-slate-100 bg-[#f8fafc] p-6 sm:p-8 text-center shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+                <div className="mx-auto mb-6 grid size-16 place-items-center rounded-2xl bg-[#facc15] text-[#111c38] shadow-sm rotate-3 hover:rotate-0 transition-transform">
+                  <Icon className="size-8" strokeWidth={2} aria-hidden="true" />
                 </div>
-                <h3 className="text-base font-black leading-tight text-ut-navy sm:text-lg">{benefit.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground sm:mt-3">{benefit.description}</p>
+                <h3 className="text-lg font-extrabold leading-tight text-[#111c38] mb-3">{benefit.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500">{benefit.description}</p>
               </article>
             );
           })}
@@ -486,21 +477,29 @@ function BenefitsSection() {
 
 function TestimonialsSection() {
   return (
-    <section id="kontak" className="scroll-mt-20 bg-background px-4 py-12 sm:px-6 md:px-8 md:py-16 lg:px-12">
-      <div className="mx-auto max-w-7xl">
-        <h2 className="text-center font-display text-2xl font-black text-ut-navy sm:text-3xl md:text-4xl">Apa Kata Mereka?</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 md:mt-10 md:gap-6 lg:grid-cols-3">
+    <section id="kontak" className="scroll-mt-20 bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12 relative overflow-hidden">
+      {/* Elemen Dekorasi Background */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-blue-900/30 blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-yellow-400/10 blur-3xl"></div>
+
+      <div className="mx-auto max-w-7xl relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">Apa Kata Mereka?</h2>
+          <div className="mt-4 mx-auto h-1.5 w-24 rounded-full bg-[#facc15]" aria-hidden="true" />
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
           {testimonials.map((item) => (
-            <article key={item.name} className="flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-testimonial transition duration-300 hover:-translate-y-1 hover:shadow-form sm:p-6">
-              <Quote className="mb-3 size-8 fill-current text-ut-yellow sm:mb-4 sm:size-10" aria-hidden="true" />
-              <p className="flex-1 text-sm italic leading-relaxed text-testimonial">“{item.quote}”</p>
-              <div className="mt-5 flex items-center gap-3 sm:mt-6">
-                <div className="grid size-12 shrink-0 place-items-center rounded-full bg-avatar text-sm font-black text-ut-navy">
+            <article key={item.name} className="flex h-full flex-col rounded-3xl border border-slate-700 bg-slate-800/50 backdrop-blur-sm p-6 shadow-xl transition duration-300 hover:-translate-y-2 hover:border-slate-500 sm:p-8">
+              <Quote className="mb-4 size-10 fill-current text-[#facc15]/80" aria-hidden="true" />
+              <p className="flex-1 text-base italic leading-relaxed text-slate-300">"{item.quote}"</p>
+              <div className="mt-8 flex items-center gap-4">
+                <div className="grid size-12 shrink-0 place-items-center rounded-full bg-[#facc15] text-sm font-black text-[#111c38] shadow-md">
                   {item.initials}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="truncate text-sm font-black text-ut-navy sm:text-base">{item.name}</h3>
-                  <span className={`mt-1 inline-flex rounded-full px-3 py-1 text-xs font-black ${item.status === "Alumni" ? "bg-ut-yellow text-ut-navy" : "bg-status-blue text-ut-blue"}`}>
+                  <h3 className="truncate text-base font-extrabold text-white">{item.name}</h3>
+                  <span className="text-sm font-medium text-slate-400">
                     {item.status}
                   </span>
                 </div>
@@ -515,25 +514,25 @@ function TestimonialsSection() {
 
 function FooterBanner() {
   return (
-    <footer className="bg-footer-blue px-4 py-6 text-hero-foreground sm:px-6 md:px-8 md:py-7 lg:px-12">
-      <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-8">
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:justify-start">
-          <div className="grid size-12 shrink-0 place-items-center rounded-full bg-whatsapp text-whatsapp-foreground shadow-lg sm:size-14">
-            <Phone className="size-6 sm:size-8" aria-hidden="true" />
+    <footer className="bg-slate-900 px-4 py-8 text-white sm:px-6 md:px-8 md:py-10 lg:px-12 border-t border-slate-800">
+      <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+        <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+          <div className="grid size-14 shrink-0 place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 hover:bg-green-400 transition-colors cursor-pointer">
+            <Phone className="size-7" aria-hidden="true" />
           </div>
-          <p className="text-lg font-black leading-tight sm:text-xl">
-            Informasi
-            <span className="block">Pendaftaran</span>
-          </p>
-          <span className="hidden h-12 w-px bg-hero-foreground/70 sm:block" aria-hidden="true" />
-          <a href="tel:081230024264" className="rounded-full border-4 border-ut-sky bg-footer-pill px-4 py-2 text-lg font-black tracking-normal text-hero-foreground shadow-inner transition hover:bg-ut-sky/30 sm:px-6 sm:text-2xl md:text-3xl">
-            0812-3002-4264
-          </a>
+          <div>
+            <p className="text-sm text-slate-400 font-medium uppercase tracking-wider mb-0.5">Layanan Informasi Pendaftaran</p>
+            <a href="tel:081230024264" className="text-2xl font-black tracking-wide text-white hover:text-[#facc15] transition-colors sm:text-3xl">
+              0812-3002-4264
+            </a>
+          </div>
         </div>
-        <p className="text-center font-script text-2xl font-bold italic leading-tight text-hero-foreground sm:text-3xl md:text-right md:text-4xl">
-          Kuliah Fleksibel
-          <span className="block">Raih Masa Depan</span>
-        </p>
+        <div className="text-center md:text-right border-t border-slate-800 pt-6 md:border-t-0 md:pt-0">
+          <p className="font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
+            Kuliah Fleksibel,
+            <span className="block text-[#facc15]">Raih Masa Depan</span>
+          </p>
+        </div>
       </div>
     </footer>
   );
