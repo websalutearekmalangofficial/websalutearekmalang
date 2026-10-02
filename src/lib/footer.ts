@@ -46,9 +46,9 @@ export const defaultFooterContent: FooterContent = {
     background_color: "#a7c8e1",
     sync_columns: true,
     columns: {
-      contact: { height: 260, alignment: "start" },
-      address: { height: 260, alignment: "start" },
-      image: { height: 260, alignment: "start" },
+      contact: { height: 300, alignment: "start" },
+      address: { height: 300, alignment: "start" },
+      image: { height: 300, alignment: "start" },
     },
   },
   columns: [],
