@@ -924,6 +924,15 @@ function FooterBanner() {
   const buildingImage =
     (footer as any).building_image_url ||
     "https://images.unsplash.com/photo-1613144883446-24e5a5ba7dc7?auto=format&fit=crop&q=80&w=800&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+  const imagePresetWidths = {
+    thumbnail: 120,
+    small: 200,
+    medium: 320,
+    large: 480,
+    xlarge: 640,
+    custom: Math.min(1200, Math.max(80, footer.building_image_size?.custom_width ?? 480)),
+  } as const;
+  const buildingImageWidth = imagePresetWidths[footer.building_image_size?.preset ?? "large"] ?? 480;
 
   return (
     // Wrapper putih untuk memberikan ruang background atas gambar agar terlihat menonjol/pop-out
@@ -937,7 +946,10 @@ function FooterBanner() {
           {/* --- GAMBAR SKETSA POP-OUT --- */}
           {/* Dipindah ke dalam container max-w-7xl agar posisinya terkunci di dalam grid konten (tidak lari ke tepi layar saat di-zoom out) */}
           {footer.address?.enabled && (
-            <div className="pointer-events-none absolute right-4 top-0 z-10 w-full max-w-[320px] -translate-y-[45%] opacity-30 sm:right-6 sm:max-w-[400px] sm:opacity-50 md:right-8 md:max-w-[480px] lg:right-12 lg:max-w-[550px] lg:opacity-100 xl:max-w-[650px] 2xl:max-w-[750px]">
+            <div
+              className="pointer-events-none absolute right-4 top-0 z-10 w-full -translate-y-[45%] opacity-30 sm:right-6 sm:opacity-50 md:right-8 lg:right-12 lg:opacity-100"
+              style={{ maxWidth: String(buildingImageWidth) + "px" }}
+            >
               <img 
                 src={buildingImage} 
                 alt="Sketsa Gedung Salute Malang" 
