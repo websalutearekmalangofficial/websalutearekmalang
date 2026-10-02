@@ -135,6 +135,53 @@ function FooterSettingsAdmin() {
               </p>
             </Field>
           </div>
+          <div className="md:col-span-2 grid gap-4 rounded-xl border border-border bg-slate-50 p-4 sm:grid-cols-2">
+            <Field label="Preset ukuran gambar gedung">
+              <select
+                className={inputClass}
+                value={content.building_image_size.preset}
+                onChange={(e) => update({
+                  building_image_size: {
+                    ...content.building_image_size,
+                    preset: e.target.value as FooterContent["building_image_size"]["preset"],
+                  },
+                })}
+              >
+                <option value="thumbnail">Thumbnail — 120 px</option>
+                <option value="small">Small — 200 px</option>
+                <option value="medium">Medium — 320 px</option>
+                <option value="large">Large — 480 px</option>
+                <option value="xlarge">Extra Large — 640 px</option>
+                <option value="custom">Custom — tentukan sendiri</option>
+              </select>
+            </Field>
+            {content.building_image_size.preset === "custom" ? (
+              <Field label="Lebar custom (px)">
+                <input
+                  className={inputClass}
+                  type="number"
+                  min={80}
+                  max={1200}
+                  step={10}
+                  value={content.building_image_size.custom_width}
+                  onChange={(e) => update({
+                    building_image_size: {
+                      ...content.building_image_size,
+                      custom_width: Math.min(1200, Math.max(80, Number(e.target.value) || 80)),
+                    },
+                  })}
+                />
+              </Field>
+            ) : (
+              <div className="flex flex-col justify-center text-xs text-slate-500">
+                <span className="font-bold text-ut-navy">Ukuran terpilih</span>
+                <span>Lebar maksimum mengikuti preset. Tinggi gambar otomatis mengikuti rasio aslinya.</span>
+              </div>
+            )}
+            <div className="sm:col-span-2 rounded-lg border border-dashed border-slate-300 bg-white p-3 text-xs text-slate-500">
+              Pengaturan ukuran disimpan bersama URL gambar ke database dan digunakan pada Footer website. Ukuran adalah lebar maksimum tampilan, bukan mengubah file gambar asli.
+            </div>
+          </div>
           {/* ================================ */}
 
         </div>
