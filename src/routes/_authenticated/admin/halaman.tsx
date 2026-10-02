@@ -8,7 +8,7 @@ import { AdminCard, Field, inputClass, textareaClass } from "@/components/admin/
 import { MediaPicker } from "@/components/admin/media-picker";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchPages, fetchSections, swapOrder } from "@/lib/admin-cms";
+import { fetchPages, fetchSections, swapOrder, uploadMedia } from "@/lib/admin-cms";
 import { deleteHeroBanner, fetchHeroBanners, moveHeroBanner, replaceHeroBanner, setHeroBannerActive, uploadHeroBanner, type HeroBanner } from "@/lib/hero-banners";
 import { iconNames, sectionKinds, type PageRecord, type Section, type SectionItem } from "@/lib/cms";
 
@@ -626,6 +626,7 @@ function SectionEditor({
               {section.items.map((item, itemIndex) => (
                 <ItemEditor
                   key={item.id}
+                  sectionKind={section.kind}
                   item={item}
                   index={itemIndex}
                   total={section.items.length}
@@ -646,18 +647,24 @@ function SectionEditor({
 }
 
 function ItemEditor({
+  sectionKind,
   item,
   index,
   total,
   siblings,
   onChanged,
 }: {
+  sectionKind: string;
   item: SectionItem;
   index: number;
   total: number;
   siblings: SectionItem[];
   onChanged: () => void;
 }) {
+  if (sectionKind === "testimonials") {
+    return <TestimonialItemEditor item={item} index={index} total={total} siblings={siblings} onChanged={onChanged} />;
+  }
+
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(item);
   const [badgeText, setBadgeText] = useState((item.badges ?? []).join(", "));
@@ -684,6 +691,7 @@ function ItemEditor({
           document_url: form.document_url,
           link_url: form.link_url,
           link_label: form.link_label,
+          config: form.config as Record<string, string | number | boolean | null>,
           is_published: form.is_published,
         })
         .eq("id", item.id);
@@ -796,6 +804,116 @@ function ItemEditor({
               <Trash2 className="size-4" aria-hidden="true" />
               Hapus
             </Button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function TestimonialItemEditor({
+  item, index, total, siblings, onChanged,
+}: {
+  item: SectionItem;
+  index: number;
+  total: number;
+  siblings: SectionItem[];
+  onChanged: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState(item);
+  const [role, setRole] = useState(String(item.config?.role ?? item.subtitle ?? ""));
+  const [degree, setDegree] = useState(String(item.config?.degree ?? ""));
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    setForm(item);
+    setRole(String(item.config?.role ?? item.subtitle ?? ""));
+    setDegree(String(item.config?.degree ?? ""));
+  }, [item]);
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").update({
+        title: form.title?.trim() || null,
+        subtitle: role.trim() || null,
+        body: form.body?.trim() || null,
+        media_url: form.media_url || null,
+        config: { ...(form.config ?? {}), role: role.trim(), degree: degree.trim() },
+        is_published: form.is_published,
+      }).eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Testimoni disimpan."); onChanged(); },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menyimpan testimoni."),
+  });
+
+  const move = useMutation({
+    mutationFn: async (direction: -1 | 1) => {
+      const target = siblings[index + direction];
+      if (!target) return;
+      await swapOrder("section_items", { id: item.id, order: item.sort_order }, { id: target.id, order: target.sort_order });
+    },
+    onSuccess: onChanged,
+    onError: () => toast.error("Gagal mengubah urutan."),
+  });
+
+  const remove = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").delete().eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Testimoni dihapus."); onChanged(); },
+    onError: () => toast.error("Gagal menghapus testimoni."),
+  });
+
+  const uploadImage = async (file?: File) => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadMedia(file, "Testimoni - " + (form.title || file.name));
+      setForm((current) => ({ ...current, media_url: url }));
+      toast.success("Foto testimoni berhasil diunggah.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengunggah foto.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-lg border border-border bg-card">
+      <div className="flex flex-wrap items-center gap-2 p-2.5">
+        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-ut-blue text-xs font-black text-hero-foreground">{index + 1}</span>
+        <button type="button" onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 truncate text-left text-sm font-bold text-ut-navy">{form.title || "(tanpa nama)"}</button>
+        <div className="flex shrink-0 gap-1">
+          <Button type="button" variant="formOutline" size="icon" disabled={index === 0} onClick={() => move.mutate(-1)}><ArrowUp className="size-4" /></Button>
+          <Button type="button" variant="formOutline" size="icon" disabled={index === total - 1} onClick={() => move.mutate(1)}><ArrowDown className="size-4" /></Button>
+        </div>
+      </div>
+      {open ? (
+        <div className="space-y-4 border-t border-border p-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Nama"><input className={inputClass} value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Nama lengkap" /></Field>
+            <Field label="Jabatan / Profesi"><input className={inputClass} value={role} onChange={(e) => setRole(e.target.value)} placeholder="Contoh: Mahasiswa Aktif / Alumni / Karyawan" /></Field>
+            <Field label="Gelar"><input className={inputClass} value={degree} onChange={(e) => setDegree(e.target.value)} placeholder="Contoh: S.E., S.Pd., M.M." /></Field>
+          </div>
+          <Field label="Teks Testimoni"><textarea className={textareaClass} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} placeholder="Tulis pengalaman/testimoni..." /></Field>
+          <div className="space-y-2">
+            <span className="block text-xs font-black uppercase tracking-wide text-ut-navy">Foto Testimoni</span>
+            <div className="flex flex-wrap items-center gap-3">
+              {form.media_url ? <img src={form.media_url} alt="Pratinjau testimoni" className="size-20 rounded-full object-cover border border-border" /> : <div className="grid size-20 place-items-center rounded-full bg-section-blue text-xs font-bold text-muted-foreground">Tanpa foto</div>}
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow">
+                <ImagePlus className="size-4" />{uploading ? "Mengunggah..." : "Upload Image"}
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" className="sr-only" disabled={uploading} onChange={(e) => { void uploadImage(e.target.files?.[0]); e.currentTarget.value = ""; }} />
+              </label>
+              {form.media_url ? <Button type="button" variant="formOutline" size="form" onClick={() => setForm({ ...form, media_url: null })}>Hapus Foto</Button> : null}
+            </div>
+          </div>
+          <Toggle label="Tayang di homepage" checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="utYellow" size="form" onClick={() => save.mutate()} disabled={save.isPending}><Save className="size-4" />Simpan Testimoni</Button>
+            <Button type="button" variant="formOutline" size="form" onClick={() => { if (confirm("Hapus testimoni ini?")) remove.mutate(); }}><Trash2 className="size-4" />Hapus</Button>
           </div>
         </div>
       ) : null}
