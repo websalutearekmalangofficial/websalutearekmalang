@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2, Image as ImageIcon, Link as ChainIcon, Palette } from "lucide-react";
+import { ArrowDown, ArrowUp, Link2, Plus, Save, Trash2, Palette } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -112,7 +112,7 @@ function FooterSettingsAdmin() {
           <div className="md:col-span-2">
             <label className="inline-flex items-center gap-2 text-sm font-bold text-ut-navy">
               <input type="checkbox" checked={content.address.enabled} onChange={(e) => update({ address: { ...content.address, enabled: e.target.checked } })} />
-              Tampilkan alamat fisik & Gambar Gedung
+              Tampilkan alamat fisik
             </label>
           </div>
 
@@ -186,10 +186,10 @@ function FooterSettingsAdmin() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="flex items-center gap-2 text-sm font-black text-ut-navy">
-                  <ChainIcon className="size-4" /> Layout 3 Kolom Footer
+                  <ChainIcon className="size-4" /> Layout 2 Kolom Footer
                 </p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Atur tinggi dan posisi vertikal masing-masing kolom: Layanan Informasi Pendaftaran, Alamat Kantor, dan Image Gedung.
+                  Atur tinggi dan posisi vertikal masing-masing kolom: Layanan Informasi Pendaftaran dan Alamat Kantor.
                 </p>
               </div>
               <label className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ut-navy/10 bg-slate-50 px-4 py-2 text-sm font-bold text-ut-navy">
@@ -209,7 +209,6 @@ function FooterSettingsAdmin() {
               {([
                 ["contact", "Layanan Informasi Pendaftaran"],
                 ["address", "Alamat Kantor"],
-                ["image", "Image Gedung"],
               ] as const).map(([key, label]) => (
                 <div key={key} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="mb-3 text-sm font-black text-ut-navy">{label}</p>
@@ -228,8 +227,7 @@ function FooterSettingsAdmin() {
                             ? {
                                 contact: { ...content.layout.columns.contact, height },
                                 address: { ...content.layout.columns.address, height },
-                                image: { ...content.layout.columns.image, height },
-                              }
+                                }
                             : {
                                 ...content.layout.columns,
                                 [key]: { ...content.layout.columns[key], height },
@@ -248,7 +246,6 @@ function FooterSettingsAdmin() {
                             ? {
                                 contact: { ...content.layout.columns.contact, alignment },
                                 address: { ...content.layout.columns.address, alignment },
-                                image: { ...content.layout.columns.image, alignment },
                               }
                             : {
                                 ...content.layout.columns,
