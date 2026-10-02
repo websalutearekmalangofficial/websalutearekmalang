@@ -23,7 +23,8 @@ import {
   Users,
   Clock,
   ArrowRight,
-  Check
+  Check,
+  MapPin
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -718,8 +719,7 @@ function BenefitsSection() {
   );
 }
 
-// === TESTIMONI CMS: SUMBER DATA DARI SUPABASE / DASHBOARD ADMIN ===
-
+// === TESTIMONI CMS ===
 type PublicTestimonial = {
   id: string;
   name: string;
@@ -872,7 +872,6 @@ function TestimonialsSection() {
                 key={item.id}
                 className="group flex cursor-default flex-col items-center text-center transition-all duration-500 hover:-translate-y-4"
               >
-                {/* Arch Image Container */}
                 <div className="mb-6 h-48 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:border-[#facc15] group-hover:shadow-[0_20px_40px_-15px_rgba(250,204,21,0.4)] sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-36 lg:w-28 xl:h-44 xl:w-36">
                   <img
                     src={item.image}
@@ -891,7 +890,6 @@ function TestimonialsSection() {
                   />
                 </div>
 
-                {/* Text Content */}
                 <h3 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide text-white transition-colors group-hover:text-[#facc15] md:text-sm">
                   {item.name}
                 </h3>
@@ -912,6 +910,7 @@ function TestimonialsSection() {
   );
 }
 
+// === FOOTER BANNER CMS + DESAIN TERPUSAT ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -922,46 +921,81 @@ function FooterBanner() {
   });
 
   const footer = footerQuery.data ?? defaultFooterContent;
-  const columns = footer.columns.filter((column) => column.enabled);
+  const columns = footer.columns?.filter((column) => column.enabled) ?? [];
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-900 px-4 py-8 text-white sm:px-6 md:px-8 md:py-10 lg:px-12">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)] md:items-start">
-          {footer.contact.enabled ? (
-            <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
-              <a href={footer.contact.phone_href || "#"} aria-label={footer.contact.label} className="grid size-14 shrink-0 cursor-pointer place-items-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-colors hover:bg-green-400">
-                <Phone className="size-7" aria-hidden="true" />
+    <footer className="bg-[#111c38] px-4 py-12 text-white sm:px-6 md:px-8 lg:px-12 border-t border-slate-800">
+      <div className="mx-auto max-w-7xl flex flex-col items-center text-center">
+        
+        {/* Informasi Kontak & WhatsApp Terpusat */}
+        {footer.contact?.enabled && (
+          <div className="mb-10 flex flex-col items-center justify-center gap-4">
+            <a href={footer.contact.phone_href || "#"} aria-label={footer.contact.label} className="grid size-14 shrink-0 place-items-center rounded-full bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)] transition-transform hover:scale-110">
+              <Phone className="size-7" aria-hidden="true" />
+            </a>
+            <div>
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-2">
+                {footer.contact.label}
+              </p>
+              <a href={footer.contact.phone_href || "#"} className="text-3xl font-black tracking-wide text-white hover:text-[#facc15] transition-colors sm:text-4xl">
+                {footer.contact.phone}
               </a>
-              <div>
-                <p className="mb-0.5 text-sm font-medium uppercase tracking-wider text-slate-400">{footer.contact.label}</p>
-                <a href={footer.contact.phone_href || "#"} className="text-2xl font-black tracking-wide text-white transition-colors hover:text-[#facc15] sm:text-3xl">{footer.contact.phone}</a>
-              </div>
             </div>
-          ) : null}
-
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {columns.map((column) => (
-              <div key={column.id} className="text-center md:text-left">
-                <h3 className="mb-3 text-sm font-black uppercase tracking-wider text-white">{column.title}</h3>
-                <div className="space-y-2">
-                  {column.items.filter((item) => item.enabled && item.label).map((item) => (
-                    <a key={item.id} href={item.href || "#"} className="block text-sm font-medium text-slate-300 transition-colors hover:text-[#facc15]" {...(item.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>{item.label}</a>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
+        )}
+
+        {/* Alamat Fisik & Slogan Terpusat */}
+        <div className="w-full max-w-3xl border-t border-slate-700/50 pt-10">
+          {footer.slogan?.enabled && (
+            <p className="mb-8 font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
+              {footer.slogan.line1} <span className="text-[#facc15]">{footer.slogan.line2}</span>
+            </p>
+          )}
+
+          {footer.address?.enabled && footer.address?.text && (
+            <div className="flex flex-col items-center gap-3">
+              <div className="grid size-10 place-items-center rounded-full bg-white/10 text-slate-300">
+                <MapPin className="size-5" aria-hidden="true" />
+              </div>
+              <p className="text-sm font-medium leading-relaxed text-slate-300 md:text-base max-w-lg">
+                {footer.address.text}
+              </p>
+            </div>
+          )}
         </div>
 
-        {footer.slogan.enabled ? (
-          <div className="mt-8 border-t border-slate-800 pt-6 text-center md:text-right">
-            <p className="font-display text-2xl font-extrabold italic leading-tight text-white sm:text-3xl">
-              {footer.slogan.line1}
-              <span className="block text-[#facc15]">{footer.slogan.line2}</span>
-            </p>
+        {/* Dynamic Columns / Tautan Terpusat (Jika ditambahkan dari CMS) */}
+        {columns.length > 0 && (
+          <div className="w-full mt-10 border-t border-slate-700/50 pt-10">
+            <div className="grid gap-8 sm:grid-cols-2 lg:flex lg:justify-center lg:gap-16">
+              {columns.map((column) => (
+                <div key={column.id} className="text-center">
+                  <h3 className="mb-4 text-sm font-black uppercase tracking-wider text-white">
+                    {column.title}
+                  </h3>
+                  <div className="space-y-3 flex flex-col items-center">
+                    {column.items.filter((item) => item.enabled && item.label).map((item) => (
+                      <a 
+                        key={item.id} 
+                        href={item.href || "#"} 
+                        className="block text-sm font-medium text-slate-400 transition-colors hover:text-[#facc15]" 
+                        {...(item.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ) : null}
+        )}
+        
+        {/* Copyright */}
+        <div className="mt-16 text-xs text-slate-500 font-medium">
+           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
+        </div>
+
       </div>
     </footer>
   );
