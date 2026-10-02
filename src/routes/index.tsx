@@ -308,16 +308,16 @@ function HeroBanner() {
   const activeBanner = banners[activeSlide] ?? banners[0];
 
   return (
-    <section id="home" aria-label="Hero Banner" className="relative scroll-mt-20 overflow-hidden bg-hero-deep">
+    <section id="home" aria-label="Hero Banner" className="relative scroll-mt-20 h-[clamp(220px,38vw,620px)] overflow-hidden bg-hero-deep">
       {activeBanner?.url ? (
         <img
           key={activeBanner.id}
           src={activeBanner.url}
           alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
-          className="relative z-10 block h-auto max-h-[80vh] w-full object-contain"
+          className="absolute inset-0 z-10 block h-full w-full object-contain object-center"
         />
       ) : (
-        <div className="h-[240px] w-full bg-hero-deep sm:h-[340px] md:h-[440px] lg:h-[520px]" aria-hidden="true" />
+        <div className="absolute inset-0 bg-hero-deep" aria-hidden="true" />
       )}
 
       {banners.length > 1 ? (
