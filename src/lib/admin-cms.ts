@@ -77,6 +77,7 @@ export async function fetchMedia(): Promise<MediaRow[]> {
 
 export type RegistrationRow = {
   id: string;
+  registration_reference: string | null;
   nama: string;
   sekolah: string | null;
   kota: string | null;
