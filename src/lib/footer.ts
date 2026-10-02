@@ -19,8 +19,6 @@ export type FooterContent = {
   contact: { label: string; phone: string; phone_href: string; enabled: boolean };
   slogan: { line1: string; line2: string; enabled: boolean };
   address: { text: string; enabled: boolean };
-  building_image_url: string; // Tambahan field untuk URL Gambar Sketsa
-  building_image_size: { preset: "thumbnail" | "small" | "medium" | "large" | "xlarge" | "custom"; custom_width: number };
   layout: {
     background_color: string;
     sync_columns: boolean;
@@ -40,8 +38,6 @@ export const defaultFooterContent: FooterContent = {
     text: "Mall Pelayanan Publik Merdeka Malang Lt. 3 (Ramayana Alun-Alun Kota Malang) Jl. Merdeka Timur No. 4 Malang.", 
     enabled: true 
   },
-  building_image_url: "", // Default kosong, akan diisi via CMS
-  building_image_size: { preset: "large", custom_width: 480 },
   layout: {
     background_color: "#a7c8e1",
     sync_columns: true,
@@ -64,11 +60,6 @@ function parseFooter(value: string | null | undefined): FooterContent {
       contact: { ...defaultFooterContent.contact, ...(parsed.contact ?? {}) },
       slogan: { ...defaultFooterContent.slogan, ...(parsed.slogan ?? {}) },
       address: { ...defaultFooterContent.address, ...(parsed.address ?? {}) },
-      building_image_url: parsed.building_image_url ?? defaultFooterContent.building_image_url,
-      building_image_size: {
-        ...defaultFooterContent.building_image_size,
-        ...(parsed.building_image_size ?? {}),
-      },
       layout: {
         ...defaultFooterContent.layout,
         ...(parsed.layout ?? {}),
@@ -102,7 +93,7 @@ export async function saveFooterAdmin(content: FooterContent) {
   const { error } = await supabase.from("admin_settings").upsert({
     key: "footer_content",
     value: JSON.stringify(content),
-    description: "Konten Footer Website: kontak, slogan, alamat, gambar gedung, dan item/kolom footer yang dikelola dari Dashboard Admin",
+    description: "Konten Footer Website: kontak, slogan, alamat, dan item/kolom footer yang dikelola dari Dashboard Admin",
     updated_by: user.user?.id ?? null,
   }, { onConflict: "key" });
   if (error) throw error;
