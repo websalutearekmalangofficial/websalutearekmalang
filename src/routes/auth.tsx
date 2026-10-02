@@ -35,13 +35,42 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin", replace: true });
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) navigate({ to: "/admin", replace: true });
-    });
-    return () => sub.subscription.unsubscribe();
+    let active = true;
+    let subscription: { unsubscribe: () => void } | undefined;
+
+    const syncSession = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (active && data.session) {
+          await navigate({ to: "/admin", replace: true });
+        }
+      } catch (error) {
+        // Auth/session restoration must never replace the login screen with
+        // the global error boundary. A failed session lookup simply means
+        // the user remains on /auth and can try signing in normally.
+        console.error("[Auth] Session restore failed", error);
+      }
+    };
+
+    try {
+      const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_IN" && session && active) {
+          void navigate({ to: "/admin", replace: true }).catch((error) => {
+            console.error("[Auth] Redirect to admin failed", error);
+          });
+        }
+      });
+      subscription = data.subscription;
+    } catch (error) {
+      console.error("[Auth] Auth listener setup failed", error);
+    }
+
+    void syncSession();
+
+    return () => {
+      active = false;
+      subscription?.unsubscribe();
+    };
   }, [navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
