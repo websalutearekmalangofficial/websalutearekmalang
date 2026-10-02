@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, Eye, EyeOff, ImagePlus, Plus, Power, RefreshCw, Replace, Save, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, Eye, EyeOff, ImagePlus, Plus, Power, RefreshCw, Replace, Save, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminCard, Field, inputClass, textareaClass } from "@/components/admin/field";
@@ -19,6 +19,8 @@ export const Route = createFileRoute("/_authenticated/admin/halaman")({
 function PagesAdmin() {
   const queryClient = useQueryClient();
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
+  const [pageSearch, setPageSearch] = useState("");
+  const [pagePickerOpen, setPagePickerOpen] = useState(false);
 
   const pagesQuery = useQuery({ queryKey: ["pages"], queryFn: fetchPages });
   const pages = pagesQuery.data ?? [];
@@ -80,22 +82,90 @@ function PagesAdmin() {
   return (
     <>
       <AdminCard title="Daftar Halaman" description="Pilih halaman untuk mengelola section di dalamnya.">
-        <div className="mb-4 flex flex-wrap gap-2">
-          {pages.map((page) => (
-            <button
-              key={page.id}
-              type="button"
-              onClick={() => setSelectedPageId(page.id)}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-black transition ${
-                page.id === selectedPageId
-                  ? "bg-ut-yellow text-ut-navy shadow-yellow"
-                  : "border border-border bg-background text-ut-navy hover:bg-section-blue"
-              }`}
-            >
-              {page.title}
-              {page.is_published ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
-            </button>
-          ))}
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="relative min-w-0 flex-1">
+            <label htmlFor="admin-page-search" className="mb-1.5 block text-xs font-black uppercase tracking-wide text-ut-navy">
+              Pilih halaman
+            </label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+              <input
+                id="admin-page-search"
+                type="text"
+                value={pagePickerOpen ? pageSearch : (pages.find((page) => page.id === selectedPageId)?.title ?? "")}
+                onFocus={() => {
+                  setPagePickerOpen(true);
+                  setPageSearch("");
+                }}
+                onChange={(event) => {
+                  setPageSearch(event.target.value);
+                  setPagePickerOpen(true);
+                }}
+                placeholder="Ketik untuk mencari halaman..."
+                autoComplete="off"
+                className={\`\${inputClass} pl-10 pr-10\`}
+                role="combobox"
+                aria-expanded={pagePickerOpen}
+                aria-controls="admin-page-options"
+                aria-autocomplete="list"
+              />
+              <ChevronDown
+                className={\`pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-ut-navy transition \${pagePickerOpen ? "rotate-180" : ""}\`}
+                aria-hidden="true"
+              />
+            </div>
+
+            {pagePickerOpen ? (
+              <div
+                id="admin-page-options"
+                className="absolute inset-x-0 top-full z-30 mt-1 max-h-64 overflow-y-auto rounded-xl border border-border bg-card p-1.5 shadow-lg"
+                role="listbox"
+              >
+                {pages
+                  .filter((page) => {
+                    const query = pageSearch.trim().toLowerCase();
+                    if (!query) return true;
+                    return [page.title, page.slug, page.nav_label ?? ""].some((value) =>
+                      value.toLowerCase().includes(query),
+                    );
+                  })
+                  .map((page) => (
+                    <button
+                      key={page.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPageId(page.id);
+                        setPageSearch("");
+                        setPagePickerOpen(false);
+                      }}
+                      className={\`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-bold transition hover:bg-section-blue \${page.id === selectedPageId ? "bg-ut-yellow/20 text-ut-navy" : "text-ut-navy"}\`}
+                      role="option"
+                      aria-selected={page.id === selectedPageId}
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate">{page.title}</span>
+                        <span className="block truncate text-xs font-medium text-muted-foreground">{page.slug}</span>
+                      </span>
+                      {page.is_published ? (
+                        <Eye className="size-4 shrink-0 text-emerald-600" aria-label="Tayang" />
+                      ) : (
+                        <EyeOff className="size-4 shrink-0 text-muted-foreground" aria-label="Tidak tayang" />
+                      )}
+                    </button>
+                  ))}
+                {pages.filter((page) => {
+                  const query = pageSearch.trim().toLowerCase();
+                  if (!query) return true;
+                  return [page.title, page.slug, page.nav_label ?? ""].some((value) =>
+                    value.toLowerCase().includes(query),
+                  );
+                }).length === 0 ? (
+                  <p className="px-3 py-4 text-center text-sm text-muted-foreground">Halaman tidak ditemukan.</p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
           <Button type="button" variant="formOutline" className="h-10 rounded-full px-4" onClick={() => addPage.mutate()}>
             <Plus className="size-4" aria-hidden="true" />
             Halaman baru
