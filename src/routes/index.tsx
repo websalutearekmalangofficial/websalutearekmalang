@@ -515,7 +515,7 @@ function KeunggulanBannerSection() {
           <div>
             <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Pendampingan</h3>
             <p className="text-slate-300 text-sm md:text-base leading-relaxed">
-              Tim akademik siap membantu selama masa perkuliahan.
+              Tim akademik membantu selama masa perkuliahan.
             </p>
           </div>
         </div>
