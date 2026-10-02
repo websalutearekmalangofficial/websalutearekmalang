@@ -365,34 +365,62 @@ function RegistrationPage() {
                     <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Data Diri Calon Mahasiswa</h2>
                     <p className="mt-1 text-sm text-slate-500">Isi identitas dan informasi kontak yang aktif.</p>
                   </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
-                    <h3 className="mb-4 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">1. Data Diri</h3>
-                    <input type="text" placeholder="Nama Lengkap" value={formData.namaLengkap} onChange={(e) => setFormData({ ...formData, namaLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <input type="text" placeholder="Tempat Lahir" value={formData.tempatLahir} onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
-                      <input type="date" value={formData.tanggalLahir} onChange={(e) => setFormData({ ...formData, tanggalLahir: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-6">
+                    <h3 className="mb-5 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">1. Data Diri</h3>
+                    <div className="space-y-5">
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Nama Lengkap</label>
+                        <input type="text" placeholder="Masukkan nama lengkap" value={formData.namaLengkap} onChange={(e) => setFormData({ ...formData, namaLengkap: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                      </div>
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-sm font-bold text-slate-700">Tempat Lahir</label>
+                          <input type="text" placeholder="Masukkan tempat lahir" value={formData.tempatLahir} onChange={(e) => setFormData({ ...formData, tempatLahir: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-bold text-slate-700">Tanggal Lahir</label>
+                          <input type="date" value={formData.tanggalLahir} onChange={(e) => setFormData({ ...formData, tanggalLahir: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-sm font-bold text-slate-700">Agama</label>
+                          <select value={formData.agama} onChange={(e) => setFormData({ ...formData, agama: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                            <option value="">Pilih agama</option>
+                            <option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Buddha">Buddha</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-sm font-bold text-slate-700">Jenis Kelamin</label>
+                          <select value={formData.jenisKelamin} onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                            <option value="">Pilih jenis kelamin</option>
+                            <option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Nama Ibu Kandung</label>
+                        <input type="text" placeholder="Masukkan nama ibu kandung" value={formData.namaIbuKandung} onChange={(e) => setFormData({ ...formData, namaIbuKandung: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                      </div>
                     </div>
-                    <select value={formData.agama} onChange={(e) => setFormData({ ...formData, agama: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white">
-                      <option value="">-- Pilih Agama --</option>
-                      <option value="Islam">Islam</option>
-                      <option value="Kristen">Kristen</option>
-                      <option value="Katolik">Katolik</option>
-                      <option value="Hindu">Hindu</option>
-                      <option value="Buddha">Buddha</option>
-                    </select>
-                    <select value={formData.jenisKelamin} onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white">
-                      <option value="">-- Jenis Kelamin --</option>
-                      <option value="Laki-laki">Laki-laki</option>
-                      <option value="Perempuan">Perempuan</option>
-                    </select>
-                    <input type="text" placeholder="Nama Ibu Kandung" value={formData.namaIbuKandung} onChange={(e) => setFormData({ ...formData, namaIbuKandung: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
                   </div>
 
-                  <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
-                    <h3 className="mb-4 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">2. Kontak & Domisili</h3>
-                    <textarea placeholder="Alamat Lengkap" rows={2} value={formData.alamatLengkap} onChange={(e) => setFormData({ ...formData, alamatLengkap: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
-                    <input type="email" placeholder="Email Aktif" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
-                    <input type="tel" placeholder="Nomor HP / WhatsApp" value={formData.nomorHp} onChange={(e) => setFormData({ ...formData, nomorHp: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border bg-white" />
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+                    <h3 className="mb-5 border-b border-slate-200 pb-3 text-sm font-black uppercase tracking-wide text-slate-800">2. Kontak & Domisili</h3>
+                    <div className="space-y-5">
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Alamat Lengkap</label>
+                        <textarea placeholder="Masukkan alamat lengkap" rows={3} value={formData.alamatLengkap} onChange={(e) => setFormData({ ...formData, alamatLengkap: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Email Aktif</label>
+                        <input type="email" placeholder="Masukkan email aktif" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Nomor HP / WhatsApp</label>
+                        <input type="tel" placeholder="Masukkan nomor HP / WhatsApp" value={formData.nomorHp} onChange={(e) => setFormData({ ...formData, nomorHp: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -404,33 +432,35 @@ function RegistrationPage() {
                     <h2 className="text-xl font-black tracking-tight text-slate-900 sm:text-2xl">Jalur & Program Studi</h2>
                     <p className="mt-1 text-sm text-slate-500">Tentukan jalur, jenjang, fakultas, dan program studi yang dipilih.</p>
                   </div>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <select value={formData.jalurPendaftaran} onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })} className="w-full px-4 py-3 rounded-lg border bg-white">
-                    <option value="Reguler">Reguler</option>
-                    <option value="RPL">RPL</option>
-                  </select>
-                  <select value={formData.jenjangPendidikan} onChange={(e) => setFormData({ ...formData, jenjangPendidikan: e.target.value, fakultas: "", jurusan: "" })} className="w-full px-4 py-3 rounded-lg border bg-white">
-                    <option value="Diploma">Diploma (D3 & D4)</option>
-                    <option value="Sarjana (S1)">Sarjana (S1)</option>
-                    <option value="Magister (S2)">Magister (S2)</option>
-                    <option value="Doktoral (S3)">Doktoral (S3)</option>
-                    <option value="Profesi">Pendidikan Profesi Guru (PPG)</option>
-                  </select>
-                  {formData.jenjangPendidikan === "Sarjana (S1)" && (
-                    <select value={formData.fakultas} onChange={(e) => setFormData({ ...formData, fakultas: e.target.value, jurusan: "" })} className="w-full px-4 py-3 rounded-lg border bg-white">
-                      <option value="FEB">Fakultas Ekonomi dan Bisnis (FEB)</option>
-                      <option value="FKIP">Fakultas Keguruan dan Ilmu Pendidikan (FKIP)</option>
-                      <option value="FST">Fakultas Sains dan Teknologi (FST)</option>
-                      <option value="FHISIP">Fakultas Hukum, Ilmu Sosial, dan Ilmu Politik (FHISIP)</option>
-                    </select>
-                  )}
-                  <div className="sm:col-span-2">
-                  <select value={formData.jurusan} onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })} className="w-full px-4 py-3 rounded-lg border bg-white">
-                    <option value="" disabled>-- Pilih Program Studi --</option>
-                    {getJurusanOptions().map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                  </select>
+                  <div className="space-y-5">
+                    <div>
+                      <label className="mb-2 block text-sm font-bold text-slate-700">Jalur Pendaftaran</label>
+                      <select value={formData.jalurPendaftaran} onChange={(e) => setFormData({ ...formData, jalurPendaftaran: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                        <option value="Reguler">Reguler</option><option value="RPL">RPL</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-bold text-slate-700">Program Pendidikan / Jenjang</label>
+                      <select value={formData.jenjangPendidikan} onChange={(e) => setFormData({ ...formData, jenjangPendidikan: e.target.value, fakultas: "", jurusan: "" })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                        <option value="Diploma">Diploma (D3 & D4)</option><option value="Sarjana (S1)">Sarjana (S1)</option><option value="Magister (S2)">Magister (S2)</option><option value="Doktoral (S3)">Doktoral (S3)</option><option value="Profesi">Pendidikan Profesi Guru (PPG)</option>
+                      </select>
+                    </div>
+                    {formData.jenjangPendidikan === "Sarjana (S1)" && (
+                      <div>
+                        <label className="mb-2 block text-sm font-bold text-slate-700">Fakultas</label>
+                        <select value={formData.fakultas} onChange={(e) => setFormData({ ...formData, fakultas: e.target.value, jurusan: "" })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                          <option value="FEB">Fakultas Ekonomi dan Bisnis (FEB)</option><option value="FKIP">Fakultas Keguruan dan Ilmu Pendidikan (FKIP)</option><option value="FST">Fakultas Sains dan Teknologi (FST)</option><option value="FHISIP">Fakultas Hukum, Ilmu Sosial, dan Ilmu Politik (FHISIP)</option>
+                        </select>
+                      </div>
+                    )}
+                    <div>
+                      <label className="mb-2 block text-sm font-bold text-slate-700">Jurusan / Program Studi</label>
+                      <select value={formData.jurusan} onChange={(e) => setFormData({ ...formData, jurusan: e.target.value })} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3">
+                        <option value="" disabled>-- Pilih Program Studi --</option>
+                        {getJurusanOptions().map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                    </div>
                   </div>
-                </div>
                 </div>
               )}
 
