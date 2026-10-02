@@ -311,11 +311,11 @@ function HeroBanner() {
   );
 }
 
-// === REDESAIN: GABUNGAN CTA & ALUR PENDAFTARAN ===
+// === REDESAIN: ALUR PENDAFTARAN FULL ANIMATED ===
 function CombinedCTAProcessSection() {
   return (
     <section id="panduan" className="px-4 pt-16 pb-12 sm:px-6 md:px-8 md:pt-24 md:pb-16 lg:px-12 relative z-10">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[45%_55%] xl:gap-16">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[40%_60%] xl:gap-16">
         
         {/* Kolom Kiri: Teks & Tombol */}
         <div className="flex flex-col items-start gap-6">
@@ -329,44 +329,47 @@ function CombinedCTAProcessSection() {
           </p>
           <Link
             to="/daftar"
-            className="mt-2 inline-flex h-12 md:h-14 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:bg-yellow-400 hover:-translate-y-1"
+            className="group mt-2 inline-flex h-12 md:h-14 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:bg-yellow-400 hover:-translate-y-1"
           >
-            Mulai Pendaftaran <ArrowRight className="w-5 h-5" />
+            Mulai Pendaftaran <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
 
-        {/* Kolom Kanan: Kartu Alur Pendaftaran (Desain Estetik Putih) */}
+        {/* Kolom Kanan: Kartu Alur Pendaftaran (Interaktif & Berwarna) */}
         <div className="w-full">
-          <div className="mb-8 border-b-2 border-slate-100 pb-4">
+          <div className="mb-10 border-b-2 border-slate-100 pb-4">
             <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
               Alur Pendaftaran Sentra Layanan UT
             </h2>
-            <div className="mt-3 h-1 w-16 rounded-full bg-[#facc15]" aria-hidden="true" />
+            <div className="mt-3 h-1.5 w-20 rounded-full bg-[#facc15]" aria-hidden="true" />
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
               return (
-                <div key={step.number} className="relative mt-3">
-                  <article className="relative flex h-full min-h-[160px] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
-                    {/* Nomor Step Melayang */}
-                    <div className="absolute -left-3 -top-3 flex size-8 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-sm font-black text-[#111c38] shadow-sm">
+                <div key={step.number} className="group relative mt-2">
+                  <article className="relative flex h-full min-h-[200px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 group-hover:-translate-y-3 group-hover:border-transparent group-hover:bg-[#111c38] group-hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)]">
+                    
+                    {/* Nomor Step Melayang - Diperbesar & Animasi */}
+                    <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:border-[#111c38]">
                       {step.number}
                     </div>
                     
-                    {/* Ikon */}
-                    <Icon className="mb-4 size-9 text-[#111c38]" strokeWidth={1.8} aria-hidden="true" />
+                    {/* Ikon Container - Lebih berwarna & Animasi */}
+                    <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all duration-500 group-hover:bg-[#facc15] group-hover:text-[#111c38] group-hover:scale-110 group-hover:-rotate-3 shadow-sm">
+                      <Icon className="size-8" strokeWidth={2.5} aria-hidden="true" />
+                    </div>
                     
-                    {/* Teks */}
-                    <h3 className="mb-2 text-sm font-extrabold leading-tight text-[#111c38]">{step.title}</h3>
+                    {/* Teks - Diperbesar */}
+                    <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">{step.title}</h3>
 
                     {/* Badges */}
                     {step.badges ? (
-                      <div className="flex flex-wrap justify-center gap-1.5 mt-auto">
+                      <div className="flex flex-wrap justify-center gap-2 mt-auto">
                         {step.badges.map((badge) => (
-                          <span key={badge} className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[0.65rem] font-bold text-slate-600">
-                            <CheckCircle2 className="size-3 text-[#facc15]" aria-hidden="true" />
+                          <span key={badge} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200">
+                            <CheckCircle2 className="size-3.5 text-[#facc15]" aria-hidden="true" />
                             {badge}
                           </span>
                         ))}
@@ -374,9 +377,9 @@ function CombinedCTAProcessSection() {
                     ) : null}
                   </article>
                   
-                  {/* Chevron Penunjuk Arah (Desktop) */}
+                  {/* Chevron Penunjuk Arah (Desktop) beranimasi */}
                   {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="absolute -right-4 top-1/2 z-10 hidden size-5 -translate-y-1/2 text-slate-300 lg:block" aria-hidden="true" />
+                    <ChevronRight className="absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:text-[#facc15] group-hover:translate-x-2 lg:block" aria-hidden="true" />
                   ) : null}
                 </div>
               );
@@ -398,7 +401,7 @@ function KeunggulanBannerSection() {
         {/* Item 1 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Gift className="w-8 h-8" strokeWidth={2} />
+            <Gift className="w-8 h-8" strokeWidth={2.5} />
           </div>
           <div>
             <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Layanan Gratis</h3>
@@ -414,7 +417,7 @@ function KeunggulanBannerSection() {
         {/* Item 2 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Users className="w-8 h-8" strokeWidth={2} />
+            <Users className="w-8 h-8" strokeWidth={2.5} />
           </div>
           <div>
             <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Pendampingan</h3>
@@ -430,7 +433,7 @@ function KeunggulanBannerSection() {
         {/* Item 3 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
-            <Clock className="w-8 h-8" strokeWidth={2} />
+            <Clock className="w-8 h-8" strokeWidth={2.5} />
           </div>
           <div>
             <h3 className="text-white font-extrabold text-lg md:text-xl mb-1.5 tracking-wide">Waktu Fleksibel</h3>
