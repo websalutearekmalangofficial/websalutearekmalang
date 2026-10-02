@@ -23,7 +23,8 @@ import {
   Gift,
   Users,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Check
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -54,37 +55,84 @@ export const Route = createFileRoute("/")({
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
 
+// Data alur pendaftaran ditambahkan deskripsi detail untuk pop-up
 const processSteps = [
   {
     number: "1",
     icon: ClipboardPenLine,
     title: "Isi Formulir",
+    description: "Siapkan dan lengkapi data diri serta informasi kontak Anda.",
+    details: [
+      "Nama Lengkap (Sesuai Ijazah)",
+      "Tempat & Tanggal Lahir",
+      "Agama & Jenis Kelamin",
+      "Nama Ibu Kandung",
+      "Alamat Lengkap Domisili",
+      "Email Aktif (Penting untuk verifikasi)",
+      "Nomor HP / WhatsApp Aktif"
+    ]
   },
   {
     number: "2",
     icon: CheckCircle2,
     title: "Pilih Jalur",
     badges: ["SIPAS", "Non SIPAS"],
+    description: "Tentukan jalur masuk yang sesuai dengan latar belakang pendidikan Anda.",
+    details: [
+      "Jalur Reguler (Untuk lulusan SMA/SMK/MA sederajat)",
+      "Jalur RPL / Alih Kredit (Untuk lulusan D3/D4/S1 yang ingin melanjutkan studi atau transfer SKS)",
+      "Layanan SIPAS (Sistem Paket Semester) - Mata kuliah sudah dipaketkan",
+      "Layanan Non-SIPAS - Mahasiswa bebas memilih mata kuliah sendiri per semester"
+    ]
   },
   {
     number: "3",
     icon: GraduationCap,
     title: "Pilih Jurusan",
+    description: "Pilih jenjang dan program studi sesuai minat dan karir Anda.",
+    details: [
+      "Fakultas Ekonomi dan Bisnis (FEB)",
+      "Fakultas Keguruan dan Ilmu Pendidikan (FKIP)",
+      "Fakultas Sains dan Teknologi (FST)",
+      "Fakultas Hukum, Ilmu Sosial dan Ilmu Politik (FHISIP)",
+      "Tersedia untuk jenjang Diploma, Sarjana (S1), Magister (S2), hingga Doktoral (S3)"
+    ]
   },
   {
     number: "4",
     icon: CloudUpload,
     title: "Unggah Dokumen",
+    description: "Siapkan pindaian (scan) dokumen asli berikut dalam format JPG/PDF.",
+    details: [
+      "Pas Foto (Latar belakang Merah/Biru)",
+      "Kartu Tanda Penduduk (KTP)",
+      "Kartu Keluarga (KK)",
+      "Ijazah Terakhir (Asli dilegalisir)",
+      "Transkrip Nilai (Asli dilegalisir)",
+      "Surat Keterangan Sehat dari fasilitas kesehatan"
+    ]
   },
   {
     number: "5",
     icon: MonitorCheck,
     title: "Verifikasi Admin",
+    description: "Tunggu proses pengecekan berkas oleh tim kami.",
+    details: [
+      "Admin SALUT Arek Malang akan memverifikasi kelengkapan dan keabsahan dokumen Anda.",
+      "Proses verifikasi biasanya memakan waktu 1 hingga 3 hari kerja.",
+      "Anda dapat memantau status pendaftaran secara berkala melalui website atau menunggu notifikasi dari kami."
+    ]
   },
   {
     number: "6",
     icon: IdCard,
     title: "Dapat Nomor Akun",
+    description: "Terima akses resmi sebagai calon mahasiswa Universitas Terbuka.",
+    details: [
+      "Jika verifikasi berhasil disetujui, Anda akan mendapatkan Nomor Induk Mahasiswa (NIM) sementara.",
+      "Lembar Informasi Pembayaran (LIP) dan panduan bayar SPP akan dikirimkan ke email terdaftar Anda.",
+      "Lakukan pembayaran sesuai batas waktu agar status Anda resmi menjadi mahasiswa aktif UT."
+    ]
   },
 ];
 
@@ -140,7 +188,6 @@ function Index() {
     <main className="min-h-screen overflow-hidden bg-[#f8fafc] font-body text-foreground">
       <Header />
       <HeroBanner />
-      {/* Wrapper Putih untuk CTA & Alur Pendaftaran */}
       <div className="bg-white">
         <CombinedCTAProcessSection />
         <KeunggulanBannerSection />
@@ -311,10 +358,78 @@ function HeroBanner() {
   );
 }
 
-// === REDESAIN: ALUR PENDAFTARAN FULL ANIMATED ===
+// === REDESAIN: ALUR PENDAFTARAN DENGAN MODAL INTERAKTIF ===
 function CombinedCTAProcessSection() {
+  const [selectedStep, setSelectedStep] = useState<typeof processSteps[0] | null>(null);
+
+  // Mencegah scroll pada body saat modal terbuka
+  useEffect(() => {
+    if (selectedStep) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedStep]);
+
   return (
     <section id="panduan" className="px-4 pt-16 pb-12 sm:px-6 md:px-8 md:pt-24 md:pb-16 lg:px-12 relative z-10">
+      
+      {/* --- MODAL POP-UP --- */}
+      {selectedStep && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedStep(null)}>
+          <div 
+            className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()} // Mencegah modal tertutup saat area dalam di klik
+          >
+            {/* Header Modal */}
+            <div className="bg-[#111c38] p-6 text-white flex items-center justify-between relative overflow-hidden">
+              <div className="absolute right-0 top-0 w-32 h-32 bg-[#facc15]/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+              <div className="flex items-center gap-4 relative z-10">
+                <div className="grid size-12 place-items-center rounded-full bg-[#facc15] text-[#111c38]">
+                  <selectedStep.icon className="size-6" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[#facc15] text-xs font-black uppercase tracking-wider mb-0.5">Langkah {selectedStep.number}</p>
+                  <h3 className="text-xl font-extrabold">{selectedStep.title}</h3>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedStep(null)}
+                className="relative z-10 grid size-8 place-items-center rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            
+            {/* Body Modal */}
+            <div className="p-6 md:p-8">
+              <p className="text-slate-600 font-medium mb-5">{selectedStep.description}</p>
+              <ul className="space-y-3">
+                {selectedStep.details.map((detail, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-sm text-slate-700">
+                    <div className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
+                      <Check className="size-3.5" strokeWidth={3} />
+                    </div>
+                    <span className="leading-snug">{detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Footer Modal */}
+            <div className="bg-slate-50 p-4 px-6 md:px-8 border-t border-slate-100 flex justify-end">
+              <button 
+                onClick={() => setSelectedStep(null)}
+                className="px-6 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-bold rounded-full transition-colors"
+              >
+                Tutup Pemandu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[40%_60%] xl:gap-16">
         
         {/* Kolom Kiri: Teks & Tombol */}
@@ -325,7 +440,7 @@ function CombinedCTAProcessSection() {
             Bersama <span className="text-[#facc15]">SALUT Arek Malang</span>
           </h2>
           <p className="text-slate-500 text-lg md:text-xl max-w-md leading-relaxed">
-            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak jauh yang inovatif dan terjangkau.
+            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak jauh yang inovatif dan terjangkau. Klik setiap alur untuk info lebih lanjut!
           </p>
           <Link
             to="/daftar"
@@ -335,7 +450,7 @@ function CombinedCTAProcessSection() {
           </Link>
         </div>
 
-        {/* Kolom Kanan: Kartu Alur Pendaftaran (Interaktif & Berwarna) */}
+        {/* Kolom Kanan: Kartu Alur Pendaftaran */}
         <div className="w-full">
           <div className="mb-10 border-b-2 border-slate-100 pb-4">
             <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
@@ -349,19 +464,21 @@ function CombinedCTAProcessSection() {
               const Icon = step.icon;
               return (
                 <div key={step.number} className="group relative mt-2">
-                  <article className="relative flex h-full min-h-[200px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 group-hover:-translate-y-3 group-hover:border-transparent group-hover:bg-[#111c38] group-hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)]">
-                    
-                    {/* Nomor Step Melayang - Diperbesar & Animasi */}
+                  <button 
+                    onClick={() => setSelectedStep(step)}
+                    className="w-full text-left relative flex h-full min-h-[200px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] cursor-pointer transition-all duration-500 hover:-translate-y-3 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
+                  >
+                    {/* Nomor Step Melayang */}
                     <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:border-[#111c38]">
                       {step.number}
                     </div>
                     
-                    {/* Ikon Container - Lebih berwarna & Animasi */}
+                    {/* Ikon Container */}
                     <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 transition-all duration-500 group-hover:bg-[#facc15] group-hover:text-[#111c38] group-hover:scale-110 group-hover:-rotate-3 shadow-sm">
                       <Icon className="size-8" strokeWidth={2.5} aria-hidden="true" />
                     </div>
                     
-                    {/* Teks - Diperbesar */}
+                    {/* Teks */}
                     <h3 className="mb-3 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">{step.title}</h3>
 
                     {/* Badges */}
@@ -374,12 +491,16 @@ function CombinedCTAProcessSection() {
                           </span>
                         ))}
                       </div>
-                    ) : null}
-                  </article>
+                    ) : (
+                      <div className="mt-auto text-xs font-semibold text-blue-500 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:text-[#facc15]">
+                        Klik untuk info detail
+                      </div>
+                    )}
+                  </button>
                   
-                  {/* Chevron Penunjuk Arah (Desktop) beranimasi */}
+                  {/* Chevron Penunjuk Arah */}
                   {index % 3 !== 2 && index < processSteps.length - 1 ? (
-                    <ChevronRight className="absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:text-[#facc15] group-hover:translate-x-2 lg:block" aria-hidden="true" />
+                    <ChevronRight className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:text-[#facc15] group-hover:translate-x-2 lg:block" aria-hidden="true" />
                   ) : null}
                 </div>
               );
@@ -391,14 +512,11 @@ function CombinedCTAProcessSection() {
   );
 }
 
-// === REDESAIN: BANNER KEUNGGULAN LAYANAN ===
+// === BANNER KEUNGGULAN LAYANAN ===
 function KeunggulanBannerSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 pb-16 relative z-20">
-      {/* Floating Banner Effect */}
       <div className="bg-[#111c38] rounded-3xl p-6 md:p-10 lg:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-10 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)]">
-        
-        {/* Item 1 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
             <Gift className="w-8 h-8" strokeWidth={2.5} />
@@ -410,11 +528,7 @@ function KeunggulanBannerSection() {
             </p>
           </div>
         </div>
-
-        {/* Pemisah Vertikal */}
         <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
-
-        {/* Item 2 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
             <Users className="w-8 h-8" strokeWidth={2.5} />
@@ -426,11 +540,7 @@ function KeunggulanBannerSection() {
             </p>
           </div>
         </div>
-
-        {/* Pemisah Vertikal */}
         <div className="hidden md:block w-px h-20 bg-slate-700/60 rounded-full"></div>
-
-        {/* Item 3 */}
         <div className="flex items-center gap-5 flex-1 w-full">
           <div className="bg-[#facc15] text-[#111c38] p-4 rounded-full shrink-0 shadow-inner">
             <Clock className="w-8 h-8" strokeWidth={2.5} />
@@ -442,7 +552,6 @@ function KeunggulanBannerSection() {
             </p>
           </div>
         </div>
-
       </div>
     </section>
   );
