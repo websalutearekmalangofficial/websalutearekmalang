@@ -240,7 +240,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
-      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
+      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 lg:min-h-20 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:px-8 xl:px-12">
         <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
           <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
             <Building2 className="size-6 sm:size-7" aria-hidden="true" />
@@ -271,7 +271,7 @@ function Header() {
         </a>
 
         <nav
-          className="hidden items-center justify-center gap-3 md:flex lg:gap-9"
+          className="hidden items-center justify-center gap-2 lg:flex xl:gap-7"
           aria-label="Navigasi utama"
         >
           <a
@@ -293,7 +293,7 @@ function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center justify-end gap-2 md:min-w-0">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2 lg:min-w-0">
           {currentUser ? (
             <div className="flex items-center gap-2">
               <Link
@@ -321,7 +321,7 @@ function Header() {
                 className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
               >
                 <LogOut className="size-3.5 sm:size-4" aria-hidden="true" />
-                <span>Keluar</span>
+                <span className="hidden sm:inline">Keluar</span>
               </button>
             </div>
           ) : (
@@ -343,7 +343,7 @@ function Header() {
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
-            className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 transition hover:bg-hero-foreground/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow md:hidden"
+            className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 transition hover:bg-hero-foreground/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow lg:hidden"
           >
             {menuOpen ? (
               <X className="size-5" aria-hidden="true" />
@@ -357,7 +357,7 @@ function Header() {
       {menuOpen ? (
         <nav
           id="mobile-nav"
-          className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 md:hidden"
+          className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 lg:hidden"
           aria-label="Navigasi mobile"
         >
           <ul className="grid gap-2">
