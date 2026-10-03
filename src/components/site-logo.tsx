@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Building2 } from "lucide-react";
 import { useEffect } from "react";
 
+import { supabase } from "@/integrations/supabase/client";
 import { fetchSiteLogoUrl } from "@/lib/site-settings";
 
 type SiteLogoProps = {
@@ -79,4 +80,3 @@ function supabaseLogoChannel(queryClient: ReturnType<typeof useQueryClient>) {
   return channel;
 }
 
-import { supabase } from "@/integrations/supabase/client";
