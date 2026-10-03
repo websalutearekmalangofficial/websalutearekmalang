@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { FileText, ImageIcon, Video, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,13 +20,14 @@ export function MediaPicker({
   kind?: "image" | "video" | "document";
 }) {
   const [open, setOpen] = useState(false);
+  const pickerId = useId().replace(/:/g, "");
   const queryClient = useQueryClient();
   const mediaQueryKey = ["media"];
   const { data: media = [], isFetching } = useQuery({ queryKey: mediaQueryKey, queryFn: fetchMedia, enabled: open });
 
   useEffect(() => {
     const channel = supabase
-      .channel("admin-media-library-picker")
+      .channel(`admin-media-library-picker-${pickerId}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "media_library" }, () => {
         void queryClient.invalidateQueries({ queryKey: mediaQueryKey });
       })
@@ -35,7 +36,7 @@ export function MediaPicker({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, pickerId]);
   const Icon = kindIcon[kind];
 
   return (
