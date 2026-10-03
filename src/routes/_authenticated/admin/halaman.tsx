@@ -727,6 +727,10 @@ function ItemEditor(props: {
     return <TestimonialItemEditor {...props} />;
   }
 
+  if (props.sectionKind === "payment_methods") {
+    return <PaymentLogoItemEditor {...props} />;
+  }
+
   return <GenericItemEditor {...props} />;
 }
 
@@ -884,6 +888,137 @@ function GenericItemEditor({
               <Trash2 className="size-4" aria-hidden="true" />
               Hapus
             </Button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function PaymentLogoItemEditor({
+  item, index, total, siblings, onChanged,
+}: {
+  item: SectionItem;
+  index: number;
+  total: number;
+  siblings: SectionItem[];
+  onChanged: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState(item);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    setForm(item);
+  }, [item]);
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").update({
+        title: form.title?.trim() || null,
+        media_url: form.media_url || null,
+        config: { ...(form.config ?? {}), role: "payment_logo" },
+        is_published: form.is_published,
+      }).eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Logo pembayaran disimpan."); onChanged(); },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menyimpan logo pembayaran."),
+  });
+
+  const remove = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").delete().eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Logo pembayaran dihapus."); onChanged(); },
+    onError: () => toast.error("Gagal menghapus logo pembayaran."),
+  });
+
+  const move = useMutation({
+    mutationFn: async (direction: -1 | 1) => {
+      const target = siblings[index + direction];
+      if (!target) return;
+      await swapOrder("section_items", { id: item.id, order: item.sort_order }, { id: target.id, order: target.sort_order });
+    },
+    onSuccess: onChanged,
+    onError: () => toast.error("Gagal mengubah urutan logo."),
+  });
+
+  const uploadImage = async (file?: File) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("File logo harus berupa gambar.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Ukuran logo maksimal 5 MB.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const url = await uploadMedia(file, "Logo Pembayaran - " + (form.title || file.name));
+      setForm((current) => ({ ...current, media_url: url }));
+      toast.success("Logo berhasil diunggah ke Media. Klik Simpan Logo untuk menerapkannya.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengunggah logo.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-lg border border-border bg-card">
+      <div className="flex flex-wrap items-center gap-2 p-2.5">
+        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-ut-blue text-xs font-black text-hero-foreground">{index + 1}</span>
+        <button type="button" onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 truncate text-left text-sm font-bold text-ut-navy">
+          {form.title || "Logo Pembayaran"}
+        </button>
+        <div className="flex shrink-0 gap-1">
+          <Button type="button" variant="formOutline" size="icon" aria-label="Naikkan urutan" disabled={index === 0} onClick={() => move.mutate(-1)}><ArrowUp className="size-4" /></Button>
+          <Button type="button" variant="formOutline" size="icon" aria-label="Turunkan urutan" disabled={index === total - 1} onClick={() => move.mutate(1)}><ArrowDown className="size-4" /></Button>
+        </div>
+      </div>
+      {open ? (
+        <div className="space-y-4 border-t border-border p-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Nama logo / metode pembayaran">
+              <input className={inputClass} value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Contoh: Bank Mandiri" />
+            </Field>
+            <Field label="Status">
+              <Toggle label="Tayang di homepage" checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
+            </Field>
+          </div>
+
+          <div className="space-y-2">
+            <span className="block text-xs font-black uppercase tracking-wide text-ut-navy">Logo pembayaran</span>
+            <div className="rounded-xl border border-dashed border-border bg-section-blue p-3">
+              <div className="flex flex-wrap items-center gap-3">
+                {form.media_url ? (
+                  <div className="flex h-24 w-40 items-center justify-center rounded-lg border border-border bg-white p-3">
+                    <img src={form.media_url} alt={form.title || "Logo pembayaran"} className="max-h-full max-w-full object-contain" />
+                  </div>
+                ) : (
+                  <div className="grid h-24 w-40 place-items-center rounded-lg border border-border bg-white text-xs font-bold text-muted-foreground">Belum ada logo</div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow transition hover:-translate-y-0.5">
+                    <ImagePlus className="size-4" />
+                    {uploading ? "Mengunggah..." : "Upload Logo Langsung"}
+                    <input type="file" accept="image/png,image/jpeg,image/webp,image/avif" className="sr-only" disabled={uploading} onChange={(e) => { void uploadImage(e.target.files?.[0]); e.currentTarget.value = ""; }} />
+                  </label>
+                  {form.media_url ? <Button type="button" variant="formOutline" size="form" onClick={() => setForm({ ...form, media_url: null })}>Hapus Logo</Button> : null}
+                </div>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">Upload langsung akan otomatis masuk ke Media dan dapat dipilih kembali dari perpustakaan media.</p>
+            </div>
+          </div>
+
+          <MediaPicker label="Pilih dari Media" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
+
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="utYellow" size="form" onClick={() => save.mutate()} disabled={save.isPending || uploading}><Save className="size-4" />Simpan Logo</Button>
+            <Button type="button" variant="formOutline" size="form" onClick={() => { if (confirm("Hapus logo pembayaran ini?")) remove.mutate(); }}><Trash2 className="size-4" />Hapus</Button>
           </div>
         </div>
       ) : null}
