@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BookOpenCheck,
   CheckCircle2,
@@ -862,6 +862,7 @@ async function fetchPublicPaymentMethods(): Promise<PublicPaymentMethod[]> {
 
 function PaymentMethodsSection() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const queryClient = useQueryClient();
   const paymentQuery = useQuery({
     queryKey: ["public-payment-methods", "beranda"],
     queryFn: fetchPublicPaymentMethods,
@@ -891,7 +892,7 @@ function PaymentMethodsSection() {
         "postgres_changes",
         { event: "*", schema: "public", table: "section_items" },
         () => {
-          void paymentQuery.refetch();
+          void queryClient.invalidateQueries({ queryKey: ["public-payment-methods", "beranda"] });
         },
       )
       .subscribe();
@@ -899,9 +900,8 @@ function PaymentMethodsSection() {
     return () => {
       void channel.unsubscribe();
     };
-  }, [paymentQuery]);
+  }, [queryClient]);
 
-  const visibleCount = 1;
   const activeMethod = methods[activeSlide];
 
   return (
