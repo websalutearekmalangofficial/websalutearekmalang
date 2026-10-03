@@ -240,7 +240,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
-      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 lg:min-h-20 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:px-8 xl:px-12">
+      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:px-8 xl:px-12">
         <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
           <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
             <Building2 className="size-6 sm:size-7" aria-hidden="true" />
@@ -271,12 +271,12 @@ function Header() {
         </a>
 
         <nav
-          className="hidden items-center justify-center gap-2 lg:flex xl:gap-7"
+          className="hidden min-w-0 items-center justify-center gap-1 lg:flex xl:gap-5"
           aria-label="Navigasi utama"
         >
           <a
             href="#home"
-            className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow lg:px-5"
+            className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-3 py-2 text-xs font-black text-ut-navy shadow-yellow xl:px-4 xl:py-2.5 xl:text-sm"
           >
             <Home className="size-4" aria-hidden="true" />
             Beranda
@@ -300,12 +300,12 @@ function Header() {
                 to="/admin"
                 aria-label="Akses Dashboard"
                 title="Akses Dashboard"
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow lg:px-3 xl:px-4 xl:text-sm"
               >
                 <LayoutDashboard className="size-3.5 sm:size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Dashboard</span>
+                <span className="hidden lg:inline">Dashboard</span>
               </Link>
-              <div className="hidden items-center gap-2 rounded-full border border-hero-foreground/40 bg-hero-foreground/10 px-3 py-1.5 text-hero-foreground sm:flex">
+              <div className="hidden items-center gap-2 rounded-full border border-hero-foreground/40 bg-hero-foreground/10 px-3 py-1.5 text-hero-foreground xl:flex">
                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
                   <UserRound className="size-4" aria-hidden="true" />
                 </div>
@@ -318,10 +318,10 @@ function Header() {
                 type="button"
                 onClick={handleLogout}
                 aria-label="Keluar"
-                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground transition hover:bg-hero-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow lg:px-3 xl:px-4 xl:text-sm"
               >
                 <LogOut className="size-3.5 sm:size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Keluar</span>
+                <span className="hidden lg:inline">Keluar</span>
               </button>
             </div>
           ) : (
