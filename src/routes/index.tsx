@@ -26,7 +26,8 @@ import {
   MapPin,
   UserRound,
   LogOut,
-  LayoutDashboard
+  LayoutDashboard,
+  Wallet // Icon untuk section Pembayaran
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -60,7 +61,6 @@ export const Route = createFileRoute("/")({
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
 
-// Data alur pendaftaran ditambahkan deskripsi detail untuk pop-up
 const processSteps = [
   {
     number: "1",
@@ -174,6 +174,8 @@ function Index() {
         <KeunggulanBannerSection />
       </div>
       <BenefitsSection />
+      {/* SECTION PEMBAYARAN DIPINDAH KE SINI */}
+      <PaymentMethodsSection />
       <TestimonialsSection />
       <FooterBanner />
     </main>
@@ -802,6 +804,67 @@ function BenefitsSection() {
               </article>
             );
           })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// === SECTION PEMBAYARAN MELALUI ===
+function PaymentMethodsSection() {
+  return (
+    <section className="bg-white px-4 pb-16 sm:px-6 md:px-8 md:pb-24 lg:px-12">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-10 text-center md:mb-14">
+          <h2 className="font-display text-3xl font-extrabold uppercase tracking-wide text-[#061b53] sm:text-4xl lg:text-5xl">
+            Pembayaran Melalui
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
+          {/* Kolom 1 */}
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
+            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
+              <Wallet 
+                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
+                strokeWidth={2}
+              />
+            </div>
+            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
+          </div>
+          
+          {/* Kolom 2 */}
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
+            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
+            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
+              <Wallet 
+                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
+                strokeWidth={2}
+              />
+            </div>
+          </div>
+          
+          {/* Kolom 3 */}
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
+            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
+              <Wallet 
+                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
+                strokeWidth={2}
+              />
+            </div>
+            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
+          </div>
+          
+          {/* Kolom 4 */}
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
+            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#fae481] shadow-sm"></div>
+            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
+              <Wallet 
+                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
+                strokeWidth={2}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
