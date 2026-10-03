@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { FileText, ImageIcon, Video, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { fetchMedia } from "@/lib/admin-cms";
+import { supabase } from "@/integrations/supabase/client";
 
 const kindIcon = { image: ImageIcon, video: Video, document: FileText } as const;
 
@@ -19,7 +20,22 @@ export function MediaPicker({
   kind?: "image" | "video" | "document";
 }) {
   const [open, setOpen] = useState(false);
-  const { data: media = [] } = useQuery({ queryKey: ["media"], queryFn: fetchMedia, enabled: open });
+  const queryClient = useQueryClient();
+  const mediaQueryKey = ["media"];
+  const { data: media = [], isFetching } = useQuery({ queryKey: mediaQueryKey, queryFn: fetchMedia, enabled: open });
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("admin-media-library-picker")
+      .on("postgres_changes", { event: "*", schema: "public", table: "media_library" }, () => {
+        void queryClient.invalidateQueries({ queryKey: mediaQueryKey });
+      })
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
   const Icon = kindIcon[kind];
 
   return (
@@ -49,8 +65,10 @@ export function MediaPicker({
 
       {open ? (
         <div className="max-h-64 overflow-y-auto rounded-xl border border-border bg-background p-2">
-          {media.length === 0 ? (
-            <p className="p-3 text-sm text-muted-foreground">Belum ada berkas. Unggah dulu di menu Media.</p>
+          {isFetching && media.length === 0 ? (
+            <p className="p-3 text-sm text-muted-foreground">Memuat Media...</p>
+          ) : media.length === 0 ? (
+            <p className="p-3 text-sm text-muted-foreground">Belum ada berkas. Unggah dulu di menu Media atau gunakan Upload Langsung jika tersedia.</p>
           ) : (
             <ul className="grid gap-2 sm:grid-cols-2">
               {media.map((item) => (
