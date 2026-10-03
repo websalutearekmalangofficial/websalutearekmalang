@@ -79,6 +79,7 @@ export const sectionKinds = [
   { value: "benefits", label: "Kartu kelebihan" },
   { value: "testimonials", label: "Testimoni" },
   { value: "contact_banner", label: "Banner kontak" },
+  { value: "payment_methods", label: "Pembayaran melalui (carousel logo)" },
   { value: "richtext", label: "Teks bebas" },
   { value: "media", label: "Gambar / Video" },
   { value: "faq", label: "Tanya jawab" },
