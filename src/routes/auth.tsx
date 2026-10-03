@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { SiteLogo } from "@/components/site-logo";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -130,8 +131,11 @@ function AuthPage() {
 
         <div className="overflow-hidden rounded-2xl bg-card shadow-form">
           <div className="flex items-center gap-3 bg-form-header px-5 py-4 text-form-header-foreground">
-            <ShieldCheck className="size-10 shrink-0 text-ut-yellow" aria-hidden="true" />
-            <div>
+            <SiteLogo
+              className="max-w-[145px] sm:max-w-[180px]"
+              imageClassName="max-h-12"
+            />
+            <div className="min-w-0">
               <h1 className="text-xl font-black leading-tight">Panel Pengelola Konten</h1>
               <p className="text-xs font-semibold opacity-90">Sentra Layanan UT Arek Malang</p>
             </div>
