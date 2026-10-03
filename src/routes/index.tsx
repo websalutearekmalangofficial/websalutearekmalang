@@ -26,8 +26,7 @@ import {
   MapPin,
   UserRound,
   LogOut,
-  LayoutDashboard,
-  Wallet // Icon untuk section Pembayaran
+  LayoutDashboard
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -174,7 +173,6 @@ function Index() {
         <KeunggulanBannerSection />
       </div>
       <BenefitsSection />
-      {/* SECTION PEMBAYARAN DIPINDAH KE SINI */}
       <PaymentMethodsSection />
       <TestimonialsSection />
       <FooterBanner />
@@ -810,61 +808,47 @@ function BenefitsSection() {
   );
 }
 
-// === SECTION PEMBAYARAN MELALUI ===
+// === SECTION PEMBAYARAN MELALUI (DESAIN BARU) ===
 function PaymentMethodsSection() {
+  // Data simulasi untuk logo bank yang berjejer[cite: 2]
+  const paymentMethods = [
+    { id: 1, bg: "bg-[#fcd34d]" }, // Kuning
+    { id: 2, bg: "bg-white" },
+    { id: 3, bg: "bg-[#fcd34d]" }, // Kuning
+    { id: 4, bg: "bg-white" },
+    { id: 5, bg: "bg-[#fcd34d]" }, // Kuning
+  ];
+
   return (
-    <section className="bg-white px-4 pb-16 sm:px-6 md:px-8 md:pb-24 lg:px-12">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-10 text-center md:mb-14">
-          <h2 className="font-display text-3xl font-extrabold uppercase tracking-wide text-[#061b53] sm:text-4xl lg:text-5xl">
-            Pembayaran Melalui
+    <section className="bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl overflow-hidden">
+        <div className="mb-10 text-center md:mb-12">
+          <h2 className="font-display text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl lg:text-4xl">
+            PEMBAYARAN MELALUI
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:gap-6">
-          {/* Kolom 1 */}
-          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
-            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
-              <Wallet 
-                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
-                strokeWidth={2}
-              />
+        {/* Container flex untuk berjejer horizontal */}
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          {paymentMethods.map((method) => (
+            <div
+              key={method.id}
+              className={`flex h-16 w-32 shrink-0 items-center justify-center rounded-xl sm:h-20 sm:w-40 ${method.bg} p-2 shadow-md transition-transform hover:scale-105`}
+            >
+              {/* Tempat untuk memanggil gambar/logo BNI. Anda bisa mengganti div ini dengan <img src="/logo-bni.png" alt="BNI" className="h-full w-full object-contain" /> */}
+              
+              {/* Simulasi tampilan Teks Logo BNI agar mirip dengan gambar jika belum ada file gambar-nya */}
+              <div className="flex items-center gap-1">
+                <span className="text-xl font-black text-[#f15a24] italic sm:text-2xl">
+                  {/* Ikon/simbol mock */}
+                  X
+                </span>
+                <span className={`text-xl font-black italic tracking-tighter sm:text-2xl ${method.bg === 'bg-white' ? 'text-teal-600' : 'text-teal-700'}`}>
+                  BNI
+                </span>
+              </div>
             </div>
-            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
-          </div>
-          
-          {/* Kolom 2 */}
-          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
-            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
-            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
-              <Wallet 
-                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
-                strokeWidth={2}
-              />
-            </div>
-          </div>
-          
-          {/* Kolom 3 */}
-          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
-            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
-              <Wallet 
-                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
-                strokeWidth={2}
-              />
-            </div>
-            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#061b53] shadow-sm"></div>
-          </div>
-          
-          {/* Kolom 4 */}
-          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6">
-            <div className="relative aspect-[4/3] w-full rounded-2xl bg-[#fae481] shadow-sm"></div>
-            <div className="relative aspect-[4/5] w-full rounded-2xl bg-[#dfa04c] shadow-sm">
-              <Wallet 
-                className="absolute bottom-3 right-3 size-7 text-white/90 sm:bottom-4 sm:right-4 sm:size-8 md:bottom-5 md:right-5 md:size-10" 
-                strokeWidth={2}
-              />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
