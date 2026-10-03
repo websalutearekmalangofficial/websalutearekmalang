@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ArrowRight, Phone, Building2, Camera, IdCard,
+  ArrowRight, Phone, Camera, IdCard,
   Users, FileText, ClipboardList, Activity,
   CheckCircle2, XCircle, Trash2, Upload, Calendar, Mail, CheckSquare,
   CircleUserRound, Home, Menu, X, Printer, Eye
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { SiteLogo } from "@/components/site-logo";
 
 export const Route = createFileRoute("/daftar")({
   head: () => ({
@@ -25,20 +26,10 @@ function Header() {
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
       <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
         <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
-          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
-            <Building2 className="size-6 sm:size-7" aria-hidden="true" />
-          </div>
-          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <div className="min-w-0 leading-none">
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">UNIVERSITAS</p>
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">TERBUKA</p>
-            </div>
-            <span className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block" aria-hidden="true" />
-            <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
-              Sentra Layanan
-              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">UT</span>
-            </div>
-          </div>
+          <SiteLogo
+            className="max-w-[145px] sm:max-w-[175px] md:max-w-[200px] lg:max-w-[220px]"
+            imageClassName="max-h-12 sm:max-h-14"
+          />
         </Link>
 
         <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
