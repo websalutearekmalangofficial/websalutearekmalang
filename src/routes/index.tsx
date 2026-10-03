@@ -26,7 +26,8 @@ import {
   Check,
   MapPin,
   UserRound,
-  LogOut
+  LogOut,
+  LayoutDashboard
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -295,6 +296,15 @@ function Header() {
         <div className="flex items-center justify-end gap-2 md:min-w-0">
           {currentUser ? (
             <div className="flex items-center gap-2">
+              <Link
+                to="/admin"
+                aria-label="Akses Dashboard"
+                title="Akses Dashboard"
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow transition hover:bg-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:px-4 sm:text-xs md:text-sm"
+              >
+                <LayoutDashboard className="size-3.5 sm:size-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </Link>
               <div className="hidden items-center gap-2 rounded-full border border-hero-foreground/40 bg-hero-foreground/10 px-3 py-1.5 text-hero-foreground sm:flex">
                 <div className="grid size-8 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
                   <UserRound className="size-4" aria-hidden="true" />
