@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   BookOpenCheck,
-  Building2,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -35,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { fetchPublicHeroBanners } from "@/lib/hero-banners";
 import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
+import { SiteLogo } from "@/components/site-logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -242,32 +242,10 @@ function Header() {
     <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
       <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 lg:min-h-20 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:px-8 xl:px-12">
         <a href="#home" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
-          <div className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/70 bg-hero-foreground/10 sm:size-11 md:size-12">
-            <Building2 className="size-6 sm:size-7" aria-hidden="true" />
-          </div>
-
-          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-            <div className="min-w-0 leading-none">
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">
-                UNIVERSITAS
-              </p>
-              <p className="truncate text-xs font-black uppercase sm:text-sm md:text-base">
-                TERBUKA
-              </p>
-            </div>
-
-            <span
-              className="hidden h-10 w-px shrink-0 bg-hero-foreground/70 sm:block"
-              aria-hidden="true"
-            />
-
-            <div className="hidden min-w-0 font-script text-2xl font-bold leading-none text-hero-foreground drop-shadow-title sm:block md:text-4xl">
-              Sentra Layanan
-              <span className="block font-display text-xl font-black tracking-normal md:text-2xl">
-                UT
-              </span>
-            </div>
-          </div>
+          <SiteLogo
+            className="max-w-[145px] sm:max-w-[175px] md:max-w-[200px] lg:max-w-[220px]"
+            imageClassName="max-h-12 sm:max-h-14"
+          />
         </a>
 
         <nav
