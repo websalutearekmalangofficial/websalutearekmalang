@@ -72,6 +72,7 @@ function FooterSettingsAdmin() {
       if (settingsError) { await supabase.storage.from("cms-media").remove([path]); throw settingsError; }
       if (logoPath && logoPath !== path) await supabase.storage.from("cms-media").remove([logoPath]);
       setLogoUrl(uploadedUrl); setLogoPath(path); setLogoFile(null);
+      await queryClient.invalidateQueries({ queryKey: ["site-logo"] });
       const input = document.getElementById(logoInputId) as HTMLInputElement | null;
       if (input) input.value = "";
       toast.success("Logo berhasil diunggah dan disinkronkan ke website.");
@@ -93,6 +94,7 @@ function FooterSettingsAdmin() {
       ]);
       if (settingsError) throw settingsError;
       setLogoUrl(null); setLogoPath(null); setLogoFile(null);
+      await queryClient.invalidateQueries({ queryKey: ["site-logo"] });
       toast.success("Logo dihapus dari website.");
     } catch (error) {
       console.error(error); toast.error("Gagal menghapus logo.");
