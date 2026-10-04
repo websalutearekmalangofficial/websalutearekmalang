@@ -181,9 +181,11 @@ function RegistrationPage() {
         }
       }
 
-      const { data: registration, error: dbError } = await supabase
-        .from("registrations")
-        .insert({
+      // Pendaftaran publik diproses melalui Edge Function agar anon tidak perlu
+      // memiliki SELECT access ke seluruh tabel registrations hanya untuk mendapatkan
+      // ID dan nomor referensi milik pendaftaran yang baru dibuat.
+      const { data: submitResult, error: submitError } = await supabase.functions.invoke("submit-registration", {
+        body: {
           nama: formData.namaLengkap,
           tempat_lahir: formData.tempatLahir,
           tanggal_lahir: formData.tanggalLahir,
@@ -202,12 +204,17 @@ function RegistrationPage() {
           fakultas: formData.fakultas || null,
           jurusan: formData.jurusan,
           status: "Menunggu Verifikasi",
-        })
-        .select("id, registration_reference")
-        .single();
+        },
+      });
 
-      if (dbError) throw dbError;
-      if (!registration?.id) throw new Error("Pendaftaran tersimpan tetapi ID pendaftaran tidak dapat diperoleh.");
+      if (submitError) {
+        throw new Error(submitResult?.error || submitError.message || "Pendaftaran gagal dikirim ke server.");
+      }
+
+      const registration = submitResult?.registration;
+      if (!registration?.id) {
+        throw new Error("Pendaftaran tersimpan tetapi ID pendaftaran tidak dapat diperoleh.");
+      }
 
       const uploadedPaths: string[] = [];
 
