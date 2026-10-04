@@ -1251,22 +1251,22 @@ function FooterBanner() {
       <footer className="w-full bg-hero-nav text-hero-foreground">
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 md:py-12 lg:px-12 lg:py-14">
           <div className="grid grid-cols-1 gap-10 lg:gap-12">
-            <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
+            <div className="flex w-full flex-col items-center justify-center gap-8 text-center md:flex-row md:items-center md:gap-10 lg:gap-14">
               {footer.contact?.enabled && (
-                <div className="flex min-h-[180px] w-full flex-col items-center justify-center text-center">
+                <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center md:items-center">
                   <a
                     href={footer.contact.phone_href || "#"}
                     aria-label={`Hubungi ${footer.contact.label}`}
-                    className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+                    className="mb-3 grid size-11 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
                   >
-                    <Phone className="size-6" fill="currentColor" aria-hidden="true" />
+                    <Phone className="size-5" fill="currentColor" aria-hidden="true" />
                   </a>
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
+                  <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
                     {footer.contact.label}
                   </p>
                   <a
                     href={footer.contact.phone_href || "#"}
-                    className="font-display text-2xl font-black tracking-[0.12em] text-hero-foreground transition-colors hover:text-ut-yellow sm:text-3xl"
+                    className="font-display text-xl font-black tracking-[0.1em] text-hero-foreground transition-colors hover:text-ut-yellow sm:text-2xl"
                   >
                     {footer.contact.phone}
                   </a>
@@ -1274,29 +1274,31 @@ function FooterBanner() {
               )}
 
               {footer.address?.enabled && footer.address?.text && (
-                <div className="flex min-h-[180px] w-full flex-col items-center justify-center text-center">
-                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
-                    <MapPin className="size-6" aria-hidden="true" />
+                <div className="flex min-w-0 flex-1 flex-col items-center justify-center text-center">
+                  <div className="mb-3 grid size-11 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
+                    <MapPin className="size-5" aria-hidden="true" />
                   </div>
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
+                  <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
                     Alamat Kantor
                   </p>
-                  <p className="w-full max-w-[520px] text-sm font-medium leading-[1.7] text-hero-foreground/85 sm:text-base">
+                  <p className="w-full max-w-[520px] text-sm font-medium leading-[1.6] text-hero-foreground/85 sm:text-base">
                     {footer.address.text}
                   </p>
-
-                  <a
-                    href="#home"
-                    aria-label="Kembali ke beranda Sentra Layanan UT Arek Malang"
-                    className="mt-7 flex items-center justify-center transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-                  >
-                    <SiteLogo
-                      className="justify-center"
-                      imageClassName="max-h-20 max-w-[210px] sm:max-h-24 sm:max-w-[240px] lg:max-h-28 lg:max-w-[270px]"
-                    />
-                  </a>
                 </div>
               )}
+
+              <div className="flex min-w-0 flex-1 items-center justify-center">
+                <a
+                  href="#home"
+                  aria-label="Kembali ke beranda Sentra Layanan UT Arek Malang"
+                  className="flex items-center justify-center transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+                >
+                  <SiteLogo
+                    className="justify-center"
+                    imageClassName="max-h-20 max-w-[210px] sm:max-h-24 sm:max-w-[240px] lg:max-h-28 lg:max-w-[270px]"
+                  />
+                </a>
+              </div>
             </div>
 
             <div className="border-t border-hero-foreground/15 pt-8 sm:pt-10">
