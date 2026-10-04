@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowRight, BookOpen, BriefcaseBusiness, ChevronDown, GraduationCap, Menu, X } from "lucide-react";
 import { SiteLogo } from "@/components/site-logo";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/program-studi")({
   head: () => ({
@@ -16,7 +18,24 @@ export const Route = createFileRoute("/program-studi")({
 type Faculty = { code: string; name: string; programs: string[] };
 type Program = { name: string; level: string; description: string; faculties: Faculty[] };
 
-const programs: Program[] = [
+type CatalogSection = {
+  id: string;
+  sort_order: number;
+  title: string | null;
+  subtitle: string | null;
+  body: string | null;
+  is_published: boolean;
+  items: Array<{
+    id: string;
+    sort_order: number;
+    title: string | null;
+    subtitle: string | null;
+    body: string | null;
+    is_published: boolean;
+  }>;
+};
+
+const fallbackPrograms: Program[] = [
   { name: "Diploma", level: "D3 & D4", description: "Pilihan program vokasi untuk membangun kompetensi praktis yang relevan dengan kebutuhan dunia kerja.", faculties: [{ code: "DIPLOMA", name: "Program Diploma", programs: ["D4 Pengelolaan Arsip dan Rekaman Informasi", "D3 Perpajakan", "D4 Kearsipan", "D3 Teknologi Informasi", "D4 Akuntansi Bisnis Digital", "D4 Manajemen Logistik", "D3 Penyiaran"] }] },
   { name: "Sarjana", level: "S1", description: "Pilihan program sarjana dari berbagai bidang untuk mendukung pengembangan akademik dan karier Anda.", faculties: [
     { code: "FEB", name: "Fakultas Ekonomi dan Bisnis (FEB)", programs: ["Manajemen", "Ekonomi Pembangunan", "Ekonomi Syariah", "Akuntansi", "Akuntansi Keuangan Publik", "Pariwisata", "Kewirausahaan"] },
@@ -29,6 +48,56 @@ const programs: Program[] = [
   { name: "Pendidikan Profesi Guru", level: "PPG", description: "Program pendidikan profesi untuk mendukung pengembangan kompetensi dan profesionalisme guru.", faculties: [{ code: "PROFESI", name: "Program Profesi", programs: ["Pendidikan Profesi Guru (PPG)"] }] },
 ];
 
+async function fetchPublicProgramCatalog(): Promise<Program[]> {
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id")
+    .eq("slug", "program-studi")
+    .eq("is_published", true)
+    .maybeSingle();
+  if (pageError) throw pageError;
+  if (!page?.id) return [];
+
+  const { data: sections, error: sectionError } = await supabase
+    .from("sections")
+    .select("id, sort_order, title, subtitle, body, is_published")
+    .eq("page_id", page.id)
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+  if (sectionError) throw sectionError;
+  if (!sections?.length) return [];
+
+  const sectionIds = sections.map((section) => section.id);
+  const { data: items, error: itemError } = await supabase
+    .from("section_items")
+    .select("id, section_id, sort_order, title, subtitle, body, is_published")
+    .in("section_id", sectionIds)
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+  if (itemError) throw itemError;
+
+  return (sections as CatalogSection[]).map((section) => {
+    const sectionItems = (items ?? []).filter((item) => item.section_id === section.id);
+    const groups = new Map<string, { name: string; programs: string[] }>();
+    for (const item of sectionItems) {
+      const faculty = item.subtitle?.trim() || "Program Studi";
+      const existing = groups.get(faculty) ?? { name: faculty, programs: [] };
+      if (item.title?.trim()) existing.programs.push(item.title.trim());
+      groups.set(faculty, existing);
+    }
+    return {
+      name: section.title?.trim() || "Program Studi",
+      level: section.subtitle?.trim() || "",
+      description: section.body?.trim() || "",
+      faculties: Array.from(groups.entries()).map(([name, value]) => ({
+        code: name.match(/\\(([^)]+)\\)/)?.[1] ?? name.toUpperCase().slice(0, 12),
+        name,
+        programs: value.programs,
+      })),
+    };
+  }).filter((program) => program.faculties.some((faculty) => faculty.programs.length > 0));
+}
+
 const tips = [
   { title: "Pilih berdasarkan tujuan", description: "Pertimbangkan bidang yang ingin Anda tekuni dan arah karier yang ingin dibangun.", icon: BriefcaseBusiness },
   { title: "Perhatikan jenjang", description: "Sesuaikan jenjang dengan latar belakang pendidikan dan rencana studi Anda.", icon: GraduationCap },
@@ -37,8 +106,16 @@ const tips = [
 
 function ProgramStudiPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const programsQuery = useQuery({
+    queryKey: ["public-program-studi"],
+    queryFn: fetchPublicProgramCatalog,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+  const programs = programsQuery.data?.length ? programsQuery.data : fallbackPrograms;
   const [active, setActive] = useState("Sarjana");
-  const selected = programs.find((p) => p.name === active) ?? programs[1];
+  const selected = programs.find((p) => p.name === active) ?? programs[0];
 
   return (
     <main className="min-h-screen bg-[#f8fafc] font-body text-slate-900">
