@@ -351,7 +351,7 @@ function KemahasiswaanPage() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3">
             {beasiswaData.map((item) => {
               const isOpen = activeBeasiswa === item.name;
               return (
