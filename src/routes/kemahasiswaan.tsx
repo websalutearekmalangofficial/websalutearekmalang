@@ -18,6 +18,7 @@ export const Route = createFileRoute("/kemahasiswaan")({
 });
 
 const leaderboardData = [
+  { rank: 1, name: "Andi Pratama", points: 1520 },
   { rank: 2, name: "Rina Aryanti", points: 1042 },
   { rank: 3, name: "Dwi Maryanto", points: 1243 },
   { rank: 4, name: "Achmad Dani", points: 1023 },
