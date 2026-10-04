@@ -8,7 +8,6 @@ import {
   ExternalLink,
   FileText,
   GraduationCap,
-  Home,
   ListOrdered,
   Settings,
   LogOut,
@@ -30,7 +29,6 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 const menu = [
-  { to: "/admin", label: "Dashboard", icon: Home, exact: true },
   { to: "/admin/pendaftar", label: "Pendaftaran", icon: ClipboardList, exact: false },
   { to: "/admin/halaman", label: "Halaman & Section", icon: ListOrdered, exact: false },
   { to: "/admin/navigasi", label: "Menu Navigasi", icon: Menu, exact: false },
