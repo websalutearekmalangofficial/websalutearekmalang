@@ -153,7 +153,18 @@ export async function fetchSections(pageId: string): Promise<Section[]> {
   }));
 }
 
-export type AdminPageOption = { id: string; title: string; slug: string; is_published: boolean; show_in_nav: boolean; };\n\nexport async function fetchAdminPageOptions(): Promise<AdminPageOption[]> {\n  const { data, error } = await supabase\n    .from("pages")\n    .select("id, title, slug, is_published, show_in_nav")\n    .order("title", { ascending: true });\n  if (error) throw error;\n  return (data ?? []) as AdminPageOption[];\n}\n\nexport async function fetchNavItems(): Promise<NavItem[]> {
+export type AdminPageOption = { id: string; title: string; slug: string; is_published: boolean; show_in_nav: boolean; };
+
+export async function fetchAdminPageOptions(): Promise<AdminPageOption[]> {
+  const { data, error } = await supabase
+    .from("pages")
+    .select("id, title, slug, is_published, show_in_nav")
+    .order("title", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as AdminPageOption[];
+}
+
+export async function fetchNavItems(): Promise<NavItem[]> {
   const { data, error } = await supabase
     .from("nav_items")
     .select("*")
