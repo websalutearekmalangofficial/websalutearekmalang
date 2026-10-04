@@ -243,7 +243,19 @@ function AdminLayout() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="flex items-center gap-2">
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+              aria-label="Lihat Website"
+            >
+              <ExternalLink className="size-4" />
+              <span className="hidden sm:inline">Lihat Website</span>
+            </a>
+
+            <div className="relative">
             <button
               type="button"
               onClick={() => setProfileOpen((open) => !open)}
@@ -261,11 +273,9 @@ function AdminLayout() {
                 <button type="button" onClick={handleSignOut} className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">
                   <LogOut className="size-4" /> Keluar
                 </button>
-                <a href="/" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                  <ExternalLink className="size-4" /> Lihat Website
-                </a>
               </div>
             ) : null}
+            </div>
           </div>
         </header>
 
