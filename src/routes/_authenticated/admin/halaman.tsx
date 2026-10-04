@@ -241,7 +241,7 @@ function DuplicatePageDialog({ page, pending, onClose, onSubmit }: { page: PageR
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const cleanTitle = title.trim();
-    const cleanSlug = slug.trim().toLowerCase().replace(/^\\/+|\\/+$/g, "");
+    const cleanSlug = slug.trim().toLowerCase();
     if (!cleanTitle) return setError("Nama halaman wajib diisi.");
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) return setError("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");
     setError(null);
