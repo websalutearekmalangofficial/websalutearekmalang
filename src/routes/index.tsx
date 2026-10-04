@@ -35,6 +35,14 @@ import { fetchPublicHeroBanners } from "@/lib/hero-banners";
 import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteLogo } from "@/components/site-logo";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1001,9 +1009,7 @@ type PublicTestimonial = {
   image: string;
 };
 
-async function fetchPublicTestimonials(): Promise<
-  PublicTestimonial[]
-> {
+async function fetchPublicTestimonials(): Promise<PublicTestimonial[]> {
   const { data: page, error: pageError } = await supabase
     .from("pages")
     .select("id")
@@ -1048,14 +1054,11 @@ async function fetchPublicTestimonials(): Promise<
           : {};
 
       const name =
-        item.title?.trim() ||
-        "Mahasiswa SALUT Arek Malang";
+        item.title?.trim() || "Mahasiswa SALUT Arek Malang";
 
       const role =
         item.subtitle?.trim() ||
-        (typeof config.role === "string"
-          ? config.role.trim()
-          : "") ||
+        (typeof config.role === "string" ? config.role.trim() : "") ||
         "Mahasiswa Universitas Terbuka";
 
       const quote = item.body?.trim() || "";
@@ -1087,18 +1090,53 @@ function TestimonialsSection() {
   });
 
   const testimonials = testimonialsQuery.data ?? [];
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const updateActiveSlide = () => {
+      setActiveSlide(carouselApi.selectedScrollSnap());
+    };
+
+    updateActiveSlide();
+    carouselApi.on("select", updateActiveSlide);
+    carouselApi.on("reInit", updateActiveSlide);
+
+    return () => {
+      carouselApi.off("select", updateActiveSlide);
+      carouselApi.off("reInit", updateActiveSlide);
+    };
+  }, [carouselApi]);
+
+  useEffect(() => {
+    if (!carouselApi || testimonials.length <= 4) return;
+
+    const timer = window.setInterval(() => {
+      carouselApi.scrollNext();
+    }, 3_000);
+
+    return () => window.clearInterval(timer);
+  }, [carouselApi, testimonials.length]);
 
   return (
     <section
       id="testimoni"
       className="relative scroll-mt-20 overflow-hidden bg-[#111c38] px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:px-12"
     >
-      <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl" />
+      <div
+        className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-blue-900/30 blur-3xl"
+        aria-hidden="true"
+      />
 
-      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-64 w-64 rounded-full bg-yellow-400/10 blur-3xl" />
+      <div
+        className="absolute bottom-0 left-0 -mb-20 -ml-20 h-64 w-64 rounded-full bg-yellow-400/10 blur-3xl"
+        aria-hidden="true"
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="mb-16 text-center">
+        <div className="mb-10 text-center md:mb-12">
           <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">
             Apa Kata Mereka?
           </h2>
@@ -1107,26 +1145,28 @@ function TestimonialsSection() {
             className="mx-auto mt-4 h-1.5 w-24 rounded-full bg-[#facc15]"
             aria-hidden="true"
           />
+
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-blue-100/80 sm:text-base">
+            Pengalaman mahasiswa dan alumni selama mendapatkan layanan dari
+            Sentra Layanan UT Arek Malang.
+          </p>
         </div>
 
         {testimonialsQuery.isPending ? (
           <div
-            className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
             aria-label="Memuat testimoni"
           >
-            {Array.from({ length: 6 }).map((_, index) => (
+            {Array.from({ length: 4 }).map((_, index) => (
               <div
                 key={index}
-                className="flex animate-pulse flex-col items-center text-center"
+                className="flex animate-pulse flex-col items-center rounded-3xl border border-white/10 bg-white/5 p-6 text-center"
                 aria-hidden="true"
               >
-                <div className="mb-6 h-48 w-40 rounded-t-full bg-white/10 sm:h-44 sm:w-36 md:h-52 md:w-40 lg:h-52 lg:w-40" />
-
+                <div className="mb-5 size-24 rounded-full bg-white/10" />
                 <div className="mb-3 h-3 w-28 rounded bg-white/10" />
-
-                <div className="mb-3 h-8 w-32 rounded bg-white/10" />
-
-                <div className="h-12 w-full max-w-[150px] rounded bg-white/10" />
+                <div className="mb-4 h-3 w-20 rounded bg-white/10" />
+                <div className="h-16 w-full rounded bg-white/10" />
               </div>
             ))}
           </div>
@@ -1139,49 +1179,115 @@ function TestimonialsSection() {
             Belum ada testimoni yang dipublikasikan.
           </div>
         ) : (
-          <div className="relative">
-            <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-6 scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {testimonials.map((item) => (
-                <article
-                  key={item.id}
-                  className="group flex w-[82vw] shrink-0 snap-center cursor-default flex-col items-center text-center sm:w-[360px] md:w-[400px] lg:w-[430px]"
-                >
-                  <div className="mb-6 h-52 w-40 overflow-hidden rounded-t-full border-[5px] border-white bg-white shadow-xl transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#facc15] sm:h-56 sm:w-44 md:h-60 md:w-48">
-                    <img
-                      src={item.image}
-                      alt={`Foto ${item.name}`}
-                      loading="lazy"
-                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                      onError={(event) => {
-                        const target = event.currentTarget;
-                        target.onerror = null;
-                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          item.name,
-                        )}&background=111c38&color=fff&size=256`;
-                      }}
-                    />
-                  </div>
+          <div className="relative px-1 sm:px-4 lg:px-10">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: testimonials.length > 4,
+                slidesToScroll: 1,
+              }}
+              setApi={setCarouselApi}
+              className="w-full"
+              aria-label="Carousel testimoni mahasiswa dan alumni"
+            >
+              <CarouselContent className="-ml-4">
+                {testimonials.map((item) => (
+                  <CarouselItem
+                    key={item.id}
+                    className="basis-full pl-4 sm:basis-1/2 lg:basis-1/4"
+                  >
+                    <article className="group flex h-full min-h-[430px] flex-col rounded-3xl border border-white/10 bg-white/[0.06] p-5 text-center shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#facc15]/50 hover:bg-white/[0.09] sm:p-6">
+                      <div className="mb-5 flex justify-center">
+                        <div className="relative size-24 overflow-hidden rounded-full border-4 border-white/90 bg-white shadow-xl transition-transform duration-300 group-hover:scale-105 group-hover:border-[#facc15]">
+                          <img
+                            src={item.image}
+                            alt={`Foto ${item.name}`}
+                            loading="lazy"
+                            className="h-full w-full object-cover object-top"
+                            onError={(event) => {
+                              const target = event.currentTarget;
+                              target.onerror = null;
+                              target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                item.name,
+                              )}&background=111c38&color=fff&size=256`;
+                            }}
+                          />
+                        </div>
+                      </div>
 
-                  <h3 className="mb-2 text-[13px] font-extrabold uppercase tracking-wide text-white md:text-sm">
-                    {item.name}
-                  </h3>
+                      <div className="mb-4 flex-1">
+                        <div
+                          className="mx-auto mb-3 grid size-8 place-items-center rounded-full bg-[#facc15] text-[#111c38]"
+                          aria-hidden="true"
+                        >
+                          <span className="font-serif text-xl font-black leading-none">
+                            “
+                          </span>
+                        </div>
 
-                  <p className="mb-3 flex min-h-10 max-w-sm items-start justify-center text-xs font-medium leading-relaxed text-blue-200">
-                    {item.role}
-                  </p>
+                        <p className="text-sm italic leading-7 text-slate-200">
+                          “{item.quote}”
+                        </p>
+                      </div>
 
-                  <p className="max-w-[380px] px-2 text-xs italic leading-relaxed text-slate-300 sm:text-sm">
-                    &quot;{item.quote}&quot;
-                  </p>
-                </article>
-              ))}
-            </div>
+                      <div className="border-t border-white/10 pt-4">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wide text-white">
+                          {item.name}
+                        </h3>
 
-            {testimonials.length > 1 && (
-              <p className="mt-2 text-center text-[11px] font-semibold text-slate-400">
-                Geser untuk melihat testimoni lainnya →
+                        <p className="mt-1 min-h-10 text-xs font-medium leading-relaxed text-blue-200">
+                          {item.role}
+                        </p>
+                      </div>
+                    </article>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              {testimonials.length > 4 ? (
+                <>
+                  <CarouselPrevious
+                    aria-label="Testimoni sebelumnya"
+                    className="-left-2 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:-left-4 lg:-left-8"
+                  />
+                  <CarouselNext
+                    aria-label="Testimoni berikutnya"
+                    className="-right-2 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:text-white sm:-right-4 lg:-right-8"
+                  />
+                </>
+              ) : null}
+            </Carousel>
+
+            {testimonials.length > 4 ? (
+              <div
+                className="mt-7 flex justify-center gap-1.5"
+                aria-label="Posisi carousel testimoni"
+              >
+                {Array.from({
+                  length: Math.max(1, testimonials.length - 3),
+                }).map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => carouselApi?.scrollTo(index)}
+                    aria-label={`Tampilkan testimoni mulai dari posisi ${index + 1}`}
+                    aria-current={activeSlide === index ? "true" : undefined}
+                    className={`h-2 rounded-full transition-all ${
+                      activeSlide === index
+                        ? "w-7 bg-[#facc15]"
+                        : "w-2 bg-white/40 hover:bg-white/70"
+                    }`}
+                  />
+                ))}
+              </div>
+            ) : null}
+
+            {testimonials.length > 4 ? (
+              <p className="mt-3 text-center text-[11px] font-semibold text-slate-400">
+                Bergeser otomatis setiap 3 detik • Gunakan panah untuk melihat
+                testimoni lainnya
               </p>
-            )}
+            ) : null}
           </div>
         )}
       </div>
