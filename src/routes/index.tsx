@@ -25,6 +25,9 @@ import {
   Check,
   MapPin,
   UserRound,
+  Instagram,
+  Globe,
+  Mail,
   LogOut,
   LayoutDashboard
 } from "lucide-react";
@@ -1295,7 +1298,7 @@ function TestimonialsSection() {
   );
 }
 
-// === FOOTER RESPONSIF: KONTAK DAN ALAMAT ===
+// === FOOTER RESPONSIF: KONTAK, ALAMAT, DAN MEDIA SOSIAL ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -1309,7 +1312,8 @@ function FooterBanner() {
   const footerBackground = footer.layout?.background_color || "#a7c8e1";
   const footerLayout = footer.layout;
   const getColumnLayout = (key: "contact" | "address") => {
-    const settings = footerLayout?.columns?.[key] ?? { height: 300, alignment: "start" as const };
+    const settings =
+      footerLayout?.columns?.[key] ?? { height: 300, alignment: "start" as const };
     const height = Math.min(800, Math.max(160, settings.height ?? 300));
     const alignmentClass =
       settings.alignment === "center"
@@ -1319,60 +1323,138 @@ function FooterBanner() {
           : "justify-start";
     return { height, alignmentClass };
   };
+
   const contactLayout = getColumnLayout("contact");
   const addressLayout = getColumnLayout("address");
+  const socialHeight = Math.max(contactLayout.height, addressLayout.height);
+
+  const socialLinks = [
+    {
+      label: "TikTok",
+      value: "@salute.arek.malang",
+      href: "https://tiktok.com/@salute.arek.malang",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          className="size-5"
+          aria-hidden="true"
+          fill="currentColor"
+        >
+          <path d="M19.59 7.69a4.83 4.83 0 0 1-3.77-3.77V3h-3.4v11.34a2.89 2.89 0 1 1-2-2.73v-3.5a6.4 6.4 0 1 0 5.4 6.32V8.75a8.2 8.2 0 0 0 3.77.91V6.28Z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Instagram",
+      value: "@salutearekmalang_ut",
+      href: "https://www.instagram.com/salutearekmalang_ut/",
+      icon: <Instagram className="size-5" aria-hidden="true" />,
+    },
+    {
+      label: "Website",
+      value: "salutearekmalang.com",
+      href: "https://salutearekmalang.com/",
+      icon: <Globe className="size-5" aria-hidden="true" />,
+    },
+    {
+      label: "Email",
+      value: "admin@salurtearekmalang.com",
+      href: "mailto:admin@salurtearekmalang.com",
+      icon: <Mail className="size-5" aria-hidden="true" />,
+    },
+  ];
 
   return (
     <div id="kontak" className="relative w-full scroll-mt-20" style={{ backgroundColor: footerBackground }}>
-      
-      {/* FOOTER BIRU MUDA (#a7c8e1) - Kontak dan Alamat */}
       <footer className="w-full text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
-
-        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 md:px-8 lg:px-12 lg:py-16">
-          
-          <div className="relative z-20 grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-8">
-            
-            {/* Kolom 1: Kontak */}
+        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 md:py-12 lg:px-12 lg:py-14">
+          <div className="grid grid-cols-1 items-stretch gap-8 sm:gap-10 lg:grid-cols-3 lg:gap-6 xl:gap-10">
             {footer.contact?.enabled && (
-              <div className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`} style={{ minHeight: `${contactLayout.height}px` }}>
-                <a href={footer.contact.phone_href || "#"} className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-110">
+              <div
+                className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`}
+                style={{ minHeight: `${contactLayout.height}px` }}
+              >
+                <a
+                  href={footer.contact.phone_href || "#"}
+                  aria-label={`Hubungi ${footer.contact.label}`}
+                  className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                >
                   <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                 </a>
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                   {footer.contact.label}
                 </p>
-                <a href={footer.contact.phone_href || "#"} className="font-display text-3xl font-black tracking-widest text-[#0f1523] transition-colors hover:text-[#334155] lg:text-4xl">
+                <a
+                  href={footer.contact.phone_href || "#"}
+                  className="font-display text-2xl font-black tracking-[0.12em] text-[#0f1523] transition-colors hover:text-slate-600 sm:text-3xl lg:text-[2rem]"
+                >
                   {footer.contact.phone}
                 </a>
               </div>
             )}
 
-            {/* Kolom 2: Alamat Kantor (Presisi di tengah layar) */}
             {footer.address?.enabled && footer.address?.text && (
-              <div className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`} style={{ minHeight: `${addressLayout.height}px` }}>
-                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white transition-colors hover:bg-slate-700 hover:text-white">
+              <div
+                className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`}
+                style={{ minHeight: `${addressLayout.height}px` }}
+              >
+                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
                   <MapPin className="size-6" aria-hidden="true" />
                 </div>
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                   Alamat Kantor
                 </p>
-                <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[420px] lg:text-[15px]">
+                <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
                   {footer.address.text}
                 </p>
               </div>
             )}
 
+            <div
+              className="flex w-full flex-col items-center justify-center text-center"
+              style={{ minHeight: `${socialHeight}px` }}
+            >
+              <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
+                <Instagram className="size-6" aria-hidden="true" />
+              </div>
+              <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                Media Sosial & Kontak
+              </p>
+
+              <ul className="grid w-full max-w-sm gap-2.5" aria-label="Akun media sosial dan kontak SALUT Arek Malang">
+                {socialLinks.map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      target={item.href.startsWith("mailto:") ? undefined : "_blank"}
+                      rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                      className="group flex min-h-11 items-center gap-3 rounded-xl border border-[#0f1523]/10 bg-white/35 px-3.5 py-2.5 text-left transition-all hover:-translate-y-0.5 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                    >
+                      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0f1523] text-white transition-colors group-hover:bg-slate-700">
+                        {item.icon}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
+                          {item.label}
+                        </span>
+                        <span className="block truncate text-xs font-extrabold text-[#0f1523] sm:text-sm">
+                          {item.value}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </footer>
 
-      {/* Bagian copyright dengan warna latar yang sama */}
-      <div className="w-full py-2" style={{ backgroundColor: footerBackground }}>
+      <div className="w-full border-t border-[#0f1523]/10 py-2.5" style={{ backgroundColor: footerBackground }}>
         <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
       </div>
-      
     </div>
   );
 }
