@@ -35,6 +35,7 @@ function NavAdmin() {
         icon: null,
         sort_order: items.length + 1,
         is_active: true,
+        parent_id: null,
       });
       if (error) throw error;
     },
@@ -114,6 +115,7 @@ function NavRow({
           badge: form.badge,
           icon: form.icon,
           is_active: form.is_active,
+          parent_id: form.parent_id ?? null,
         })
         .eq("id", item.id);
       if (error) throw error;
@@ -168,6 +170,20 @@ function NavRow({
         </Field>
                 <Field label="Tautan">
           <input className={inputClass} value={form.href} onChange={(e) => setForm({ ...form, href: e.target.value })} />
+        </Field>
+        <Field label="Jadikan Submenu dari">
+          <select
+            className={inputClass}
+            value={form.parent_id ?? ""}
+            onChange={(e) => setForm({ ...form, parent_id: e.target.value || null })}
+          >
+            <option value="">Menu utama (Top Level)</option>
+            {siblings
+              .filter((entry) => entry.id !== item.id && entry.parent_id === null)
+              .map((entry) => (
+                <option key={entry.id} value={entry.id}>{entry.label}</option>
+              ))}
+          </select>
         </Field>
         <Field label="Badge (opsional)">
           <input
