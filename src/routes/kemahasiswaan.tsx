@@ -110,7 +110,7 @@ function KemahasiswaanPage() {
       if (itemsError) throw itemsError;
       return (items ?? []).map((item) => ({
         ...item,
-        requirements: String(item.config?.requirements ?? "").split("\\n").map((value) => value.trim()).filter(Boolean),
+        requirements: String(item.config?.requirements ?? "").split(/\\n|\n/).map((value) => value.trim()).filter(Boolean),
         benefits: String(item.config?.benefits ?? "").split("\\n").map((value) => value.trim()).filter(Boolean),
       }));
     },
