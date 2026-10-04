@@ -819,102 +819,11 @@ function BenefitsSection() {
   );
 }
 
-// === SECTION PEMBAYARAN MELALUI (CMS CAROUSEL) ===
-type PublicPaymentMethod = {
-  id: string;
-  title: string;
-  logoUrl: string;
-  sortOrder: number;
-};
-
-async function fetchPublicPaymentMethods(): Promise<PublicPaymentMethod[]> {
-  const { data: page, error: pageError } = await supabase
-    .from("pages")
-    .select("id")
-    .eq("slug", "beranda")
-    .eq("is_published", true)
-    .maybeSingle();
-
-  if (pageError) throw pageError;
-  if (!page?.id) return [];
-
-  const { data: section, error: sectionError } = await supabase
-    .from("sections")
-    .select("id")
-    .eq("page_id", page.id)
-    .eq("kind", "payment_methods")
-    .eq("is_published", true)
-    .order("sort_order", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-
-  if (sectionError) throw sectionError;
-  if (!section?.id) return [];
-
-  const { data: items, error: itemsError } = await supabase
-    .from("section_items")
-    .select("id,title,media_url,sort_order,is_published")
-    .eq("section_id", section.id)
-    .eq("is_published", true)
-    .not("media_url", "is", null)
-    .order("sort_order", { ascending: true });
-
-  if (itemsError) throw itemsError;
-
-  return (items ?? [])
-    .filter((item) => Boolean(item.media_url?.trim()))
-    .map((item) => ({
-      id: item.id,
-      title: item.title?.trim() || "Logo pembayaran",
-      logoUrl: item.media_url!.trim(),
-      sortOrder: item.sort_order,
-    }));
-}
+// === SECTION PEMBAYARAN MELALUI ===
+const PAYMENT_GUIDE_IMAGE =
+  "https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/sign/cms-media/1791119550835-Cara-pembayaran-.png?token=eyJraWQiOiI4MTNjMTY3Ny04ZTVmLTRiZmYtOTAyNS1lMTIxY2U2ZDZlNTAiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjbXMtbWVkaWEvMTc5MTExOTU1MDgzNS1DYXJhLXBlbWJheXJhbi0ucG5nIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5MTExOTU1MSwiZXhwIjoxOTQ4Nzk5NTUxfQ.vU1rmn0TP9d7-vlr81gzD1BwduP8XO4zo3vZRRwRLQNNJNXtojVVNOTWgCEn6SNScgBEq5nkkRFpg4EgzoxtvA";
 
 function PaymentMethodsSection() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const queryClient = useQueryClient();
-  const paymentQuery = useQuery({
-    queryKey: ["public-payment-methods", "beranda"],
-    queryFn: fetchPublicPaymentMethods,
-    staleTime: 0,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
-  });
-
-  const methods = paymentQuery.data ?? [];
-
-  useEffect(() => {
-    if (activeSlide >= methods.length) setActiveSlide(0);
-  }, [activeSlide, methods.length]);
-
-  useEffect(() => {
-    if (methods.length <= 1) return;
-    const timer = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % methods.length);
-    }, 3000);
-    return () => window.clearInterval(timer);
-  }, [methods.length]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("public-payment-methods")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "section_items" },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["public-payment-methods", "beranda"] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      void channel.unsubscribe();
-    };
-  }, [queryClient]);
-
-  const activeMethod = methods[activeSlide];
-
   return (
     <section
       id="pembayaran"
@@ -924,80 +833,24 @@ function PaymentMethodsSection() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 text-center sm:mb-10">
           <p className="mb-2 text-xs font-black uppercase tracking-[0.22em] text-[#facc15]">
-            Pilihan Pembayaran
+            Informasi Pembayaran
           </p>
           <h2 className="font-display text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl lg:text-4xl">
             PEMBAYARAN MELALUI
           </h2>
         </div>
 
-        {paymentQuery.isPending ? (
-          <div className="mx-auto h-28 w-full max-w-3xl animate-pulse rounded-2xl bg-white/10" aria-label="Memuat logo pembayaran" />
-        ) : paymentQuery.isError ? (
-          <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm text-slate-300">
-            Logo pembayaran belum dapat dimuat.
+        <div className="mx-auto max-w-6xl">
+          <div className="overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_70px_-28px_rgba(0,0,0,0.65)]">
+            <img
+              src={PAYMENT_GUIDE_IMAGE}
+              alt="Cara pembayaran melalui layanan SALUT Arek Malang"
+              className="block h-auto w-full object-contain"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
-        ) : methods.length === 0 ? (
-          <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center text-sm text-slate-300">
-            Logo pembayaran belum ditambahkan. Admin dapat menambahkannya melalui Pengaturan Beranda.
-          </div>
-        ) : (
-          <div className="relative mx-auto max-w-5xl">
-            <div className="overflow-hidden rounded-3xl">
-              <div
-                className="flex transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
-              >
-                {methods.map((method) => (
-                  <div key={method.id} className="w-full shrink-0 px-2 sm:px-4">
-                    <div className="mx-auto flex min-h-28 w-full max-w-3xl items-center justify-center rounded-2xl bg-white px-6 py-5 shadow-lg sm:min-h-36 sm:px-10 md:min-h-44 md:px-14">
-                      <img
-                        src={method.logoUrl}
-                        alt={method.title}
-                        className="block max-h-24 w-auto max-w-[82%] object-contain sm:max-h-28 md:max-h-32"
-                        loading={method.id === activeMethod?.id ? "eager" : "lazy"}
-                        decoding="async"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {methods.length > 1 ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setActiveSlide((current) => (current - 1 + methods.length) % methods.length)}
-                  aria-label="Logo pembayaran sebelumnya"
-                  className="absolute left-1 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111c38] shadow-lg transition hover:bg-[#facc15] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#facc15] sm:left-2"
-                >
-                  <ChevronLeft className="size-5" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveSlide((current) => (current + 1) % methods.length)}
-                  aria-label="Logo pembayaran berikutnya"
-                  className="absolute right-1 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111c38] shadow-lg transition hover:bg-[#facc15] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#facc15] sm:right-2"
-                >
-                  <ChevronRight className="size-5" aria-hidden="true" />
-                </button>
-                <div className="mt-5 flex justify-center gap-1.5" aria-label="Pilihan logo pembayaran">
-                  {methods.map((method, index) => (
-                    <button
-                      key={method.id}
-                      type="button"
-                      onClick={() => setActiveSlide(index)}
-                      aria-label={`Tampilkan ${method.title}`}
-                      aria-current={index === activeSlide ? "true" : undefined}
-                      className={`h-2.5 rounded-full transition-all ${index === activeSlide ? "w-7 bg-[#facc15]" : "w-2.5 bg-white/50 hover:bg-white"}`}
-                    />
-                  ))}
-                </div>
-              </>
-            ) : null}
-          </div>
-        )}
+        </div>
       </div>
     </section>
   );
