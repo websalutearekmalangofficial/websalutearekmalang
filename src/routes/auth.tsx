@@ -43,7 +43,7 @@ function AuthPage() {
       try {
         const { data } = await supabase.auth.getSession();
         if (active && data.session) {
-          await navigate({ to: "/admin", replace: true });
+          await navigate({ to: "/admin/pendaftar", replace: true });
         }
       } catch (error) {
         // Auth/session restoration must never replace the login screen with
@@ -56,7 +56,7 @@ function AuthPage() {
     try {
       const { data } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === "SIGNED_IN" && session && active) {
-          void navigate({ to: "/admin", replace: true }).catch((error) => {
+          void navigate({ to: "/admin/pendaftar", replace: true }).catch((error) => {
             console.error("[Auth] Redirect to admin failed", error);
           });
         }
