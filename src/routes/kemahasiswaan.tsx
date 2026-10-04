@@ -25,12 +25,55 @@ const leaderboardData = [
   { rank: 5, name: "Yumna Azmi", points: 832 },
 ];
 
-const jurusanData = [
-  { name: "Jurusan Manajemen", price: "Rp. 1.000.000 / Semester" },
-  { name: "Jurusan Manajemen", price: "Rp. 1.000.000 / Semester" },
-  { name: "Jurusan Akuntansi", price: "Rp. 1.000.000 / Semester" },
-  { name: "Jurusan Akuntansi", price: "Rp. 1.000.000 / Semester" },
-];
+const educationData = [
+  {
+    program: "Sarjana (S1)",
+    faculties: [
+      {
+        name: "FEB",
+        label: "Fakultas Ekonomi dan Bisnis",
+        majors: ["Manajemen", "Ekonomi Pembangunan", "Ekonomi Syariah", "Akuntansi", "Akuntansi Keuangan Publik", "Pariwisata", "Kewirausahaan"],
+      },
+      {
+        name: "FKIP",
+        label: "Fakultas Keguruan dan Ilmu Pendidikan",
+        majors: ["Pendidikan Bahasa dan Sastra Indonesia", "Pendidikan Bahasa Inggris", "Pendidikan Biologi", "Pendidikan Matematika", "Pendidikan Guru Sekolah Dasar (PGSD)", "Pendidikan Agama Islam"],
+      },
+      {
+        name: "FST",
+        label: "Fakultas Sains dan Teknologi",
+        majors: ["Statistika", "Matematika", "Biologi", "Teknologi Pangan", "Agribisnis", "Sistem Informasi", "Sains Data"],
+      },
+      {
+        name: "FHISIP",
+        label: "Fakultas Hukum, Ilmu Sosial dan Ilmu Politik",
+        majors: ["Ilmu Administrasi Publik", "Administrasi Bisnis", "Hukum", "Ilmu Pemerintahan", "Ilmu Komunikasi", "Sosiologi", "Sastra Inggris"],
+      },
+    ],
+  },
+  {
+    program: "Diploma",
+    majors: ["D4 Pengelolaan Arsip dan Rekaman Informasi", "D3 Perpajakan", "D4 Kearsipan", "D3 Teknologi Informasi", "D4 Akuntansi Bisnis Digital", "D4 Manajemen Logistik", "D3 Penyiaran"],
+  },
+  {
+    program: "Magister (S2)",
+    majors: ["Administrasi Publik (S2)", "Manajemen (S2)", "Ilmu Kelautan (S2)", "Pendidikan Matematika (S2)", "Pendidikan Dasar (S2)", "Hukum (S2)"],
+  },
+  {
+    program: "Doktoral (S3)",
+    majors: ["Doktor Administrasi Publik (S3)", "Doktor Ilmu Manajemen (S3)"],
+  },
+  {
+    program: "Profesi",
+    majors: ["Pendidikan Profesi Guru (PPG)"],
+  },
+  {
+    program: "Sertifikat",
+    majors: ["Program Sertifikat (MOOCs, BIPA, PMKM)"],
+  },
+] as const;
+
+const educationPrograms = educationData.map((item) => item.program);
 
 const beasiswaData = [
   "Beasiswa PPA",
@@ -40,7 +83,7 @@ const beasiswaData = [
 ];
 
 function KemahasiswaanPage() {
-  const [activeTab, setActiveTab] = useState("Sarjana");
+  const [activeTab, setActiveTab] = useState("Sarjana (S1)");
 
   return (
     <main className="min-h-screen bg-white font-body text-[#101010]">
@@ -218,42 +261,59 @@ function KemahasiswaanPage() {
           </div>
 
           <div className="mb-6 flex flex-wrap gap-2">
-            {["Sarjana", "Diploma", "Program Lainnya"].map((tab) => (
+            {educationPrograms.map((program) => (
               <button
-                key={tab}
+                key={program}
                 type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`rounded-full px-5 py-2.5 text-sm font-black transition ${
-                  activeTab === tab
+                onClick={() => setActiveTab(program)}
+                className={`rounded-full px-4 py-2.5 text-sm font-black transition ${
+                  activeTab === program
                     ? "bg-[#08266f] text-white"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
-                {tab}
+                {program}
               </button>
             ))}
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {jurusanData.map((item, index) => (
-              <div
-                key={`${item.name}-${index}`}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 p-5"
-              >
-                <div>
-                  <h3 className="font-black text-slate-900">{item.name}</h3>
-                  <p className="mt-1 text-sm text-slate-500">{activeTab}</p>
-                </div>
-                <span className="shrink-0 text-sm font-black text-[#08266f]">
-                  {item.price}
-                </span>
+          {(() => {
+            const selected = educationData.find((item) => item.program === activeTab) ?? educationData[0];
+            const groups = "faculties" in selected ? selected.faculties.flatMap((faculty) =>
+              faculty.majors.map((major) => ({ faculty: faculty.name, facultyLabel: faculty.label, major }))
+            ) : selected.majors.map((major) => ({ faculty: null, facultyLabel: null, major }));
+
+            return (
+              <div className="grid gap-4 md:grid-cols-2">
+                {groups.map((item, index) => (
+                  <div
+                    key={`${selected.program}-${item.major}`}
+                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        {item.faculty && (
+                          <p className="mb-1 text-[11px] font-black uppercase tracking-wider text-[#08266f]">
+                            {item.faculty} · {item.facultyLabel}
+                          </p>
+                        )}
+                        <h3 className="text-base font-black text-slate-900">{item.major}</h3>
+                        <p className="mt-1 text-xs text-slate-500">{selected.program}</p>
+                      </div>
+                      <span className="shrink-0 rounded-xl bg-yellow-50 px-3 py-2 text-right text-xs font-black text-slate-800">
+                        Rp. {(900000 + (index % 5) * 150000).toLocaleString("id-ID")}<br />
+                        <span className="font-bold text-slate-500">/ Semester</span>
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
 
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-400">
             <ChevronDown className="size-4" />
-            Informasi biaya dapat diperbarui sesuai ketentuan program.
+            Nominal di atas adalah data dummy untuk kebutuhan tampilan dan dapat diganti sesuai ketentuan biaya resmi masing-masing program.
           </div>
         </section>
 
