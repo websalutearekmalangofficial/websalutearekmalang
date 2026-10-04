@@ -20,7 +20,8 @@ function PagesAdmin() {
   const queryClient = useQueryClient();
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const [pageSearch, setPageSearch] = useState("");
-  const [pagePickerOpen, setPagePickerOpen] = useState(false);\n  const [duplicateOpen, setDuplicateOpen] = useState(false);
+  const [pagePickerOpen, setPagePickerOpen] = useState(false);
+  const [duplicateOpen, setDuplicateOpen] = useState(false);
 
   const pagesQuery = useQuery({ queryKey: ["pages"], queryFn: fetchPages });
   const pages = pagesQuery.data ?? [];
