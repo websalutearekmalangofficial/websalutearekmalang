@@ -76,14 +76,35 @@ const educationData = [
 const educationPrograms = educationData.map((item) => item.program);
 
 const beasiswaData = [
-  "Beasiswa PPA",
-  "Beasiswa BBM",
-  "Beasiswa Kementerian",
-  "Beasiswa Prestasi",
-];
+  {
+    name: "Beasiswa PPA",
+    description: "Dukungan pendidikan untuk mahasiswa yang memenuhi kriteria akademik dan ketentuan program beasiswa.",
+    requirements: ["Terdaftar sebagai mahasiswa aktif", "Memenuhi ketentuan akademik program", "Melengkapi dokumen administrasi yang diminta"],
+    benefits: ["Bantuan biaya pendidikan", "Dukungan biaya penunjang perkuliahan"],
+  },
+  {
+    name: "Beasiswa BBM",
+    description: "Program bantuan pendidikan bagi mahasiswa yang membutuhkan dukungan biaya selama masa studi.",
+    requirements: ["Mahasiswa aktif", "Memiliki dokumen administrasi yang lengkap", "Memenuhi kriteria penerima sesuai program"],
+    benefits: ["Bantuan biaya pendidikan", "Dukungan biaya kebutuhan akademik"],
+  },
+  {
+    name: "Beasiswa Kementerian",
+    description: "Beasiswa yang ditujukan bagi mahasiswa sesuai program dan ketentuan yang ditetapkan oleh kementerian terkait.",
+    requirements: ["Mahasiswa aktif", "Memenuhi persyaratan program", "Mengikuti proses seleksi sesuai ketentuan"],
+    benefits: ["Bantuan biaya pendidikan", "Kesempatan mendapatkan dukungan pendidikan sesuai program"],
+  },
+  {
+    name: "Beasiswa Prestasi",
+    description: "Dukungan pendidikan bagi mahasiswa dengan prestasi akademik maupun nonakademik yang memenuhi kriteria.",
+    requirements: ["Memiliki prestasi yang dapat dibuktikan", "Mahasiswa aktif", "Melengkapi dokumen pendukung prestasi"],
+    benefits: ["Bantuan biaya pendidikan", "Apresiasi atas prestasi mahasiswa"],
+  },
+] as const;
 
 function KemahasiswaanPage() {
   const [activeTab, setActiveTab] = useState("Sarjana (S1)");
+  const [activeBeasiswa, setActiveBeasiswa] = useState<string | null>(null);
 
   return (
     <main className="min-h-screen bg-white font-body text-[#101010]">
@@ -331,16 +352,61 @@ function KemahasiswaanPage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            {beasiswaData.map((item) => (
-              <button
-                key={item}
-                type="button"
-                className="flex items-center justify-between rounded-2xl bg-white/10 p-5 text-left transition hover:bg-white/15"
-              >
-                <span className="font-bold">{item}</span>
-                <ChevronRight className="size-5" />
-              </button>
-            ))}
+            {beasiswaData.map((item) => {
+              const isOpen = activeBeasiswa === item.name;
+              return (
+                <div key={item.name} className="rounded-2xl bg-white/10">
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setActiveBeasiswa(isOpen ? null : item.name)}
+                    className="flex w-full items-center justify-between rounded-2xl p-5 text-left transition hover:bg-white/15"
+                  >
+                    <span className="font-bold">{item.name}</span>
+                    <ChevronRight className={`size-5 transition-transform ${isOpen ? "rotate-90" : ""}`} />
+                  </button>
+
+                  {isOpen && (
+                    <div className="border-t border-white/10 px-5 pb-5 pt-4">
+                      <p className="text-sm leading-relaxed text-blue-100">{item.description}</p>
+
+                      <div className="mt-5 grid gap-5 md:grid-cols-2">
+                        <div>
+                          <h3 className="text-sm font-black">Persyaratan</h3>
+                          <ul className="mt-2 space-y-2 text-sm text-blue-100">
+                            {item.requirements.map((requirement) => (
+                              <li key={requirement} className="flex gap-2">
+                                <span className="mt-1 size-1.5 shrink-0 rounded-full bg-yellow-300" />
+                                <span>{requirement}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-black">Benefit</h3>
+                          <ul className="mt-2 space-y-2 text-sm text-blue-100">
+                            {item.benefits.map((benefit) => (
+                              <li key={benefit} className="flex gap-2">
+                                <span className="mt-1 size-1.5 shrink-0 rounded-full bg-yellow-300" />
+                                <span>{benefit}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <a
+                        href="/daftar"
+                        className="mt-6 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-black text-[#08266f] transition hover:bg-blue-50"
+                      >
+                        Mendaftar Beasiswa
+                      </a>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </section>
       </div>
