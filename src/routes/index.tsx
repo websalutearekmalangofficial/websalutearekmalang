@@ -824,6 +824,40 @@ const PAYMENT_GUIDE_IMAGE =
   "https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/public/cms-media/1791119550835-Cara-pembayaran-.png";
 
 function PaymentMethodsSection() {
+  const paymentSectionQuery = useQuery({
+    queryKey: ["public-payment-methods", "beranda"],
+    queryFn: async () => {
+      const { data: page, error: pageError } = await supabase
+        .from("pages")
+        .select("id")
+        .eq("slug", "beranda")
+        .eq("is_published", true)
+        .maybeSingle();
+
+      if (pageError) throw pageError;
+      if (!page?.id) return null;
+
+      const { data: section, error: sectionError } = await supabase
+        .from("sections")
+        .select("id, media_url, title, is_published")
+        .eq("page_id", page.id)
+        .eq("kind", "payment_methods")
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (sectionError) throw sectionError;
+      return section;
+    },
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+  });
+
+  const paymentImage =
+    paymentSectionQuery.data?.media_url?.trim() || PAYMENT_GUIDE_IMAGE;
+
   return (
     <section
       id="pembayaran"
@@ -841,9 +875,9 @@ function PaymentMethodsSection() {
         </div>
 
         <div className="mx-auto max-w-6xl">
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-white shadow-[0_24px_70px_-28px_rgba(0,0,0,0.65)]">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_70px_-28px_rgba(0,0,0,0.65)]">
             <img
-              src={PAYMENT_GUIDE_IMAGE}
+              src={paymentImage}
               alt="Cara pembayaran melalui layanan SALUT Arek Malang"
               className="block h-auto w-full object-contain"
               loading="lazy"
