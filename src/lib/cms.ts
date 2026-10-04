@@ -84,6 +84,9 @@ export const sectionKinds = [
   { value: "media", label: "Gambar / Video" },
   { value: "faq", label: "Tanya jawab" },
   { value: "scholarships", label: "Beasiswa (accordion)" },
+  { value: "activities", label: "Kegiatan Member" },
+  { value: "leaderboard", label: "Leaderboard + Video" },
+  { value: "education", label: "Biaya Pendidikan" },
 ] as const;
 
 export const mediaKinds = [
