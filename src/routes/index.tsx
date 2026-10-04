@@ -1278,18 +1278,33 @@ function FooterBanner() {
 
               {footer.address?.enabled && footer.address?.text && (
                 <div
-                  className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`}
+                  className={`grid w-full grid-cols-1 items-center gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(150px,0.65fr)] sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.7fr)] lg:gap-8`}
                   style={{ minHeight: `${addressLayout.height}px` }}
                 >
-                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
-                    <MapPin className="size-6" aria-hidden="true" />
+                  <div className={`flex min-w-0 flex-col items-center ${addressLayout.alignmentClass} text-center sm:items-start sm:text-left`}>
+                    <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
+                      <MapPin className="size-6" aria-hidden="true" />
+                    </div>
+                    <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
+                      Alamat Kantor
+                    </p>
+                    <p className="w-full max-w-[390px] text-sm font-medium leading-[1.6] text-hero-foreground/85 sm:text-base lg:text-[15px]">
+                      {footer.address.text}
+                    </p>
                   </div>
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                    Alamat Kantor
-                  </p>
-                  <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-hero-foreground/85 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
-                    {footer.address.text}
-                  </p>
+
+                  <div className="flex min-h-[120px] items-center justify-center rounded-2xl border border-hero-foreground/10 bg-hero-foreground/[0.04] px-5 py-5 sm:min-h-[150px] lg:min-h-[170px]">
+                    <a
+                      href="#home"
+                      aria-label="Kembali ke beranda Sentra Layanan UT Arek Malang"
+                      className="flex w-full items-center justify-center rounded-xl p-2 transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+                    >
+                      <SiteLogo
+                        className="w-full justify-center"
+                        imageClassName="max-h-20 max-w-[210px] sm:max-h-24 sm:max-w-[240px] lg:max-h-28 lg:max-w-[270px]"
+                      />
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
