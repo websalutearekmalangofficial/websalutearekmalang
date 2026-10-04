@@ -159,6 +159,7 @@ export type NavItem = {
   icon: string | null;
   sort_order: number;
   is_active: boolean;
+  parent_id: string | null;
 };
 
 export type PageContent = {
