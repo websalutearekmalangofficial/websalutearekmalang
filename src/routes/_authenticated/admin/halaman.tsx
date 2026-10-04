@@ -37,7 +37,20 @@ function PagesAdmin() {
   });
 
   const refreshPages = () => queryClient.invalidateQueries({ queryKey: ["pages"] });
-  const refreshSections = () => queryClient.invalidateQueries({ queryKey: ["sections", selectedPageId] });\n  const duplicateMutation = useMutation({\n    mutationFn: async ({ title, slug }: { title: string; slug: string }) => {\n      if (!selectedPageId) throw new Error("Pilih halaman yang akan diduplikasi terlebih dahulu.");\n      return duplicatePage(selectedPageId, title, slug);\n    },\n    onSuccess: (newPage) => {\n      toast.success(`Halaman “${newPage.title}” berhasil diduplikasi.`);\n      setDuplicateOpen(false);\n      refreshPages();\n      setSelectedPageId(newPage.id);\n    },\n    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menduplikasi halaman."),\n  });
+  const refreshSections = () => queryClient.invalidateQueries({ queryKey: ["sections", selectedPageId] });
+  const duplicateMutation = useMutation({
+    mutationFn: async ({ title, slug }: { title: string; slug: string }) => {
+      if (!selectedPageId) throw new Error("Pilih halaman yang akan diduplikasi terlebih dahulu.");
+      return duplicatePage(selectedPageId, title, slug);
+    },
+    onSuccess: (newPage) => {
+      toast.success(`Halaman “${newPage.title}” berhasil diduplikasi.`);
+      setDuplicateOpen(false);
+      refreshPages();
+      setSelectedPageId(newPage.id);
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menduplikasi halaman."),
+  });
 
   const addPage = useMutation({
     mutationFn: async () => {
@@ -169,10 +182,23 @@ function PagesAdmin() {
             ) : null}
           </div>
 
-          <div className="flex flex-wrap gap-2">\n            <Button type="button" variant="formOutline" className="h-10 rounded-full px-4" onClick={() => setDuplicateOpen(true)} disabled={!selectedPage}>\n              <Copy className="size-4" aria-hidden="true" />\n              Duplicate Halaman\n            </Button>\n            <Button type="button" variant="formOutline" className="h-10 rounded-full px-4" onClick={() => addPage.mutate()}>\n              <Plus className="size-4" aria-hidden="true" />\n              Halaman baru\n            </Button>\n          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="formOutline" className="h-10 rounded-full px-4" onClick={() => setDuplicateOpen(true)} disabled={!selectedPage}>
+              <Copy className="size-4" aria-hidden="true" />
+              Duplicate Halaman
+            </Button>
+            <Button type="button" variant="formOutline" className="h-10 rounded-full px-4" onClick={() => addPage.mutate()}>
+              <Plus className="size-4" aria-hidden="true" />
+              Halaman baru
+            </Button>
+          </div>
         </div>
 
-        {selectedPage ? <PageForm page={selectedPage} onSaved={refreshPages} /> : null}\n\n        {duplicateOpen && selectedPage ? (\n          <DuplicatePageDialog page={selectedPage} pending={duplicateMutation.isPending} onClose={() => setDuplicateOpen(false)} onSubmit={(title, slug) => duplicateMutation.mutate({ title, slug })} />\n        ) : null}
+        {selectedPage ? <PageForm page={selectedPage} onSaved={refreshPages} /> : null}
+
+        {duplicateOpen && selectedPage ? (
+          <DuplicatePageDialog page={selectedPage} pending={duplicateMutation.isPending} onClose={() => setDuplicateOpen(false)} onSubmit={(title, slug) => duplicateMutation.mutate({ title, slug })} />
+        ) : null}
       </AdminCard>
 
       {selectedPage?.slug === "beranda" ? (
@@ -207,7 +233,41 @@ function PagesAdmin() {
   );
 }
 
-function DuplicatePageDialog({ page, pending, onClose, onSubmit }: { page: PageRecord; pending: boolean; onClose: () => void; onSubmit: (title: string, slug: string) => void }) {\n  const [title, setTitle] = useState(`${page.title} - Salinan`);\n  const [slug, setSlug] = useState(`${page.slug}-salinan`);\n  const [error, setError] = useState<string | null>(null);\n\n  const submit = (event: FormEvent) => {\n    event.preventDefault();\n    const cleanTitle = title.trim();\n    const cleanSlug = slug.trim().toLowerCase().replace(/^\\/+|\\/+$/g, "");\n    if (!cleanTitle) return setError("Nama halaman wajib diisi.");\n    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) return setError("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");\n    setError(null);\n    onSubmit(cleanTitle, cleanSlug);\n  };\n\n  return (\n    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="duplicate-page-title">\n      <form onSubmit={submit} className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">\n        <div className="flex items-start justify-between gap-4">\n          <div><h2 id="duplicate-page-title" className="text-lg font-black text-ut-navy">Duplicate Halaman</h2><p className="mt-1 text-sm text-muted-foreground">Menyalin “{page.title}” beserta seluruh section dan isi.</p></div>\n          <button type="button" onClick={onClose} disabled={pending} className="rounded-full px-2 py-1 text-xl leading-none text-muted-foreground hover:bg-muted" aria-label="Tutup">×</button>\n        </div>\n        <div className="mt-5 space-y-4">\n          <Field label="Nama halaman baru"><input autoFocus className={inputClass} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Contoh: Program Sarjana Bisnis" disabled={pending} /></Field>\n          <Field label="Slug halaman baru"><input className={inputClass} value={slug} onChange={(event) => setSlug(event.target.value.toLowerCase())} placeholder="contoh: program-sarjana-bisnis" disabled={pending} /></Field>\n          <div className="rounded-xl bg-section-blue p-3 text-xs leading-5 text-muted-foreground">Slug harus unik. Halaman sumber tidak diubah. Halaman hasil duplikasi dibuat <strong>tidak tampil di menu</strong> dan <strong>tidak tayang</strong> terlebih dahulu.</div>\n          {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}\n        </div>\n        <div className="mt-6 flex flex-wrap justify-end gap-2"><Button type="button" variant="formOutline" size="form" onClick={onClose} disabled={pending}>Batal</Button><Button type="submit" variant="utYellow" size="form" disabled={pending}><Copy className="size-4" />{pending ? "Menduplikasi..." : "Duplicate Halaman"}</Button></div>\n      </form>\n    </div>\n  );\n}\n\nfunction PageForm({ page, onSaved }: { page: PageRecord; onSaved: () => void }) {
+function DuplicatePageDialog({ page, pending, onClose, onSubmit }: { page: PageRecord; pending: boolean; onClose: () => void; onSubmit: (title: string, slug: string) => void }) {
+  const [title, setTitle] = useState(`${page.title} - Salinan`);
+  const [slug, setSlug] = useState(`${page.slug}-salinan`);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const cleanTitle = title.trim();
+    const cleanSlug = slug.trim().toLowerCase().replace(/^\\/+|\\/+$/g, "");
+    if (!cleanTitle) return setError("Nama halaman wajib diisi.");
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleanSlug)) return setError("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");
+    setError(null);
+    onSubmit(cleanTitle, cleanSlug);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="duplicate-page-title">
+      <form onSubmit={submit} className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div><h2 id="duplicate-page-title" className="text-lg font-black text-ut-navy">Duplicate Halaman</h2><p className="mt-1 text-sm text-muted-foreground">Menyalin “{page.title}” beserta seluruh section dan isi.</p></div>
+          <button type="button" onClick={onClose} disabled={pending} className="rounded-full px-2 py-1 text-xl leading-none text-muted-foreground hover:bg-muted" aria-label="Tutup">×</button>
+        </div>
+        <div className="mt-5 space-y-4">
+          <Field label="Nama halaman baru"><input autoFocus className={inputClass} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Contoh: Program Sarjana Bisnis" disabled={pending} /></Field>
+          <Field label="Slug halaman baru"><input className={inputClass} value={slug} onChange={(event) => setSlug(event.target.value.toLowerCase())} placeholder="contoh: program-sarjana-bisnis" disabled={pending} /></Field>
+          <div className="rounded-xl bg-section-blue p-3 text-xs leading-5 text-muted-foreground">Slug harus unik. Halaman sumber tidak diubah. Halaman hasil duplikasi dibuat <strong>tidak tampil di menu</strong> dan <strong>tidak tayang</strong> terlebih dahulu.</div>
+          {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
+        </div>
+        <div className="mt-6 flex flex-wrap justify-end gap-2"><Button type="button" variant="formOutline" size="form" onClick={onClose} disabled={pending}>Batal</Button><Button type="submit" variant="utYellow" size="form" disabled={pending}><Copy className="size-4" />{pending ? "Menduplikasi..." : "Duplicate Halaman"}</Button></div>
+      </form>
+    </div>
+  );
+}
+
+function PageForm({ page, onSaved }: { page: PageRecord; onSaved: () => void }) {
   const [form, setForm] = useState(page);
   useEffect(() => setForm(page), [page]);
 
