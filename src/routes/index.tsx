@@ -828,14 +828,14 @@ function PaymentMethodsSection() {
     <section
       id="pembayaran"
       aria-label="Pembayaran melalui"
-      className="relative overflow-hidden bg-[#111c38] px-4 py-14 sm:px-6 md:px-8 md:py-20 lg:px-12"
+      className="relative overflow-hidden bg-white px-4 py-14 sm:px-6 md:px-8 md:py-20 lg:px-12"
     >
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 text-center sm:mb-10">
-          <p className="mb-2 text-xs font-black uppercase tracking-[0.22em] text-[#facc15]">
+          <p className="mb-2 text-xs font-black uppercase tracking-[0.22em] text-[#111c38]">
             Informasi Pembayaran
           </p>
-          <h2 className="font-display text-2xl font-extrabold uppercase tracking-wide text-white sm:text-3xl lg:text-4xl">
+          <h2 className="font-display text-2xl font-extrabold uppercase tracking-wide text-[#111c38] sm:text-3xl lg:text-4xl">
             PEMBAYARAN MELALUI
           </h2>
         </div>
