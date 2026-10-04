@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowRight, BookOpen, BriefcaseBusiness, ChevronDown, GraduationCap, Menu, X } from "lucide-react";
-import { SiteLogo } from "@/components/site-logo";
+import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/program-studi")({
@@ -119,31 +119,7 @@ function ProgramStudiPage() {
 
   return (
     <main className="min-h-screen bg-[#f8fafc] font-body text-slate-900">
-      <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
-        <div className="mx-auto grid min-h-16 max-w-7xl grid-cols-[1fr_auto] items-center gap-2 px-3 py-2.5 sm:px-4 lg:min-h-20 lg:grid-cols-[auto_1fr_auto] lg:px-8 xl:px-12">
-          <Link to="/" className="flex min-w-0 items-center"><SiteLogo className="max-w-[145px] sm:max-w-[175px] md:max-w-[200px] lg:max-w-[220px]" imageClassName="max-h-12 sm:max-h-14" /></Link>
-          <nav className="hidden items-center justify-center gap-2 lg:flex xl:gap-4">
-            <Link to="/" className="rounded-full px-3 py-2 text-sm font-bold text-hero-foreground/95 hover:text-ut-yellow">Beranda</Link>
-            <Link to="/program-studi" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow"><GraduationCap className="size-4" />Program Studi</Link>
-            <a href="/#informasi" className="rounded-full px-3 py-2 text-sm font-bold text-hero-foreground/95 hover:text-ut-yellow">Informasi</a>
-            <a href="/#panduan" className="rounded-full px-3 py-2 text-sm font-bold text-hero-foreground/95 hover:text-ut-yellow">Panduan</a>
-            <a href="/#kontak" className="rounded-full px-3 py-2 text-sm font-bold text-hero-foreground/95 hover:text-ut-yellow">Kontak</a>
-          </nav>
-          <div className="flex items-center justify-end gap-2">
-            <Link to="/daftar" className="inline-flex items-center gap-1.5 rounded-full bg-ut-yellow px-3 py-2 text-xs font-black text-ut-navy shadow-yellow sm:px-4 sm:text-sm">Daftar <ArrowRight className="size-4" /></Link>
-            <button type="button" onClick={() => setMenuOpen((v) => !v)} className="grid size-10 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 lg:hidden" aria-label="Menu">
-              {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
-          </div>
-        </div>
-        {menuOpen && <nav className="grid gap-2 border-t border-hero-foreground/20 px-4 pb-4 pt-3 lg:hidden">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold">Beranda</Link>
-          <Link to="/program-studi" onClick={() => setMenuOpen(false)} className="rounded-xl bg-ut-yellow px-4 py-3 text-sm font-black text-ut-navy">Program Studi</Link>
-          <a href="/#informasi" className="rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold">Informasi</a>
-          <a href="/#panduan" className="rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold">Panduan</a>
-          <a href="/#kontak" className="rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold">Kontak</a>
-        </nav>}
-      </header>
+      <PublicHeader />
 
       <section className="relative overflow-hidden bg-hero-deep px-4 py-16 text-white sm:px-6 md:px-8 md:py-24 lg:px-12">
         <div className="absolute -right-24 -top-24 size-80 rounded-full bg-blue-700/30 blur-3xl" />
@@ -205,10 +181,7 @@ function ProgramStudiPage() {
         </div>
       </section>
 
-      <footer className="bg-hero-nav px-4 pb-8 pt-6 text-center text-xs text-white/60">
-        <Link to="/" className="mx-auto mb-4 inline-flex"><SiteLogo imageClassName="max-h-14 max-w-[190px]" /></Link>
-        <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
-      </footer>
+      <PublicFooter />
     </main>
   );
 }
