@@ -273,6 +273,7 @@ function RegistrationsAdmin() {
                         <th className="border-b px-4 py-4">Tanggal Lahir</th>
                         <th className="border-b px-4 py-4">Jenis Kelamin</th>
                         <th className="border-b px-4 py-4">Nomor HP / WhatsApp</th>
+                        <th className="border-b px-4 py-4">WhatsApp</th>
                         <th className="border-b px-4 py-4">Waktu Daftar</th>
                         <th className="border-b px-4 py-4">Status</th>
                         <th className="border-b px-4 py-4">Detail</th>
@@ -294,6 +295,21 @@ function RegistrationsAdmin() {
                           <td className="whitespace-nowrap border-b px-4 py-4 text-slate-600">{row.tanggal_lahir || "-"}</td>
                           <td className="border-b px-4 py-4 text-slate-600">{row.jenis_kelamin || "-"}</td>
                           <td className="whitespace-nowrap border-b px-4 py-4 font-medium text-slate-700">{row.nomor_hp || "-"}</td>
+                          <td className="border-b px-4 py-4">
+                            {whatsappUrl(row.nomor_hp) ? (
+                              <a
+                                href={whatsappUrl(row.nomor_hp) ?? undefined}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={"Buka WhatsApp " + (row.nama || "pendaftar")}
+                                className="inline-flex h-9 items-center gap-2 rounded-lg bg-emerald-600 px-3 text-xs font-black text-white transition hover:bg-emerald-700"
+                              >
+                                <MessageCircle className="size-4" /> WhatsApp
+                              </a>
+                            ) : (
+                              <span className="text-xs text-slate-400">Tidak ada nomor</span>
+                            )}
+                          </td>
                           <td className="whitespace-nowrap border-b px-4 py-4 text-slate-500">{new Date(row.created_at).toLocaleString("id-ID")}</td>
                           <td className="border-b px-4 py-4">
                             <select
