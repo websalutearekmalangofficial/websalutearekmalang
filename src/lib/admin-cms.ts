@@ -153,7 +153,7 @@ export async function fetchSections(pageId: string): Promise<Section[]> {
   }));
 }
 
-export async function fetchNavItems(): Promise<NavItem[]> {
+export type AdminPageOption = { id: string; title: string; slug: string; is_published: boolean; show_in_nav: boolean; };\n\nexport async function fetchAdminPageOptions(): Promise<AdminPageOption[]> {\n  const { data, error } = await supabase\n    .from("pages")\n    .select("id, title, slug, is_published, show_in_nav")\n    .order("title", { ascending: true });\n  if (error) throw error;\n  return (data ?? []) as AdminPageOption[];\n}\n\nexport async function fetchNavItems(): Promise<NavItem[]> {
   const { data, error } = await supabase
     .from("nav_items")
     .select("*")
