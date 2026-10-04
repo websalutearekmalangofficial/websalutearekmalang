@@ -1303,12 +1303,6 @@ function FooterBanner() {
 
             <div className="border-t border-hero-foreground/15 pt-8 sm:pt-10">
               <div className="mx-auto max-w-5xl">
-                <div className="mb-5 text-center">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                    Media Sosial & Kontak
-                  </p>
-                </div>
-
                 <ul
                   className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4"
                   aria-label="Akun media sosial dan kontak SALUT Arek Malang"
