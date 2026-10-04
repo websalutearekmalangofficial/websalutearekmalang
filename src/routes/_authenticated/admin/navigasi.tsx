@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { AdminCard, Field, inputClass } from "@/components/admin/field";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchNavItems, swapOrder } from "@/lib/admin-cms";
+import { fetchAdminPageOptions, fetchNavItems, swapOrder } from "@/lib/admin-cms";
 import { iconNames, type NavItem } from "@/lib/cms";
 
 export const Route = createFileRoute("/_authenticated/admin/navigasi")({
@@ -17,24 +17,33 @@ export const Route = createFileRoute("/_authenticated/admin/navigasi")({
 function NavAdmin() {
   const queryClient = useQueryClient();
   const navQuery = useQuery({ queryKey: ["nav"], queryFn: fetchNavItems });
+  const pagesQuery = useQuery({ queryKey: ["admin-page-options"], queryFn: fetchAdminPageOptions });
+  const [selectedPageId, setSelectedPageId] = useState("");
   const items = navQuery.data ?? [];
   const refresh = () => queryClient.invalidateQueries({ queryKey: ["nav"] });
 
   const addItem = useMutation({
     mutationFn: async () => {
+      const page = pagesQuery.data?.find((entry) => entry.id === selectedPageId);
+      if (!page) throw new Error("Pilih halaman dari daftar terlebih dahulu.");
+      const href = page.slug === "beranda" ? "/" : "/" + page.slug;
+      if (items.some((item) => item.href === href)) throw new Error("Halaman tersebut sudah ada di navigasi.");
       const { error } = await supabase.from("nav_items").insert({
-        label: "Menu Baru",
-        href: "/",
+        label: page.title,
+        href,
+        badge: null,
+        icon: null,
         sort_order: items.length + 1,
         is_active: true,
       });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Menu baru ditambahkan.");
+      toast.success("Halaman berhasil ditambahkan ke navigasi.");
+      setSelectedPageId("");
       refresh();
     },
-    onError: () => toast.error("Gagal menambah menu."),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menambah menu."),
   });
 
   return (
@@ -45,14 +54,33 @@ function NavAdmin() {
     >
       <div className="space-y-3">
         {items.map((item, index) => (
-          <NavRow key={item.id} item={item} index={index} siblings={items} onChanged={refresh} />
+          <NavRow key={item.id} item={item} index={index} siblings={items} onChanged={refresh} pageOptions={pagesQuery.data ?? []} />
         ))}
         {items.length === 0 && !navQuery.isLoading ? (
           <p className="text-sm font-medium text-muted-foreground">Belum ada menu.</p>
         ) : null}
-        <Button type="button" variant="formOutline" className="h-11 rounded-full px-4" onClick={() => addItem.mutate()}>
+        <div className="flex flex-col gap-3 rounded-2xl border border-ut-sky/20 bg-section-blue p-4 sm:flex-row sm:items-end">
+          <div className="min-w-0 flex-1">
+            <Field label="Tambah dari Page">
+              <select className={inputClass} value={selectedPageId} onChange={(e) => setSelectedPageId(e.target.value)}>
+                <option value="">Pilih halaman dari database...</option>
+                {(pagesQuery.data ?? []).map((page) => (
+                  <option key={page.id} value={page.id}>{page.title} — /{page.slug === "beranda" ? "" : page.slug}</option>
+                ))}
+              </select>
+            </Field>
+          </div>
+          <Button type="button" variant="utYellow" className="h-11 rounded-full px-5" disabled={!selectedPageId || addItem.isPending} onClick={() => addItem.mutate()}>
+            <Plus className="size-4" aria-hidden="true" />
+            {addItem.isPending ? "Menambahkan..." : "Tambahkan ke Header"}
+          </Button>
+        </div>
+        <Button type="button" variant="formOutline" className="h-11 rounded-full px-4" onClick={async () => {
+          const { error } = await supabase.from("nav_items").insert({ label: "Menu Baru", href: "/", sort_order: items.length + 1, is_active: true });
+          if (error) toast.error("Gagal menambah menu."); else { toast.success("Menu manual ditambahkan."); refresh(); }
+        }}>
           <Plus className="size-4" aria-hidden="true" />
-          Menu baru
+          Menu manual
         </Button>
       </div>
       </AdminCard>
@@ -70,6 +98,7 @@ function NavRow({
   index: number;
   siblings: NavItem[];
   onChanged: () => void;
+  pageOptions: { id: string; title: string; slug: string }[];
 }) {
   const [form, setForm] = useState(item);
   useEffect(() => setForm(item), [item]);
@@ -127,7 +156,16 @@ function NavRow({
         <Field label="Nama menu">
           <input className={inputClass} value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} />
         </Field>
-        <Field label="Tautan">
+        <Field label="Pilih Page">
+          <select className={inputClass} value={form.href} onChange={(e) => {
+            const page = pageOptions.find((entry) => (entry.slug === "beranda" ? "/" : "/" + entry.slug) === e.target.value);
+            setForm({ ...form, href: e.target.value, label: page?.title ?? form.label });
+          }}>
+            <option value={form.href}>URL saat ini: {form.href}</option>
+            {pageOptions.map((page) => <option key={page.id} value={page.slug === "beranda" ? "/" : "/" + page.slug}>{page.title} — /{page.slug === "beranda" ? "" : page.slug}</option>)}
+          </select>
+        </Field>
+                <Field label="Tautan">
           <input className={inputClass} value={form.href} onChange={(e) => setForm({ ...form, href: e.target.value })} />
         </Field>
         <Field label="Badge (opsional)">
