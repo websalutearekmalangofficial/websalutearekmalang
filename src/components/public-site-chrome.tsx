@@ -5,12 +5,22 @@ import { CircleUserRound, ClipboardPenLine, Globe, Home, LayoutDashboard, LogOut
 import { SiteLogo } from "@/components/site-logo";
 import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
+import type { NavItem } from "@/lib/cms";
 
-const navLinks = ["Informasi", "Panduan", "Kontak"];
+const fallbackNavLinks = [{ label: "Informasi", href: "/#informasi" }, { label: "Panduan", href: "/#panduan" }, { label: "Kontak", href: "/#kontak" }];
 
 export function PublicHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(null);
+  const [navItems, setNavItems] = useState<NavItem[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    void supabase.from("nav_items").select("*").eq("is_active", true).order("sort_order", { ascending: true }).then(({ data }) => {
+      if (mounted) setNavItems((data ?? []) as NavItem[]);
+    });
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -31,6 +41,8 @@ export function PublicHeader() {
     return () => { mounted = false; subscription.unsubscribe(); };
   }, []);
 
+  const publicNav = navItems.length ? navItems : [{ id: "fallback", label: "Beranda", href: "/" } as NavItem, ...fallbackNavLinks.map((item, index) => ({ id: `fallback-${index}`, label: item.label, href: item.href, badge: null, icon: null, sort_order: index + 2, is_active: true }))];
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setCurrentUser(null);
@@ -48,7 +60,7 @@ export function PublicHeader() {
             <Home className="size-4" aria-hidden="true" />Beranda
           </Link>
           {navLinks.map((link) => (
-            <a key={link} href={`/#${link.toLowerCase()}`} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link}</a>
+            <a key={link} href={`/#${link.toLowerCase()}`} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link.label}</Link>)
           ))}
         </nav>
         <div className="flex items-center justify-end gap-1.5 sm:gap-2 lg:min-w-0">
@@ -80,7 +92,7 @@ export function PublicHeader() {
         <nav id="public-mobile-nav" className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 lg:hidden" aria-label="Navigasi mobile">
           <ul className="grid gap-2">
             <li><Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-xl bg-ut-yellow px-4 py-3 text-sm font-black text-ut-navy"><Home className="size-4" />Beranda</Link></li>
-            {navLinks.map((link) => <li key={link}><a href={`/#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground">{link}</a></li>)}
+            {publicNav.filter((link) => link.href !== "/").map((link) => <li key={link.id}><Link to={link.href} onClick={() => setMenuOpen(false)} className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground">{link.label}</Link></li>)}
           </ul>
         </nav>
       ) : null}
