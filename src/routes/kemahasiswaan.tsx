@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Star, Trophy } from "lucide-react";
+import { ChevronDown, ChevronRight, Star, Trophy } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 
 export const Route = createFileRoute("/kemahasiswaan")({
@@ -148,40 +148,61 @@ function KemahasiswaanPage() {
         </section>
 
         <section className="mb-16 rounded-[2rem] bg-slate-50 p-6 sm:p-10">
-          <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <div className="mb-2 flex items-center gap-2 text-[#08266f]">
-                <Trophy className="size-5" />
-                <span className="text-xs font-black uppercase tracking-[0.2em]">
-                  Apresiasi
-                </span>
-              </div>
-              <h2 className="text-3xl font-black text-slate-900">
-                Leaderboard
-              </h2>
-              <p className="mt-2 text-sm text-slate-500">
-                Papan apresiasi mahasiswa berdasarkan poin kegiatan.
-              </p>
+          <div className="mb-8">
+            <div className="mb-2 flex items-center gap-2 text-[#08266f]">
+              <Trophy className="size-5" />
+              <span className="text-xs font-black uppercase tracking-[0.2em]">
+                Apresiasi
+              </span>
             </div>
+            <h2 className="text-3xl font-black text-slate-900">Leaderboard</h2>
+            <p className="mt-2 text-sm text-slate-500">
+              Papan apresiasi mahasiswa berdasarkan poin kegiatan.
+            </p>
           </div>
 
-          <div className="grid gap-3">
-            {leaderboardData.map((item) => (
-              <div
-                key={item.rank}
-                className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-4"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="flex size-10 items-center justify-center rounded-full bg-[#08266f] text-sm font-black text-white">
-                    {item.rank}
-                  </span>
-                  <span className="font-bold text-slate-800">{item.name}</span>
-                </div>
-                <span className="font-black text-[#08266f]">
-                  {item.points.toLocaleString("id-ID")} poin
-                </span>
+          <div className="grid gap-6 lg:grid-cols-[30%_70%] lg:items-stretch">
+            <div className="order-2 rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 lg:order-1">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-black text-slate-900">Peringkat</h3>
+                <Trophy className="size-5 text-[#08266f]" />
               </div>
-            ))}
+              <div className="grid gap-3">
+                {leaderboardData.map((item) => (
+                  <div key={item.rank} className="flex items-center justify-between rounded-2xl border border-slate-200 p-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#08266f] text-xs font-black text-white">
+                        {item.rank}
+                      </span>
+                      <span className="truncate text-sm font-bold text-slate-800">{item.name}</span>
+                    </div>
+                    <span className="ml-2 shrink-0 text-xs font-black text-[#08266f]">
+                      {item.points.toLocaleString("id-ID")} poin
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="order-1 overflow-hidden rounded-3xl border border-slate-200 bg-white lg:order-2">
+              <div className="aspect-video w-full bg-slate-900">
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="Video kegiatan mahasiswa SALUT Arek Malang"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+              <div className="p-5">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#08266f]">Video Kegiatan</p>
+                <h3 className="mt-1 text-lg font-black text-slate-900">Aktivitas Mahasiswa SALUT Arek Malang</h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Area ini siap digunakan untuk embed YouTube atau video yang diunggah melalui sistem website.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
