@@ -93,6 +93,7 @@ function NavRow({
   index,
   siblings,
   onChanged,
+  pageOptions,
 }: {
   item: NavItem;
   index: number;
