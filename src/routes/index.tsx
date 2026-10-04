@@ -707,7 +707,7 @@ function CombinedCTAProcessSection() {
 function KeunggulanBannerSection() {
   return (
     <section className="relative z-20 mx-auto max-w-7xl px-4 pb-14 sm:px-6 md:px-8">
-      <div className="flex flex-col items-start justify-between gap-10 rounded-3xl bg-[#111c38] p-6 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)] md:flex-row md:items-center md:p-10 lg:p-12">
+      <div className="flex flex-col items-start justify-between gap-10 rounded-3xl bg-hero-deep p-6 shadow-[0_20px_40px_-15px_rgba(17,28,56,0.3)] md:flex-row md:items-center md:p-10 lg:p-12">
         <div className="flex w-full flex-1 items-center gap-5">
           <div className="shrink-0 rounded-full bg-[#facc15] p-4 text-[#111c38] shadow-inner">
             <Gift
