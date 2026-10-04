@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramStudiRouteImport } from './routes/program-studi'
-import { Route as ProgramStudiManajemenRouteImport } from './routes/program-studi/manajemen'
+import { Route as ProgramStudiManajemenRouteImport } from './routes/program-studi.manajemen'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -34,8 +34,8 @@ const ProgramStudiRoute = ProgramStudiRouteImport.update({
 } as any)
 const ProgramStudiManajemenRoute = ProgramStudiManajemenRouteImport.update({
   id: '/program-studi/manajemen',
-  path: '/manajemen',
-  getParentRoute: () => ProgramStudiRoute,
+  path: '/program-studi/manajemen',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -169,7 +169,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProgramStudiRoute: typeof ProgramStudiRouteWithChildren
+  ProgramStudiRoute: typeof ProgramStudiRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
 }
@@ -195,7 +195,7 @@ declare module '@tanstack/react-router' {
       path: '/manajemen'
       fullPath: '/program-studi/manajemen'
       preLoaderRoute: typeof ProgramStudiManajemenRouteImport
-      parentRoute: typeof ProgramStudiRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
       id: '/_authenticated'
@@ -295,15 +295,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-const ProgramStudiRouteChildren = {
-  ProgramStudiManajemenRoute: ProgramStudiManajemenRoute,
-}
-const ProgramStudiRouteWithChildren =
-  ProgramStudiRoute._addFileChildren(ProgramStudiRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProgramStudiRoute: ProgramStudiRouteWithChildren,
+  ProgramStudiRoute: ProgramStudiRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
 }
