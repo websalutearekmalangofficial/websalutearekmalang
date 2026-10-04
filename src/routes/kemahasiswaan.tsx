@@ -82,6 +82,24 @@ function KemahasiswaanPage() {
   const [activeTab, setActiveTab] = useState("Sarjana (S1)");
   const [activeBeasiswa, setActiveBeasiswa] = useState<string | null>(null);
 
+  const sectionsQuery = useQuery({
+    queryKey: ["kemahasiswaan-sections"],
+    queryFn: async () => {
+      const { data: page, error: pageError } = await supabase.from("pages").select("id").eq("slug", "kemahasiswaan").maybeSingle();
+      if (pageError) throw pageError;
+      if (!page) return [];
+      const { data, error } = await supabase.from("sections").select("*, items:section_items(*)").eq("page_id", page.id).eq("is_published", true).order("sort_order", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((section) => ({ ...section, items: [...(section.items ?? [])].filter((item) => item.is_published).sort((a,b) => a.sort_order-b.sort_order) }));
+    },
+  });
+  const cmsSections = sectionsQuery.data ?? [];
+  const cmsSection = (kind: string) => cmsSections.find((section) => section.kind === kind);
+  const heroSection = cmsSection("hero");
+  const joinSection = cmsSection("benefits");
+  const activitySection = cmsSection("activities");
+  const leaderboardSection = cmsSection("leaderboard");
+  const educationSection = cmsSection("education");
   const scholarshipsQuery = useQuery({
     queryKey: ["kemahasiswaan-scholarships"],
     queryFn: async () => {
