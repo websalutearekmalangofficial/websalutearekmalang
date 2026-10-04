@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { CircleUserRound, ClipboardPenLine, Globe, Home, LayoutDashboard, LogOut, Mail, MapPin, Menu, Phone, UserRound, X, Instagram } from "lucide-react";
+import { ChevronDown, CircleUserRound, ClipboardPenLine, Globe, Home, LayoutDashboard, LogOut, Mail, MapPin, Menu, Phone, UserRound, X, Instagram } from "lucide-react";
 import { SiteLogo } from "@/components/site-logo";
 import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,9 +59,23 @@ export function PublicHeader() {
           <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-3 py-2 text-xs font-black text-ut-navy shadow-yellow xl:px-4 xl:py-2.5 xl:text-sm">
             <Home className="size-4" aria-hidden="true" />Beranda
           </Link>
-          {publicNav.filter((link) => link.href !== "/").map((link) => (
-            <Link key={link.id} to={link.href} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link.label}</Link>
-          ))}        </nav>
+          {publicNav.filter((link) => link.href !== "/" && link.parent_id === null).map((link) => {
+            const children = publicNav.filter((child) => child.parent_id === link.id);
+            return children.length ? (
+              <div key={link.id} className="group relative">
+                <Link to={link.href} className="inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">
+                  {link.label}<ChevronDown className="size-4 transition-transform group-hover:rotate-180" />
+                </Link>
+                <div className="invisible absolute left-1/2 top-full z-50 mt-2 min-w-56 -translate-x-1/2 translate-y-1 rounded-2xl border border-hero-foreground/15 bg-hero-nav p-2 opacity-0 shadow-xl transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  {children.map((child) => (
+                    <Link key={child.id} to={child.href} className="block rounded-xl px-4 py-3 text-sm font-bold text-hero-foreground/90 hover:bg-hero-foreground/10 hover:text-ut-yellow">{child.label}</Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Link key={link.id} to={link.href} className="rounded-full px-2 py-2 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link.label}</Link>
+            );
+          })}        </nav>
         <div className="flex items-center justify-end gap-1.5 sm:gap-2 lg:min-w-0">
           {currentUser ? (
             <div className="flex items-center gap-2">
@@ -91,7 +105,15 @@ export function PublicHeader() {
         <nav id="public-mobile-nav" className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 lg:hidden" aria-label="Navigasi mobile">
           <ul className="grid gap-2">
             <li><Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-xl bg-ut-yellow px-4 py-3 text-sm font-black text-ut-navy"><Home className="size-4" />Beranda</Link></li>
-            {publicNav.filter((link) => link.href !== "/").map((link) => <li key={link.id}><Link to={link.href} onClick={() => setMenuOpen(false)} className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground">{link.label}</Link></li>)}
+            {publicNav.filter((link) => link.href !== "/" && link.parent_id === null).map((link) => {
+              const children = publicNav.filter((child) => child.parent_id === link.id);
+              return (
+                <li key={link.id}>
+                  <Link to={link.href} onClick={() => setMenuOpen(false)} className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground">{link.label}</Link>
+                  {children.length ? <ul className="mt-1 ml-3 grid gap-1 border-l border-hero-foreground/20 pl-3">{children.map((child) => <li key={child.id}><Link to={child.href} onClick={() => setMenuOpen(false)} className="block rounded-lg px-4 py-2 text-sm font-medium text-hero-foreground/80 hover:bg-hero-foreground/10 hover:text-ut-yellow">{child.label}</Link></li>)}</ul> : null}
+                </li>
+              );
+            })}
           </ul>
         </nav>
       ) : null}
