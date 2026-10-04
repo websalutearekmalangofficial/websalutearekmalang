@@ -179,9 +179,9 @@ function Index() {
     <main className="min-h-screen overflow-hidden bg-[#f8fafc] font-body text-foreground">
       <Header />
       <HeroBanner />
+      <KeunggulanBannerSection />
       <div className="bg-white">
         <CombinedCTAProcessSection />
-        <KeunggulanBannerSection />
       </div>
       <BenefitsSection />
       <PaymentMethodsSection />
