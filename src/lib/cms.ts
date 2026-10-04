@@ -83,6 +83,7 @@ export const sectionKinds = [
   { value: "richtext", label: "Teks bebas" },
   { value: "media", label: "Gambar / Video" },
   { value: "faq", label: "Tanya jawab" },
+  { value: "scholarships", label: "Beasiswa (accordion)" },
 ] as const;
 
 export const mediaKinds = [
