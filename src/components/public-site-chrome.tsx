@@ -41,7 +41,7 @@ export function PublicHeader() {
     return () => { mounted = false; subscription.unsubscribe(); };
   }, []);
 
-  const publicNav = navItems.length ? navItems : [{ id: "fallback", label: "Beranda", href: "/" } as NavItem, ...fallbackNavLinks.map((item, index) => ({ id: `fallback-${index}`, label: item.label, href: item.href, badge: null, icon: null, sort_order: index + 2, is_active: true }))];
+  const publicNav = navItems.length ? navItems : [{ id: "fallback", label: "Beranda", href: "/" } as NavItem, ...fallbackNavLinks.map((item, index) => ({ id: `fallback-${index}`, label: item.label, href: item.href, badge: null, icon: null, sort_order: index + 2, is_active: true, parent_id: null }))];
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
