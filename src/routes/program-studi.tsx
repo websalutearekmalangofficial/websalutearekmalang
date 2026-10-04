@@ -135,6 +135,14 @@ function FacultyCard({ faculty }: { faculty: Faculty }) {
       <div className="min-w-0"><p className="mb-1 text-[10px] font-black uppercase tracking-[0.18em] text-yellow-700">{faculty.code}</p><h4 className="text-base font-black leading-6 sm:text-lg">{faculty.name}</h4></div>
       <ChevronDown className={`size-5 shrink-0 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`} />
     </button>
-    {open && <div className="border-t border-slate-200 bg-white p-4 sm:p-5"><ul className="grid gap-2 sm:grid-cols-2">{faculty.programs.map((program) => <li key={program}><Link to="/daftar" className="group flex min-h-12 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700 hover:border-yellow-300 hover:bg-yellow-50"><span>{program}</span><ArrowRight className="size-4 shrink-0 text-yellow-600" /></Link></li>)}</ul></div>}
+    {open && <div className="border-t border-slate-200 bg-white p-4 sm:p-5"><ul className="grid gap-2 sm:grid-cols-2">{faculty.programs.map((program) => <li key={program}>{program === "Manajemen" ? (
+  <Link to="/program-studi/manajemen" className="group flex min-h-12 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700 hover:border-yellow-300 hover:bg-yellow-50">
+    <span>{program}</span><ArrowRight className="size-4 shrink-0 text-yellow-600" />
+  </Link>
+) : (
+  <Link to="/daftar" className="group flex min-h-12 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700 hover:border-yellow-300 hover:bg-yellow-50">
+    <span>{program}</span><ArrowRight className="size-4 shrink-0 text-yellow-600" />
+  </Link>
+)}</li>)}</ul></div>}
   </article>;
 }
