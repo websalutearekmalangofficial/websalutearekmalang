@@ -632,7 +632,7 @@ function CombinedCTAProcessSection() {
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
 
@@ -643,25 +643,25 @@ function CombinedCTAProcessSection() {
                 >
                   <button
                     onClick={() => setSelectedStep(step)}
-                    className="relative flex h-full min-h-[200px] w-full cursor-pointer flex-col items-center justify-center rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-3 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_20px_40px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
+                    className="relative flex h-full min-h-[170px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-[0_4px_16px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_16px_32px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
                   >
-                    <div className="absolute -left-4 -top-5 flex size-12 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:rotate-12 group-hover:scale-110 group-hover:border-[#111c38]">
+                    <div className="absolute -left-3 -top-4 flex size-10 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:rotate-12 group-hover:scale-110 group-hover:border-[#111c38]">
                       {step.number}
                     </div>
 
-                    <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-sm transition-all duration-500 group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-[#facc15] group-hover:text-[#111c38]">
+                    <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-sm transition-all duration-500 group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-[#facc15] group-hover:text-[#111c38]">
                       <Icon
-                        className="size-8"
+                        className="size-6"
                         strokeWidth={2.5}
                         aria-hidden="true"
                       />
                     </div>
 
-                    <h3 className="mb-2 text-lg font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
+                    <h3 className="mb-1.5 text-base font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
                       {step.title}
                     </h3>
 
-                    <p className="mb-4 max-w-[17rem] text-sm leading-relaxed text-slate-500 transition-colors duration-500 group-hover:text-slate-200">
+                    <p className="mb-3 max-w-[15rem] text-xs leading-relaxed text-slate-500 transition-colors duration-500 group-hover:text-slate-200">
                       {step.description}
                     </p>
 
@@ -670,10 +670,10 @@ function CombinedCTAProcessSection() {
                         {step.badges.map((badge) => (
                           <span
                             key={badge}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200"
+                            className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200"
                           >
                             <CheckCircle2
-                              className="size-3.5 text-[#facc15]"
+                              className="size-3 text-[#facc15]"
                               aria-hidden="true"
                             />
                             {badge}
@@ -687,7 +687,7 @@ function CombinedCTAProcessSection() {
                     )}
                   </button>
 
-                  {index % 3 !== 2 &&
+                  {index % 4 !== 3 &&
                   index < processSteps.length - 1 ? (
                     <ChevronRight
                       className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:translate-x-2 group-hover:text-[#facc15] lg:block"
