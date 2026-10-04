@@ -1198,7 +1198,6 @@ function FooterBanner() {
   });
 
   const footer = footerQuery.data ?? defaultFooterContent;
-  const footerBackground = footer.layout?.background_color || "#a7c8e1";
   const footerLayout = footer.layout;
   const getColumnLayout = (key: "contact" | "address") => {
     const settings =
@@ -1248,8 +1247,8 @@ function FooterBanner() {
   ];
 
   return (
-    <div id="kontak" className="relative w-full scroll-mt-20" style={{ backgroundColor: footerBackground }}>
-      <footer className="w-full text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
+    <div id="kontak" className="relative w-full scroll-mt-20 bg-hero-nav text-hero-foreground">
+      <footer className="w-full bg-hero-nav text-hero-foreground">
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 md:py-12 lg:px-12 lg:py-14">
           <div className="grid grid-cols-1 gap-10 lg:gap-12">
             <div className="grid grid-cols-1 items-stretch gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-8">
@@ -1261,16 +1260,16 @@ function FooterBanner() {
                   <a
                     href={footer.contact.phone_href || "#"}
                     aria-label={`Hubungi ${footer.contact.label}`}
-                    className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                    className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
                   >
                     <Phone className="size-6" fill="currentColor" aria-hidden="true" />
                   </a>
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
                     {footer.contact.label}
                   </p>
                   <a
                     href={footer.contact.phone_href || "#"}
-                    className="font-display text-2xl font-black tracking-[0.12em] text-[#0f1523] transition-colors hover:text-slate-600 sm:text-3xl lg:text-[2rem]"
+                    className="font-display text-2xl font-black tracking-[0.12em] text-hero-foreground transition-colors hover:text-ut-yellow sm:text-3xl lg:text-[2rem]"
                   >
                     {footer.contact.phone}
                   </a>
@@ -1282,20 +1281,20 @@ function FooterBanner() {
                   className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`}
                   style={{ minHeight: `${addressLayout.height}px` }}
                 >
-                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
+                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
                     <MapPin className="size-6" aria-hidden="true" />
                   </div>
                   <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
                     Alamat Kantor
                   </p>
-                  <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
+                  <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-hero-foreground/85 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
                     {footer.address.text}
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="border-t border-[#0f1523]/10 pt-8 sm:pt-10">
+            <div className="border-t border-hero-foreground/15 pt-8 sm:pt-10">
               <div className="mx-auto max-w-5xl">
                 <div className="mb-5 text-center">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
@@ -1313,16 +1312,16 @@ function FooterBanner() {
                         href={item.href}
                         target={item.href.startsWith("mailto:") ? undefined : "_blank"}
                         rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                        className="group flex min-h-14 w-full items-center gap-3 rounded-xl border border-[#0f1523]/10 bg-white/35 px-3.5 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                        className="group flex min-h-14 w-full items-center gap-3 rounded-xl border border-hero-foreground/15 bg-hero-foreground/10 px-3.5 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-hero-foreground/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
                       >
-                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#0f1523] text-white transition-colors group-hover:bg-slate-700">
+                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-ut-yellow text-ut-navy transition-colors group-hover:bg-yellow-400">
                           {item.icon}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-hero-foreground/65">
                             {item.label}
                           </span>
-                          <span className="block truncate text-xs font-extrabold text-[#0f1523] sm:text-sm">
+                          <span className="block truncate text-xs font-extrabold text-hero-foreground sm:text-sm">
                             {item.value}
                           </span>
                         </span>
@@ -1336,8 +1335,8 @@ function FooterBanner() {
         </div>
       </footer>
 
-      <div className="w-full border-t border-[#0f1523]/10 py-2.5" style={{ backgroundColor: footerBackground }}>
-        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-[#0f1523] sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
+      <div className="w-full border-t border-hero-foreground/15 bg-hero-nav py-2.5">
+        <div className="mx-auto max-w-7xl px-4 text-center text-[10px] font-bold leading-normal text-hero-foreground/70 sm:px-6 sm:text-xs md:px-8 lg:px-12 lg:text-left">
           <p>© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
         </div>
       </div>
