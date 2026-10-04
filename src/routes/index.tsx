@@ -1298,7 +1298,7 @@ function TestimonialsSection() {
   );
 }
 
-// === FOOTER RESPONSIF: KONTAK, ALAMAT, DAN MEDIA SOSIAL ===
+// === FOOTER RESPONSIF: INFORMASI UTAMA DAN MEDIA SOSIAL ===
 function FooterBanner() {
   const footerQuery = useQuery({
     queryKey: ["public-footer"],
@@ -1326,7 +1326,6 @@ function FooterBanner() {
 
   const contactLayout = getColumnLayout("contact");
   const addressLayout = getColumnLayout("address");
-  const socialHeight = Math.max(contactLayout.height, addressLayout.height);
 
   const socialLinks = [
     {
@@ -1334,12 +1333,7 @@ function FooterBanner() {
       value: "@salute.arek.malang",
       href: "https://tiktok.com/@salute.arek.malang",
       icon: (
-        <svg
-          viewBox="0 0 24 24"
-          className="size-5"
-          aria-hidden="true"
-          fill="currentColor"
-        >
+        <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true" fill="currentColor">
           <path d="M19.59 7.69a4.83 4.83 0 0 1-3.77-3.77V3h-3.4v11.34a2.89 2.89 0 1 1-2-2.73v-3.5a6.4 6.4 0 1 0 5.4 6.32V8.75a8.2 8.2 0 0 0 3.77.91V6.28Z" />
         </svg>
       ),
@@ -1368,83 +1362,86 @@ function FooterBanner() {
     <div id="kontak" className="relative w-full scroll-mt-20" style={{ backgroundColor: footerBackground }}>
       <footer className="w-full text-[#0f1523]" style={{ backgroundColor: footerBackground }}>
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 md:py-12 lg:px-12 lg:py-14">
-          <div className="grid grid-cols-1 items-stretch gap-8 sm:gap-10 lg:grid-cols-3 lg:gap-6 xl:gap-10">
-            {footer.contact?.enabled && (
-              <div
-                className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`}
-                style={{ minHeight: `${contactLayout.height}px` }}
-              >
-                <a
-                  href={footer.contact.phone_href || "#"}
-                  aria-label={`Hubungi ${footer.contact.label}`}
-                  className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+          <div className="grid grid-cols-1 gap-10 lg:gap-12">
+            <div className="grid grid-cols-1 items-stretch gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-8">
+              {footer.contact?.enabled && (
+                <div
+                  className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`}
+                  style={{ minHeight: `${contactLayout.height}px` }}
                 >
-                  <Phone className="size-6" fill="currentColor" aria-hidden="true" />
-                </a>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                  {footer.contact.label}
-                </p>
-                <a
-                  href={footer.contact.phone_href || "#"}
-                  className="font-display text-2xl font-black tracking-[0.12em] text-[#0f1523] transition-colors hover:text-slate-600 sm:text-3xl lg:text-[2rem]"
-                >
-                  {footer.contact.phone}
-                </a>
-              </div>
-            )}
-
-            {footer.address?.enabled && footer.address?.text && (
-              <div
-                className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`}
-                style={{ minHeight: `${addressLayout.height}px` }}
-              >
-                <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
-                  <MapPin className="size-6" aria-hidden="true" />
+                  <a
+                    href={footer.contact.phone_href || "#"}
+                    aria-label={`Hubungi ${footer.contact.label}`}
+                    className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                  >
+                    <Phone className="size-6" fill="currentColor" aria-hidden="true" />
+                  </a>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                    {footer.contact.label}
+                  </p>
+                  <a
+                    href={footer.contact.phone_href || "#"}
+                    className="font-display text-2xl font-black tracking-[0.12em] text-[#0f1523] transition-colors hover:text-slate-600 sm:text-3xl lg:text-[2rem]"
+                  >
+                    {footer.contact.phone}
+                  </a>
                 </div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                  Alamat Kantor
-                </p>
-                <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
-                  {footer.address.text}
-                </p>
-              </div>
-            )}
+              )}
 
-            <div
-              className="flex w-full flex-col items-center justify-center text-center"
-              style={{ minHeight: `${socialHeight}px` }}
-            >
-              <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
-                <Instagram className="size-6" aria-hidden="true" />
-              </div>
-              <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
-                Media Sosial & Kontak
-              </p>
+              {footer.address?.enabled && footer.address?.text && (
+                <div
+                  className={`flex w-full flex-col items-center ${addressLayout.alignmentClass} text-center`}
+                  style={{ minHeight: `${addressLayout.height}px` }}
+                >
+                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-[#0f1523] text-white">
+                    <MapPin className="size-6" aria-hidden="true" />
+                  </div>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                    Alamat Kantor
+                  </p>
+                  <p className="max-w-[320px] text-sm font-medium leading-[1.6] text-slate-800 sm:max-w-[380px] sm:text-base lg:max-w-[390px] lg:text-[15px]">
+                    {footer.address.text}
+                  </p>
+                </div>
+              )}
+            </div>
 
-              <ul className="grid w-full max-w-sm gap-2.5" aria-label="Akun media sosial dan kontak SALUT Arek Malang">
-                {socialLinks.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      target={item.href.startsWith("mailto:") ? undefined : "_blank"}
-                      rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                      className="group flex min-h-11 items-center gap-3 rounded-xl border border-[#0f1523]/10 bg-white/35 px-3.5 py-2.5 text-left transition-all hover:-translate-y-0.5 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
-                    >
-                      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0f1523] text-white transition-colors group-hover:bg-slate-700">
-                        {item.icon}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
-                          {item.label}
+            <div className="border-t border-[#0f1523]/10 pt-8 sm:pt-10">
+              <div className="mx-auto max-w-5xl">
+                <div className="mb-5 text-center">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-700 sm:text-xs">
+                    Media Sosial & Kontak
+                  </p>
+                </div>
+
+                <ul
+                  className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4"
+                  aria-label="Akun media sosial dan kontak SALUT Arek Malang"
+                >
+                  {socialLinks.map((item) => (
+                    <li key={item.label} className="min-w-0">
+                      <a
+                        href={item.href}
+                        target={item.href.startsWith("mailto:") ? undefined : "_blank"}
+                        rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                        className="group flex min-h-14 w-full items-center gap-3 rounded-xl border border-[#0f1523]/10 bg-white/35 px-3.5 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f1523]"
+                      >
+                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#0f1523] text-white transition-colors group-hover:bg-slate-700">
+                          {item.icon}
                         </span>
-                        <span className="block truncate text-xs font-extrabold text-[#0f1523] sm:text-sm">
-                          {item.value}
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
+                            {item.label}
+                          </span>
+                          <span className="block truncate text-xs font-extrabold text-[#0f1523] sm:text-sm">
+                            {item.value}
+                          </span>
                         </span>
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
