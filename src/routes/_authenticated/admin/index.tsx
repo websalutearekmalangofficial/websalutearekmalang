@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { Images, ListOrdered, Menu, Users } from "lucide-react";
 
 import { AdminCard } from "@/components/admin/field";
 import { fetchMedia, fetchNavItems, fetchPages, fetchRegistrations } from "@/lib/admin-cms";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
+  beforeLoad: () => {
+    throw redirect({ to: "/admin/pendaftar" });
+  },
   component: AdminOverview,
 });
 
