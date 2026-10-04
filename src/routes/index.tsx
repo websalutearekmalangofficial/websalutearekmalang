@@ -821,7 +821,7 @@ function BenefitsSection() {
 
 // === SECTION PEMBAYARAN MELALUI ===
 const PAYMENT_GUIDE_IMAGE =
-  "https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/sign/cms-media/1791119550835-Cara-pembayaran-.png?token=eyJraWQiOiI4MTNjMTY3Ny04ZTVmLTRiZmYtOTAyNS1lMTIxY2U2ZDZlNTAiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjbXMtbWVkaWEvMTc5MTExOTU1MDgzNS1DYXJhLXBlbWJheXJhbi0ucG5nIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5MTExOTU1MSwiZXhwIjoxOTQ4Nzk5NTUxfQ.vU1rmn0TP9d7-vlr81gzD1BwduP8XO4zo3vZRRwRLQNNJNXtojVVNOTWgCEn6SNScgBEq5nkkRFpg4EgzoxtvA";
+  "https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/public/cms-media/1791119550835-Cara-pembayaran-.png";
 
 function PaymentMethodsSection() {
   return (
