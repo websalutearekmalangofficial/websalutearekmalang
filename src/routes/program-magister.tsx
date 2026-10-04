@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ProgramLevelPage } from "@/components/program-level-page";
+export const Route = createFileRoute("/program-magister")({ head: () => ({ meta: [{ title: "Program Magister - SALUT Arek Malang" }, { name: "description", content: "Informasi Program Magister Universitas Terbuka melalui SALUT Arek Malang." }] }), component: () => <ProgramLevelPage program="Magister" credential="S2" slug="program-magister" /> });
