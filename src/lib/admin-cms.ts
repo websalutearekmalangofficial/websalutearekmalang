@@ -18,7 +18,114 @@ export async function fetchPages(): Promise<PageRecord[]> {
   return (data ?? []) as PageRecord[];
 }
 
-export async function duplicatePage(sourcePageId: string, title: string, slug: string): Promise<PageRecord> {\n  const normalizedSlug = slug.trim().toLowerCase().replace(/^\\/+|\\/+$/g, "");\n  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedSlug)) {\n    throw new Error("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");\n  }\n\n  const { data: existing, error: existingError } = await supabase\n    .from("pages")\n    .select("id")\n    .eq("slug", normalizedSlug)\n    .maybeSingle();\n  if (existingError) throw existingError;\n  if (existing) throw new Error(`Slug “${normalizedSlug}” sudah digunakan. Gunakan slug lain.`);\n\n  const { data: source, error: sourceError } = await supabase\n    .from("pages")\n    .select("title, meta_title, meta_description, nav_label, nav_order")\n    .eq("id", sourcePageId)\n    .single();\n  if (sourceError) throw sourceError;\n\n  const { data: sections, error: sectionsError } = await supabase\n    .from("sections")\n    .select("*")\n    .eq("page_id", sourcePageId)\n    .order("sort_order", { ascending: true });\n  if (sectionsError) throw sectionsError;\n\n  const { data: newPage, error: pageError } = await supabase\n    .from("pages")\n    .insert({\n      slug: normalizedSlug,\n      title: title.trim(),\n      meta_title: source.meta_title,\n      meta_description: source.meta_description,\n      nav_label: title.trim(),\n      nav_order: Number(source.nav_order) + 1,\n      show_in_nav: false,\n      is_published: false,\n    })\n    .select("id, slug, title, meta_title, meta_description, nav_label, nav_order, show_in_nav, is_published")\n    .single();\n  if (pageError || !newPage) throw pageError ?? new Error("Halaman baru gagal dibuat.");\n\n  try {\n    const sectionIdMap = new Map<string, string>();\n    for (const section of sections ?? []) {\n      const { data: newSection, error: sectionError } = await supabase\n        .from("sections")\n        .insert({\n          page_id: newPage.id,\n          kind: section.kind,\n          sort_order: section.sort_order,\n          eyebrow: section.eyebrow,\n          title: section.title,\n          subtitle: section.subtitle,\n          body: section.body,\n          media_url: section.media_url,\n          media_kind: section.media_kind,\n          video_url: section.video_url,\n          document_url: section.document_url,\n          link_url: section.link_url,\n          link_label: section.link_label,\n          config: section.config ?? {},\n          is_published: false,\n        })\n        .select("id")\n        .single();\n      if (sectionError || !newSection) throw sectionError ?? new Error("Section gagal diduplikasi.");\n      sectionIdMap.set(section.id, newSection.id);\n\n      const { data: items, error: itemsError } = await supabase\n        .from("section_items")\n        .select("*")\n        .eq("section_id", section.id)\n        .order("sort_order", { ascending: true });\n      if (itemsError) throw itemsError;\n\n      if (items?.length) {\n        const itemRows = items.map((item) => ({\n          section_id: newSection.id,\n          sort_order: item.sort_order,\n          title: item.title,\n          subtitle: item.subtitle,\n          body: item.body,\n          icon: item.icon,\n          badges: item.badges ?? [],\n          media_url: item.media_url,\n          video_url: item.video_url,\n          document_url: item.document_url,\n          link_url: item.link_url,\n          link_label: item.link_label,\n          config: item.config ?? {},\n          is_published: false,\n        }));\n        const { error: insertItemsError } = await supabase.from("section_items").insert(itemRows);\n        if (insertItemsError) throw insertItemsError;\n      }\n    }\n  } catch (error) {\n    await supabase.from("pages").delete().eq("id", newPage.id);\n    throw error;\n  }\n\n  return newPage as PageRecord;\n}\n\nexport async function fetchSections(pageId: string): Promise<Section[]> {
+export async function duplicatePage(sourcePageId: string, title: string, slug: string): Promise<PageRecord> {
+  const normalizedSlug = slug.trim().toLowerCase();
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedSlug)) {
+    throw new Error("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");
+  }
+
+  const { data: existing, error: existingError } = await supabase
+    .from("pages")
+    .select("id")
+    .eq("slug", normalizedSlug)
+    .maybeSingle();
+  if (existingError) throw existingError;
+  if (existing) throw new Error(`Slug “${normalizedSlug}” sudah digunakan. Gunakan slug lain.`);
+
+  const { data: source, error: sourceError } = await supabase
+    .from("pages")
+    .select("title, meta_title, meta_description, nav_label, nav_order")
+    .eq("id", sourcePageId)
+    .single();
+  if (sourceError) throw sourceError;
+
+  const { data: sections, error: sectionsError } = await supabase
+    .from("sections")
+    .select("*")
+    .eq("page_id", sourcePageId)
+    .order("sort_order", { ascending: true });
+  if (sectionsError) throw sectionsError;
+
+  const { data: newPage, error: pageError } = await supabase
+    .from("pages")
+    .insert({
+      slug: normalizedSlug,
+      title: title.trim(),
+      meta_title: source.meta_title,
+      meta_description: source.meta_description,
+      nav_label: title.trim(),
+      nav_order: Number(source.nav_order) + 1,
+      show_in_nav: false,
+      is_published: false,
+    })
+    .select("id, slug, title, meta_title, meta_description, nav_label, nav_order, show_in_nav, is_published")
+    .single();
+  if (pageError || !newPage) throw pageError ?? new Error("Halaman baru gagal dibuat.");
+
+  try {
+    const sectionIdMap = new Map<string, string>();
+    for (const section of sections ?? []) {
+      const { data: newSection, error: sectionError } = await supabase
+        .from("sections")
+        .insert({
+          page_id: newPage.id,
+          kind: section.kind,
+          sort_order: section.sort_order,
+          eyebrow: section.eyebrow,
+          title: section.title,
+          subtitle: section.subtitle,
+          body: section.body,
+          media_url: section.media_url,
+          media_kind: section.media_kind,
+          video_url: section.video_url,
+          document_url: section.document_url,
+          link_url: section.link_url,
+          link_label: section.link_label,
+          config: section.config ?? {},
+          is_published: false,
+        })
+        .select("id")
+        .single();
+      if (sectionError || !newSection) throw sectionError ?? new Error("Section gagal diduplikasi.");
+      sectionIdMap.set(section.id, newSection.id);
+
+      const { data: items, error: itemsError } = await supabase
+        .from("section_items")
+        .select("*")
+        .eq("section_id", section.id)
+        .order("sort_order", { ascending: true });
+      if (itemsError) throw itemsError;
+
+      if (items?.length) {
+        const itemRows = items.map((item) => ({
+          section_id: newSection.id,
+          sort_order: item.sort_order,
+          title: item.title,
+          subtitle: item.subtitle,
+          body: item.body,
+          icon: item.icon,
+          badges: item.badges ?? [],
+          media_url: item.media_url,
+          video_url: item.video_url,
+          document_url: item.document_url,
+          link_url: item.link_url,
+          link_label: item.link_label,
+          config: item.config ?? {},
+          is_published: false,
+        }));
+        const { error: insertItemsError } = await supabase.from("section_items").insert(itemRows);
+        if (insertItemsError) throw insertItemsError;
+      }
+    }
+  } catch (error) {
+    await supabase.from("pages").delete().eq("id", newPage.id);
+    throw error;
+  }
+
+  return newPage as PageRecord;
+}
+
+export async function fetchSections(pageId: string): Promise<Section[]> {
   const { data, error } = await supabase
     .from("sections")
     .select("*")
