@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Star, Trophy } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/kemahasiswaan")({
   head: () => ({
@@ -75,37 +77,45 @@ const educationData = [
 
 const educationPrograms = educationData.map((item) => item.program);
 
-const beasiswaData = [
-  {
-    name: "Beasiswa PPA",
-    description: "Dukungan pendidikan untuk mahasiswa yang memenuhi kriteria akademik dan ketentuan program beasiswa.",
-    requirements: ["Terdaftar sebagai mahasiswa aktif", "Memenuhi ketentuan akademik program", "Melengkapi dokumen administrasi yang diminta"],
-    benefits: ["Bantuan biaya pendidikan", "Dukungan biaya penunjang perkuliahan"],
-  },
-  {
-    name: "Beasiswa BBM",
-    description: "Program bantuan pendidikan bagi mahasiswa yang membutuhkan dukungan biaya selama masa studi.",
-    requirements: ["Mahasiswa aktif", "Memiliki dokumen administrasi yang lengkap", "Memenuhi kriteria penerima sesuai program"],
-    benefits: ["Bantuan biaya pendidikan", "Dukungan biaya kebutuhan akademik"],
-  },
-  {
-    name: "Beasiswa Kementerian",
-    description: "Beasiswa yang ditujukan bagi mahasiswa sesuai program dan ketentuan yang ditetapkan oleh kementerian terkait.",
-    requirements: ["Mahasiswa aktif", "Memenuhi persyaratan program", "Mengikuti proses seleksi sesuai ketentuan"],
-    benefits: ["Bantuan biaya pendidikan", "Kesempatan mendapatkan dukungan pendidikan sesuai program"],
-  },
-  {
-    name: "Beasiswa Prestasi",
-    description: "Dukungan pendidikan bagi mahasiswa dengan prestasi akademik maupun nonakademik yang memenuhi kriteria.",
-    requirements: ["Memiliki prestasi yang dapat dibuktikan", "Mahasiswa aktif", "Melengkapi dokumen pendukung prestasi"],
-    benefits: ["Bantuan biaya pendidikan", "Apresiasi atas prestasi mahasiswa"],
-  },
-] as const;
 
 function KemahasiswaanPage() {
   const [activeTab, setActiveTab] = useState("Sarjana (S1)");
   const [activeBeasiswa, setActiveBeasiswa] = useState<string | null>(null);
 
+  const scholarshipsQuery = useQuery({
+    queryKey: ["kemahasiswaan-scholarships"],
+    queryFn: async () => {
+      const { data: page, error: pageError } = await supabase
+        .from("pages")
+        .select("id")
+        .eq("slug", "kemahasiswaan")
+        .maybeSingle();
+      if (pageError) throw pageError;
+      if (!page) return [];
+      const { data: section, error: sectionError } = await supabase
+        .from("sections")
+        .select("id")
+        .eq("page_id", page.id)
+        .eq("kind", "scholarships")
+        .eq("is_published", true)
+        .maybeSingle();
+      if (sectionError) throw sectionError;
+      if (!section) return [];
+      const { data: items, error: itemsError } = await supabase
+        .from("section_items")
+        .select("id, sort_order, title, body, link_url, link_label, config, is_published")
+        .eq("section_id", section.id)
+        .eq("is_published", true)
+        .order("sort_order", { ascending: true });
+      if (itemsError) throw itemsError;
+      return (items ?? []).map((item) => ({
+        ...item,
+        requirements: String(item.config?.requirements ?? "").split("\\n").map((value) => value.trim()).filter(Boolean),
+        benefits: String(item.config?.benefits ?? "").split("\\n").map((value) => value.trim()).filter(Boolean),
+      }));
+    },
+  });
+  const beasiswaData = scholarshipsQuery.data ?? [];
   return (
     <main className="min-h-screen bg-white font-body text-[#101010]">
       <PublicHeader />
@@ -368,7 +378,7 @@ function KemahasiswaanPage() {
 
                   {isOpen && (
                     <div className="border-t border-white/10 px-5 pb-5 pt-4">
-                      <p className="text-sm leading-relaxed text-blue-100">{item.description}</p>
+                      <p className="text-sm leading-relaxed text-blue-100">{item.body}</p>
 
                       <div className="mt-5 grid gap-5 md:grid-cols-2">
                         <div>
@@ -397,10 +407,10 @@ function KemahasiswaanPage() {
                       </div>
 
                       <a
-                        href="/daftar"
+                        href={item.link_url || "/daftar"}
                         className="mt-6 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-black text-[#08266f] transition hover:bg-blue-50"
                       >
-                        Mendaftar Beasiswa
+                        {item.link_label || "Mendaftar Beasiswa"}
                       </a>
                     </div>
                   )}
