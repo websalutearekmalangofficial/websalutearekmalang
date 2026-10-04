@@ -59,10 +59,9 @@ export function PublicHeader() {
           <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-3 py-2 text-xs font-black text-ut-navy shadow-yellow xl:px-4 xl:py-2.5 xl:text-sm">
             <Home className="size-4" aria-hidden="true" />Beranda
           </Link>
-          {navLinks.map((link) => (
-            <a key={link} href={`/#${link.toLowerCase()}`} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link.label}</Link>)
-          ))}
-        </nav>
+          {publicNav.filter((link) => link.href !== "/").map((link) => (
+            <Link key={link.id} to={link.href} className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow">{link.label}</Link>
+          ))}        </nav>
         <div className="flex items-center justify-end gap-1.5 sm:gap-2 lg:min-w-0">
           {currentUser ? (
             <div className="flex items-center gap-2">
