@@ -789,6 +789,10 @@ function ItemEditor(props: {
     return <PaymentLogoItemEditor {...props} />;
   }
 
+  if (props.sectionKind === "scholarships") {
+    return <ScholarshipItemEditor {...props} />;
+  }
+
   return <GenericItemEditor {...props} />;
 }
 
@@ -946,6 +950,98 @@ function GenericItemEditor({
               <Trash2 className="size-4" aria-hidden="true" />
               Hapus
             </Button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ScholarshipItemEditor({
+  item, index, total, siblings, onChanged,
+}: {
+  item: SectionItem;
+  index: number;
+  total: number;
+  siblings: SectionItem[];
+  onChanged: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState(item);
+  const [requirements, setRequirements] = useState(String(item.config?.requirements ?? ""));
+  const [benefits, setBenefits] = useState(String(item.config?.benefits ?? ""));
+
+  useEffect(() => {
+    setForm(item);
+    setRequirements(String(item.config?.requirements ?? ""));
+    setBenefits(String(item.config?.benefits ?? ""));
+  }, [item]);
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").update({
+        title: form.title?.trim() || null,
+        body: form.body?.trim() || null,
+        link_url: form.link_url?.trim() || "/daftar",
+        link_label: form.link_label?.trim() || "Mendaftar Beasiswa",
+        config: {
+          ...(form.config ?? {}),
+          requirements: requirements.trim(),
+          benefits: benefits.trim(),
+        },
+        is_published: form.is_published,
+      }).eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Beasiswa disimpan."); onChanged(); },
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Gagal menyimpan beasiswa."),
+  });
+
+  const remove = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("section_items").delete().eq("id", item.id);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Beasiswa dihapus."); onChanged(); },
+    onError: () => toast.error("Gagal menghapus beasiswa."),
+  });
+
+  const move = useMutation({
+    mutationFn: async (direction: -1 | 1) => {
+      const target = siblings[index + direction];
+      if (!target) return;
+      await swapOrder("section_items", { id: item.id, order: item.sort_order }, { id: target.id, order: target.sort_order });
+    },
+    onSuccess: onChanged,
+    onError: () => toast.error("Gagal mengubah urutan beasiswa."),
+  });
+
+  return (
+    <div className="rounded-lg border border-border bg-card">
+      <div className="flex flex-wrap items-center gap-2 p-2.5">
+        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-ut-blue text-xs font-black text-hero-foreground">{index + 1}</span>
+        <button type="button" onClick={() => setOpen((v) => !v)} className="min-w-0 flex-1 truncate text-left text-sm font-bold text-ut-navy">
+          {form.title || "(tanpa nama beasiswa)"}
+        </button>
+        <div className="flex shrink-0 gap-1">
+          <Button type="button" variant="formOutline" size="icon" aria-label="Naikkan urutan" disabled={index === 0} onClick={() => move.mutate(-1)}><ArrowUp className="size-4" /></Button>
+          <Button type="button" variant="formOutline" size="icon" aria-label="Turunkan urutan" disabled={index === total - 1} onClick={() => move.mutate(1)}><ArrowDown className="size-4" /></Button>
+        </div>
+      </div>
+      {open ? (
+        <div className="space-y-4 border-t border-border p-4">
+          <Field label="Nama Beasiswa"><input className={inputClass} value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} /></Field>
+          <Field label="Deskripsi Beasiswa"><textarea className={textareaClass} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} /></Field>
+          <Field label="Persyaratan (satu item per baris)"><textarea className={textareaClass} value={requirements} onChange={(e) => setRequirements(e.target.value)} /></Field>
+          <Field label="Benefit (satu item per baris)"><textarea className={textareaClass} value={benefits} onChange={(e) => setBenefits(e.target.value)} /></Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Link Pendaftaran"><input className={inputClass} value={form.link_url ?? "/daftar"} onChange={(e) => setForm({ ...form, link_url: e.target.value })} /></Field>
+            <Field label="Teks Tombol"><input className={inputClass} value={form.link_label ?? "Mendaftar Beasiswa"} onChange={(e) => setForm({ ...form, link_label: e.target.value })} /></Field>
+          </div>
+          <Toggle label="Tayang" checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="utYellow" size="form" onClick={() => save.mutate()} disabled={save.isPending}><Save className="size-4" />Simpan Beasiswa</Button>
+            <Button type="button" variant="formOutline" size="form" onClick={() => { if (confirm("Hapus beasiswa ini?")) remove.mutate(); }}><Trash2 className="size-4" />Hapus</Button>
           </div>
         </div>
       ) : null}
