@@ -592,8 +592,8 @@ function CombinedCTAProcessSection() {
         </div>
       )}
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[40%_60%] xl:gap-16">
-        <div className="flex flex-col items-start gap-6">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16 xl:gap-24">
+        <div className="flex flex-col items-start gap-6 lg:pr-8 xl:pr-12">
           <h2 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-[#111c38] md:text-5xl lg:text-[3.25rem]">
             Kuliah Fleksibel,{" "}
             <br className="hidden md:block" />
