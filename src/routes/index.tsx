@@ -1251,12 +1251,9 @@ function FooterBanner() {
       <footer className="w-full bg-hero-nav text-hero-foreground">
         <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 md:py-12 lg:px-12 lg:py-14">
           <div className="grid grid-cols-1 gap-10 lg:gap-12">
-            <div className="grid grid-cols-1 items-stretch gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-8">
+            <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
               {footer.contact?.enabled && (
-                <div
-                  className={`flex w-full flex-col items-center ${contactLayout.alignmentClass} text-center`}
-                  style={{ minHeight: `${contactLayout.height}px` }}
-                >
+                <div className="flex min-h-[180px] w-full flex-col items-center justify-center text-center">
                   <a
                     href={footer.contact.phone_href || "#"}
                     aria-label={`Hubungi ${footer.contact.label}`}
@@ -1269,7 +1266,7 @@ function FooterBanner() {
                   </p>
                   <a
                     href={footer.contact.phone_href || "#"}
-                    className="font-display text-2xl font-black tracking-[0.12em] text-hero-foreground transition-colors hover:text-ut-yellow sm:text-3xl lg:text-[2rem]"
+                    className="font-display text-2xl font-black tracking-[0.12em] text-hero-foreground transition-colors hover:text-ut-yellow sm:text-3xl"
                   >
                     {footer.contact.phone}
                   </a>
@@ -1277,34 +1274,27 @@ function FooterBanner() {
               )}
 
               {footer.address?.enabled && footer.address?.text && (
-                <div
-                  className={`grid w-full grid-cols-1 items-center gap-8 sm:grid-cols-[minmax(0,1fr)_minmax(150px,0.65fr)] sm:gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(180px,0.7fr)] lg:gap-8`}
-                  style={{ minHeight: `${addressLayout.height}px` }}
-                >
-                  <div className={`flex min-w-0 flex-col items-center ${addressLayout.alignmentClass} text-center sm:items-start sm:text-left`}>
-                    <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
-                      <MapPin className="size-6" aria-hidden="true" />
-                    </div>
-                    <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
-                      Alamat Kantor
-                    </p>
-                    <p className="w-full max-w-[390px] text-sm font-medium leading-[1.6] text-hero-foreground/85 sm:text-base lg:text-[15px]">
-                      {footer.address.text}
-                    </p>
+                <div className="flex min-h-[180px] w-full flex-col items-center justify-center text-center">
+                  <div className="mb-4 grid size-12 shrink-0 place-items-center rounded-full bg-ut-yellow text-ut-navy">
+                    <MapPin className="size-6" aria-hidden="true" />
                   </div>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-hero-foreground/70 sm:text-xs">
+                    Alamat Kantor
+                  </p>
+                  <p className="w-full max-w-[520px] text-sm font-medium leading-[1.7] text-hero-foreground/85 sm:text-base">
+                    {footer.address.text}
+                  </p>
 
-                  <div className="flex min-h-[120px] items-center justify-center rounded-2xl border border-hero-foreground/10 bg-hero-foreground/[0.04] px-5 py-5 sm:min-h-[150px] lg:min-h-[170px]">
-                    <a
-                      href="#home"
-                      aria-label="Kembali ke beranda Sentra Layanan UT Arek Malang"
-                      className="flex w-full items-center justify-center rounded-xl p-2 transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-                    >
-                      <SiteLogo
-                        className="w-full justify-center"
-                        imageClassName="max-h-20 max-w-[210px] sm:max-h-24 sm:max-w-[240px] lg:max-h-28 lg:max-w-[270px]"
-                      />
-                    </a>
-                  </div>
+                  <a
+                    href="#home"
+                    aria-label="Kembali ke beranda Sentra Layanan UT Arek Malang"
+                    className="mt-7 flex items-center justify-center transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+                  >
+                    <SiteLogo
+                      className="justify-center"
+                      imageClassName="max-h-20 max-w-[210px] sm:max-h-24 sm:max-w-[240px] lg:max-h-28 lg:max-w-[270px]"
+                    />
+                  </a>
                 </div>
               )}
             </div>
@@ -1327,7 +1317,7 @@ function FooterBanner() {
                         href={item.href}
                         target={item.href.startsWith("mailto:") ? undefined : "_blank"}
                         rel={item.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                        className="group flex min-h-14 w-full items-center gap-3 rounded-xl border border-hero-foreground/15 bg-hero-foreground/10 px-3.5 py-3 text-left transition-all hover:-translate-y-0.5 hover:bg-hero-foreground/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
+                        className="group flex min-h-14 w-full items-center justify-center gap-3 rounded-xl border border-hero-foreground/15 bg-hero-foreground/10 px-3.5 py-3 text-center transition-all hover:-translate-y-0.5 hover:bg-hero-foreground/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow sm:justify-start sm:text-left"
                       >
                         <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-ut-yellow text-ut-navy transition-colors group-hover:bg-yellow-400">
                           {item.icon}
