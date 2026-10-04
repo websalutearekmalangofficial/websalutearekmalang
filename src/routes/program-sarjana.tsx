@@ -17,7 +17,7 @@ import {
   Phone,
   X,
 } from "lucide-react";
-import { SiteLogo } from "@/components/site-logo";
+import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/program-sarjana")({
@@ -279,32 +279,7 @@ function ProgramSarjanaPage() {
 
   return (
     <main className="min-h-screen bg-[#fafaf5] font-body text-[#101010]">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#08266f] text-white shadow-lg">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:min-h-20 lg:px-10">
-          <Link to="/" className="shrink-0">
-            <SiteLogo className="max-w-[150px] sm:max-w-[190px]" imageClassName="max-h-12 sm:max-h-14" />
-          </Link>
-          <nav className="hidden items-center gap-2 lg:flex">
-            <Link to="/" className="rounded-full px-4 py-2 text-sm font-bold hover:text-[#facc15]">Beranda</Link>
-            <Link to="/program-studi" className="rounded-full px-4 py-2 text-sm font-bold hover:text-[#facc15]">Program Studi</Link>
-            <Link to="/program-sarjana" className="rounded-full bg-[#facc15] px-4 py-2 text-sm font-black text-[#08266f]">Program Sarjana</Link>
-            <Link to="/daftar" className="rounded-full bg-white px-5 py-2.5 text-sm font-black text-[#08266f]">Daftar</Link>
-          </nav>
-          <div className="flex items-center gap-2 lg:hidden">
-            <Link to="/daftar" className="rounded-full bg-[#facc15] px-4 py-2 text-xs font-black text-[#08266f]">Daftar</Link>
-            <button type="button" onClick={() => setMenuOpen((value) => !value)} className="grid size-10 place-items-center rounded-full border border-white/30 bg-white/10" aria-label="Menu">
-              {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
-          </div>
-        </div>
-        {menuOpen && (
-          <nav className="grid gap-2 border-t border-white/10 px-4 pb-4 pt-3 lg:hidden">
-            <Link to="/" onClick={() => setMenuOpen(false)} className="rounded-xl bg-white/10 px-4 py-3 text-sm font-bold">Beranda</Link>
-            <Link to="/program-studi" onClick={() => setMenuOpen(false)} className="rounded-xl bg-white/10 px-4 py-3 text-sm font-bold">Program Studi</Link>
-            <Link to="/program-sarjana" onClick={() => setMenuOpen(false)} className="rounded-xl bg-[#facc15] px-4 py-3 text-sm font-black text-[#08266f]">Program Sarjana</Link>
-          </nav>
-        )}
-      </header>
+      <PublicHeader />
 
       <section className="px-3 pt-3 sm:px-5 lg:px-7">
         <div className="relative mx-auto max-w-[1400px] overflow-hidden rounded-[2rem] bg-white shadow-sm">
@@ -448,10 +423,7 @@ function ProgramSarjanaPage() {
         </div>
       </section>
 
-      <footer className="bg-[#08266f] px-5 py-8 text-center text-white sm:px-8">
-        <Link to="/" className="mx-auto inline-flex"><SiteLogo imageClassName="max-h-16 max-w-[210px]" /></Link>
-        <p className="mt-4 text-xs text-white/60">© {new Date().getFullYear()} Sentra Layanan Universitas Terbuka Arek Malang.</p>
-      </footer>
+      <PublicFooter />
     </main>
   );
 }
