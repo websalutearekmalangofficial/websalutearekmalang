@@ -167,7 +167,15 @@ function ProgramStudiPage() {
             <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">Pilih jenjang pendidikan untuk melihat fakultas dan program studi yang tersedia pada pilihan pendaftaran saat ini.</p>
           </div>
           <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {programs.map((program) => <button key={program.name} type="button" onClick={() => setActive(program.name)} className={active === program.name ? "rounded-2xl border-2 border-ut-yellow bg-ut-yellow px-3 py-4 text-center shadow-lg" : "rounded-2xl border border-slate-200 bg-white px-3 py-4 text-center shadow-sm hover:border-yellow-300"} aria-pressed={active === program.name}><span className="block text-sm font-black">{program.name}</span><span className="mt-1 block text-xs font-semibold text-slate-500">{program.level}</span></button>)}
+            {programs.map((program) => program.name === "Sarjana" ? (
+              <Link key={program.name} to="/program-sarjana" className={active === program.name ? "rounded-2xl border-2 border-ut-yellow bg-ut-yellow px-3 py-4 text-center shadow-lg" : "rounded-2xl border border-slate-200 bg-white px-3 py-4 text-center shadow-sm hover:border-yellow-300"}>
+                <span className="block text-sm font-black">{program.name}</span><span className="mt-1 block text-xs font-semibold text-slate-500">{program.level}</span>
+              </Link>
+            ) : (
+              <button key={program.name} type="button" onClick={() => setActive(program.name)} className={active === program.name ? "rounded-2xl border-2 border-ut-yellow bg-ut-yellow px-3 py-4 text-center shadow-lg" : "rounded-2xl border border-slate-200 bg-white px-3 py-4 text-center shadow-sm hover:border-yellow-300"} aria-pressed={active === program.name}>
+                <span className="block text-sm font-black">{program.name}</span><span className="mt-1 block text-xs font-semibold text-slate-500">{program.level}</span>
+              </button>
+            ))}
           </div>
 
           <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.35)] sm:p-7 md:p-9">
