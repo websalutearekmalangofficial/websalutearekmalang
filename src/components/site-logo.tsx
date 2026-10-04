@@ -1,8 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Building2 } from "lucide-react";
-import { useEffect } from "react";
 
-import { supabase } from "@/integrations/supabase/client";
 import { fetchSiteLogoUrl } from "@/lib/site-settings";
 
 type SiteLogoProps = {
@@ -16,21 +14,14 @@ export function SiteLogo({
   imageClassName = "",
   alt = "Logo Sentra Layanan UT Arek Malang",
 }: SiteLogoProps) {
-  const queryClient = useQueryClient();
   const logoQuery = useQuery({
     queryKey: ["site-logo"],
     queryFn: fetchSiteLogoUrl,
-    staleTime: 0,
+    staleTime: 60_000,
     refetchOnMount: "always",
     refetchOnWindowFocus: true,
+    retry: 1,
   });
-
-  useEffect(() => {
-    const channel = supabaseLogoChannel(queryClient);
-    return () => {
-      void channel.unsubscribe();
-    };
-  }, [queryClient]);
 
   if (logoQuery.data) {
     return (
@@ -59,24 +50,3 @@ export function SiteLogo({
     </span>
   );
 }
-
-function supabaseLogoChannel(queryClient: ReturnType<typeof useQueryClient>) {
-  const channel = supabase
-    .channel("public-site-logo-setting")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "admin_settings",
-        filter: "key=eq.site_logo_url",
-      },
-      () => {
-        void queryClient.invalidateQueries({ queryKey: ["site-logo"] });
-      },
-    )
-    .subscribe();
-
-  return channel;
-}
-
