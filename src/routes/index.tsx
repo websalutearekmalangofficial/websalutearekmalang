@@ -412,15 +412,17 @@ function HeroBanner() {
     <section
       id="home"
       aria-label="Hero Banner"
-      className="relative scroll-mt-20 h-[clamp(220px,38vw,620px)] overflow-hidden bg-hero-deep"
+      className="relative scroll-mt-20 aspect-[1920/700] w-full overflow-hidden bg-hero-deep"
     >
       {activeBanner?.url ? (
-        <img
-          key={activeBanner.id}
-          src={activeBanner.url}
-          alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
-          className="absolute inset-0 z-10 block h-full w-full object-cover object-center"
-        />
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-hero-deep">
+          <img
+            key={activeBanner.id}
+            src={activeBanner.url}
+            alt={activeBanner.alt_text ?? "Hero Banner Salute Arek Malang"}
+            className="block h-full w-full object-contain object-center"
+          />
+        </div>
       ) : (
         <div
           className="absolute inset-0 bg-hero-deep"
