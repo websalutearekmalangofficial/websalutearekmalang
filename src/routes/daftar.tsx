@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { SiteLogo } from "@/components/site-logo";
+import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 
 export const Route = createFileRoute("/daftar")({
   head: () => ({
@@ -18,85 +18,6 @@ export const Route = createFileRoute("/daftar")({
 });
 
 const navLinks = ["Informasi", "Panduan", "Kontak"];
-
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
-    <header className="sticky top-0 z-40 border-b border-ut-sky/25 bg-hero-nav text-hero-foreground shadow-header">
-      <div className="mx-auto grid min-h-16 w-full max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-4 py-2.5 sm:gap-3 sm:py-3 md:min-h-20 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:px-8 lg:px-12">
-        <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Sentra Layanan UT Beranda">
-          <SiteLogo
-            className="max-w-[145px] sm:max-w-[175px] md:max-w-[200px] lg:max-w-[220px]"
-            imageClassName="max-h-12 sm:max-h-14"
-          />
-        </Link>
-
-        <nav className="hidden items-center justify-center gap-3 md:flex lg:gap-9" aria-label="Navigasi utama">
-          <Link to="/" className="inline-flex items-center gap-2 rounded-full bg-ut-yellow px-4 py-2.5 text-sm font-black text-ut-navy shadow-yellow lg:px-5">
-            <Home className="size-4" aria-hidden="true" />
-            Beranda
-          </Link>
-          {navLinks.map((link) => (
-            <a
-              key={link}
-              href={`/#${link.toLowerCase()}`}
-              className="rounded-full px-2 py-1 text-sm font-bold text-hero-foreground/95 transition hover:text-ut-yellow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow"
-            >
-              {link}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex items-center justify-end gap-2 md:min-w-0">
-          <Button variant="heroOutline" size="pill" className="shrink-0 px-3 text-[0.7rem] sm:px-4 sm:text-xs md:text-sm">
-            <CircleUserRound className="size-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Masuk / Daftar</span>
-            <span className="sm:hidden">Masuk</span>
-          </Button>
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav-daftar"
-            aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
-            className="grid size-10 shrink-0 place-items-center rounded-full border border-hero-foreground/60 bg-hero-foreground/10 transition hover:bg-hero-foreground/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ut-yellow md:hidden"
-          >
-            {menuOpen ? <X className="size-5" aria-hidden="true" /> : <Menu className="size-5" aria-hidden="true" />}
-          </button>
-        </div>
-      </div>
-
-      {menuOpen ? (
-        <nav id="mobile-nav-daftar" className="border-t border-hero-foreground/20 px-4 pb-4 pt-3 md:hidden" aria-label="Navigasi mobile">
-          <ul className="grid gap-2">
-            <li>
-              <Link
-                to="/"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 rounded-xl bg-ut-yellow px-4 py-3 text-sm font-black text-ut-navy"
-              >
-                <Home className="size-4" aria-hidden="true" />
-                Beranda
-              </Link>
-            </li>
-            {navLinks.map((link) => (
-              <li key={link}>
-                <a
-                  href={`/#${link.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="block rounded-xl bg-hero-foreground/10 px-4 py-3 text-sm font-bold text-hero-foreground transition hover:bg-hero-foreground/20"
-                >
-                  {link}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      ) : null}
-    </header>
-  );
-}
 
 function RegistrationPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -302,7 +223,7 @@ function RegistrationPage() {
   if (isSuccess) {
     return (
       <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
-        <Header />
+        <PublicHeader />
         <div className="mx-auto w-full max-w-4xl px-4 pt-6 sm:px-6 md:pt-10">
           <div className="mb-6 rounded-t-2xl bg-white p-6 md:p-10 shadow-sm border border-slate-200">
             <h1 className="text-3xl font-extrabold text-[#d2a32c] sm:text-4xl mb-3 tracking-tight">Pendaftaran Berhasil Dikirim!</h1>
@@ -637,6 +558,7 @@ function RegistrationPage() {
           </div>
         </div>
       </div>
-    </main>
+          <PublicFooter />
+</main>
   );
 }
