@@ -727,6 +727,44 @@ function SectionEditor({
             </div>
           ) : null}
 
+          {form.kind === "contact_banner" ? (
+            <div className="rounded-xl border border-ut-sky/30 bg-section-blue p-4">
+              <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Kontak & Lokasi</p>
+              <p className="mb-4 text-xs leading-5 text-muted-foreground">
+                Data ini ditampilkan langsung pada section Kontak & Lokasi di halaman Profile.
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Nomor WhatsApp">
+                  <input
+                    className={inputClass}
+                    value={String(form.config["whatsapp"] ?? "")}
+                    onChange={(e) => setConfig("whatsapp", e.target.value)}
+                    placeholder="0812-3002-4264"
+                  />
+                </Field>
+                <Field label="Email">
+                  <input
+                    type="email"
+                    className={inputClass}
+                    value={String(form.config["email"] ?? "")}
+                    onChange={(e) => setConfig("email", e.target.value)}
+                    placeholder="admin@salutarekmalang.com"
+                  />
+                </Field>
+                <div className="sm:col-span-2">
+                  <Field label="Alamat">
+                    <textarea
+                      className={textareaClass}
+                      value={String(form.config["address"] ?? "")}
+                      onChange={(e) => setConfig("address", e.target.value)}
+                      placeholder="Masukkan alamat lengkap"
+                    />
+                  </Field>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           <Toggle label="Tayang" checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
 
           <div className="flex flex-wrap gap-2">
