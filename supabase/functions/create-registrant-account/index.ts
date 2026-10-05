@@ -142,7 +142,15 @@ export default {
       return Response.json({ error: "Profil user gagal dibuat: " + profileResult.error.message }, { status: 500, headers: corsHeaders });
     }
 
-    const roleResult = await admin.from("user_roles").insert({ user_id: userId, role: "user" });
+    // Role assignment is idempotent: some environments may already create a default
+    // user role when a new Auth user is provisioned. Do not fail account creation
+    // just because the same (user_id, role) row already exists.
+    const roleResult = await admin
+      .from("user_roles")
+      .upsert(
+        { user_id: userId, role: "user" },
+        { onConflict: "user_id,role", ignoreDuplicates: true },
+      );
     if (roleResult.error) {
       await admin.from("profiles").delete().eq("id", userId);
       await admin.auth.admin.deleteUser(userId);
