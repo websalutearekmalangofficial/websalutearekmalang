@@ -713,6 +713,9 @@ function RegistrationDetail({
   accountCredentials,
   onCreateAccount,
   creatingAccount,
+  accountStatus,
+  onResetPassword,
+  resettingPassword,
 }: {
   row: RegistrationRow;
   editing: boolean;
