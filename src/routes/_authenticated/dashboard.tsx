@@ -149,7 +149,7 @@ function UserDashboard() {
     { label: "Dokumen Saya", icon: FileText, href: "/dashboard/dokumen" },
     { label: "Pembayaran", icon: CreditCard, href: "#pembayaran" },
     { label: "Progress Saya", icon: CheckCircle2, href: "#progress" },
-    { label: "Pengumuman", icon: Megaphone, href: "#pengumuman" },
+    { label: "Pengumuman", icon: Megaphone, href: "/dashboard/pengumuman" },
     { label: "Pesan & Bantuan", icon: MessageCircle, href: "#bantuan" },
     { label: "Akademik", icon: BookOpen, href: "#akademik" },
     { label: "Notifikasi", icon: Bell, href: "#notifikasi" },
