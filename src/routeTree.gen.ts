@@ -54,8 +54,8 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardProfileRoute = AuthenticatedDashboardProfileRouteImport.update({
-  id: '/dashboard/profile',
-  path: '/dashboard/profile',
+  id: '/_authenticated/dashboard_/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
