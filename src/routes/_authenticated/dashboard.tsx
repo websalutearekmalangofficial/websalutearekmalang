@@ -146,7 +146,7 @@ function UserDashboard() {
     { label: "Beranda", icon: GraduationCap, href: "/dashboard" },
     { label: "Profil Saya", icon: UserRound, href: "/dashboard/profile" },
     { label: "Pendaftaran Saya", icon: ClipboardList, href: "/dashboard/pendaftaran" },
-    { label: "Dokumen Saya", icon: FileText, href: "#dokumen" },
+    { label: "Dokumen Saya", icon: FileText, href: "/dashboard/dokumen" },
     { label: "Pembayaran", icon: CreditCard, href: "#pembayaran" },
     { label: "Progress Saya", icon: CheckCircle2, href: "#progress" },
     { label: "Pengumuman", icon: Megaphone, href: "#pengumuman" },
