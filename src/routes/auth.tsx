@@ -27,6 +27,14 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+async function redirectAfterLogin(navigate: ReturnType<typeof useNavigate>) {
+  const { data } = await supabase.auth.getUser();
+  const userId = data.user?.id;
+  if (!userId) return;
+  const { data: role } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+  await navigate({ to: role?.role === "admin" ? "/admin/pendaftar" : "/dashboard", replace: true });
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"masuk" | "daftar">("masuk");
@@ -43,7 +51,7 @@ function AuthPage() {
       try {
         const { data } = await supabase.auth.getSession();
         if (active && data.session) {
-          await navigate({ to: "/admin/pendaftar", replace: true });
+          await redirectAfterLogin(navigate);
         }
       } catch (error) {
         // Auth/session restoration must never replace the login screen with
@@ -80,7 +88,8 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "masuk") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const loginEmail = email.includes("@") ? email.trim().toLowerCase() : `${email.trim().toLowerCase()}@auth.salutarekmalang.com`;
+        const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
         if (error) throw error;
         toast.success("Berhasil masuk.");
       } else {
@@ -173,8 +182,8 @@ function AuthPage() {
                 required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="Alamat Email"
-                aria-label="Alamat Email"
+                placeholder="Email Admin atau Username Pendaftar"
+                aria-label="Email Admin atau Username Pendaftar"
                 autoComplete="email"
                 className="h-12 w-full rounded-xl border border-input bg-background px-4 text-base font-semibold outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/25 sm:text-sm"
               />
