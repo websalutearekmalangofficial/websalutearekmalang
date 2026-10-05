@@ -22,7 +22,7 @@ import { Route as AuthenticatedAdminNavigasiRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminPendaftarRouteImport } from './routes/_authenticated/admin/pendaftar'
 import { Route as AuthenticatedAdminSyncronRouteImport } from './routes/_authenticated/admin/syncron'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard/profile'
+import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -56,7 +56,7 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedDashboardProfileRoute = AuthenticatedDashboardProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => AuthenticatedDashboardRoute,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
