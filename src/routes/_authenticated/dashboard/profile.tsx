@@ -355,7 +355,7 @@ function UserProfilePage() {
                     Nama Lengkap
                   </span>
                   <input
-                    className={`${fieldClass} h-11 rounded-xl`}
+                    className={fieldClass + " h-11 rounded-xl"}
                     value={fullName}
                     onChange={(event) => setFullName(event.target.value)}
                     placeholder="Nama lengkap"
@@ -369,7 +369,7 @@ function UserProfilePage() {
                     Username
                   </span>
                   <input
-                    className={`${fieldClass} h-11 rounded-xl bg-slate-50`}
+                    className={fieldClass + " h-11 rounded-xl bg-slate-50"}
                     value={profile?.username || "-"}
                     readOnly
                   />
@@ -385,7 +385,7 @@ function UserProfilePage() {
                   <div className="relative">
                     <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                     <input
-                      className={`${fieldClass} h-11 rounded-xl bg-slate-50 pl-10`}
+                      className={fieldClass + " h-11 rounded-xl bg-slate-50 pl-10"}
                       value={displayEmail}
                       readOnly
                     />
