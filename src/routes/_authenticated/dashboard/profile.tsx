@@ -603,5 +603,3 @@ function InfoRow({
     </div>
   );
 }
-```
-
