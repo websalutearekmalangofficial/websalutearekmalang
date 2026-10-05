@@ -12,7 +12,7 @@ import {
   Settings,
   UserRound,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -206,17 +206,13 @@ function UserDashboard() {
   );
 }
 
-function DashboardShell({
-  menu,
-  locationPath,
-  signOut,
-  children,
-}: {
+function DashboardShell(props: {
   menu: Array<{ label: string; icon: typeof GraduationCap; href: string }>;
   locationPath: string;
   signOut: () => Promise<void>;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
+  const { menu, locationPath, signOut, children } = props;
   return (
     <div className="min-h-screen bg-slate-50">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-slate-900 text-white lg:flex">
