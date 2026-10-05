@@ -138,6 +138,9 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          username: string | null
+          must_change_password: boolean
+          first_login_at: string | null
           updated_at: string
         }
         Insert: {
@@ -146,6 +149,9 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          username?: string | null
+          must_change_password?: boolean
+          first_login_at?: string | null
           updated_at?: string
         }
         Update: {
@@ -154,6 +160,9 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          username?: string | null
+          must_change_password?: boolean
+          first_login_at?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -185,6 +194,7 @@ export type Database = {
           jenjang_pendidikan: string | null
           fakultas: string | null
           jurusan: string | null
+          registration_reference: string | null
         }
         Insert: {
           id?: string
@@ -212,6 +222,7 @@ export type Database = {
           jenjang_pendidikan?: string | null
           fakultas?: string | null
           jurusan?: string | null
+          registration_reference?: string | null
         }
         Update: {
           id?: string
@@ -239,6 +250,7 @@ export type Database = {
           jenjang_pendidikan?: string | null
           fakultas?: string | null
           jurusan?: string | null
+          registration_reference?: string | null
         }
         Relationships: []
       }
