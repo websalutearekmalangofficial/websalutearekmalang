@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/_authenticated/dashboard/profile")({
+export const Route = createFileRoute("/_authenticated/dashboard_/profile")({
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
 
