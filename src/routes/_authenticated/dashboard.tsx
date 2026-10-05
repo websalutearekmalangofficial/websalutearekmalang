@@ -206,12 +206,20 @@ function UserDashboard() {
   );
 }
 
-function DashboardShell(props: {
-  menu: Array<{ label: string; icon: typeof GraduationCap; href: string }>;
+type DashboardMenuItem = {
+  label: string;
+  icon: typeof GraduationCap;
+  href: string;
+};
+
+type DashboardShellProps = {
+  menu: DashboardMenuItem[];
   locationPath: string;
   signOut: () => Promise<void>;
   children: ReactNode;
-}) {
+};
+
+function DashboardShell(props: DashboardShellProps) {
   const { menu, locationPath, signOut, children } = props;
   return (
     <div className="min-h-screen bg-slate-50">
