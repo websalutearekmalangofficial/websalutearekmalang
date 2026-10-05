@@ -185,7 +185,6 @@ function Index() {
         <CombinedCTAProcessSection />
       </div>
       <BenefitsSection />
-      <PaymentMethodsSection />
       <TestimonialsSection />
       <PublicFooter />
     </main>
