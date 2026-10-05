@@ -143,7 +143,7 @@ function UserDashboard() {
 
   const menu = [
     { label: "Beranda", icon: GraduationCap, href: "/dashboard" },
-    { label: "Profil Saya", icon: UserRound, href: "#profil" },
+    { label: "Profil Saya", icon: UserRound, href: "/profile" },
     { label: "Pendaftaran Saya", icon: ClipboardList, href: "#pendaftaran" },
     { label: "Dokumen Saya", icon: FileText, href: "#dokumen" },
     { label: "Pembayaran", icon: CreditCard, href: "#pembayaran" },
