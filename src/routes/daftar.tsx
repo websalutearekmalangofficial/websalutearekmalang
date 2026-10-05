@@ -305,7 +305,7 @@ function RegistrationPage() {
 
   return (
     <main className="min-h-screen bg-[#f8f9fa] font-sans pb-12">
-      <Header />
+      <PublicHeader />
 
       <div className="mx-auto w-full max-w-6xl px-3 pb-6 pt-4 sm:px-5 sm:pt-6 lg:px-8">
         <div className="mb-5 text-center sm:mb-7 sm:text-left">
