@@ -203,6 +203,7 @@ function UserDashboard() {
           </section>
         </main>
       </DashboardShell>
+    </div>
   );
 }
 
