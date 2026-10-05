@@ -250,3 +250,4 @@ function InfoCard({ title, icon: Icon, children, id }: { title: string; icon: ty
 }
 function InfoRow({ label, value }: { label: string; value: string | null | undefined }) { return <div className="flex flex-col gap-1 border-t border-slate-100 py-3 first:border-t-0"><span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">{label}</span><span className="break-words text-sm font-semibold text-slate-700">{value || "-"}</span></div>; }
 function EmptyFeature({ text }: { text: string }) { return <div className="rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-500">{text}</div>; }
+
