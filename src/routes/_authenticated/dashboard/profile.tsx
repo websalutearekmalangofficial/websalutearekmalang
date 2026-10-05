@@ -1,3 +1,4 @@
+```tsx
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -598,3 +599,4 @@ function InfoRow({
     </div>
   );
 }
+```
