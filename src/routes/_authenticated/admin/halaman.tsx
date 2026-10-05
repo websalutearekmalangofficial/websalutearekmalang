@@ -275,8 +275,8 @@ function AddSectionDialog({
   const [title, setTitle] = useState("Section Baru");
   const [isPublished, setIsPublished] = useState(false);
 
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
+  const submit = () => {
+    if (pending) return;
     onSubmit(kind, title, isPublished);
   };
 
@@ -287,7 +287,7 @@ function AddSectionDialog({
       aria-modal="true"
       aria-labelledby="add-section-title"
     >
-      <form onSubmit={submit} className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">
+      <div className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 id="add-section-title" className="text-lg font-black text-ut-navy">Tambah Section</h2>
@@ -344,12 +344,18 @@ function AddSectionDialog({
           <Button type="button" variant="formOutline" size="form" onClick={onClose} disabled={pending}>
             Batal
           </Button>
-          <Button type="submit" variant="utYellow" size="form" disabled={pending}>
+          <Button
+            type="button"
+            variant="utYellow"
+            size="form"
+            onClick={submit}
+            disabled={pending}
+          >
             <Plus className="size-4" aria-hidden="true" />
             {pending ? "Menambahkan..." : "Tambah Section"}
           </Button>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
