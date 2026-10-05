@@ -29,6 +29,7 @@ import {
   fetchRegistrantAccountStatus,
   resetRegistrantPassword,
   type RegistrationRow,
+  type RegistrantAccountStatus,
 } from "@/lib/admin-cms";
 
 export const Route = createFileRoute("/_authenticated/admin/pendaftar")({
@@ -160,6 +161,9 @@ function RegistrationsAdmin() {
     username: string;
     password: string;
   } | null>(null);
+
+  const [accountStatus, setAccountStatus] =
+    useState<RegistrantAccountStatus | null>(null);
 
   const rows: RegistrationRow[] = query.data ?? [];
 
