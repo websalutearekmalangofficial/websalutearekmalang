@@ -75,11 +75,19 @@ export default {
       return Response.json({ error: "Role user gagal dibuat: " + roleResult.error.message }, { status: 500, headers: corsHeaders });
     }
 
-    const registrationResult = await admin.from("registrations").update({ user_id: userId }).eq("id", registration.id).is("user_id", null);
-    if (registrationResult.error || !registrationResult.data?.length) {
+    const { data: linkedRegistration, error: registrationUpdateError } = await admin
+      .from("registrations")
+      .update({ user_id: userId })
+      .eq("id", registration.id)
+      .is("user_id", null)
+      .select("id")
+      .maybeSingle();
+
+    if (registrationUpdateError || !linkedRegistration) {
       await admin.from("user_roles").delete().eq("user_id", userId);
+      await admin.from("profiles").delete().eq("id", userId);
       await admin.auth.admin.deleteUser(userId);
-      return Response.json({ error: registrationResult.error?.message ?? "Pendaftaran gagal ditautkan ke akun user." }, { status: 500, headers: corsHeaders });
+      return Response.json({ error: registrationUpdateError?.message ?? "Pendaftaran gagal ditautkan ke akun user." }, { status: 500, headers: corsHeaders });
     }
 
     return Response.json({
