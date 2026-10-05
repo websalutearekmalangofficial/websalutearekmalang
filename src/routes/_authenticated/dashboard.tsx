@@ -145,7 +145,7 @@ function UserDashboard() {
   const menu = [
     { label: "Beranda", icon: GraduationCap, href: "/dashboard" },
     { label: "Profil Saya", icon: UserRound, href: "/dashboard/profile" },
-    { label: "Pendaftaran Saya", icon: ClipboardList, href: "#pendaftaran" },
+    { label: "Pendaftaran Saya", icon: ClipboardList, href: "/dashboard/pendaftaran" },
     { label: "Dokumen Saya", icon: FileText, href: "#dokumen" },
     { label: "Pembayaran", icon: CreditCard, href: "#pembayaran" },
     { label: "Progress Saya", icon: CheckCircle2, href: "#progress" },
@@ -156,7 +156,7 @@ function UserDashboard() {
     { label: "Pengaturan", icon: Settings, href: "#pengaturan" },
   ];
 
-  if (location.pathname === "/dashboard/profile") {
+  if (location.pathname !== "/dashboard") {
     return <Outlet />;
   }
 
