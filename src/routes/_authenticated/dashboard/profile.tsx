@@ -204,7 +204,8 @@ function UserProfilePage() {
         .update({
           must_change_password: false,
           first_login_at: firstLoginAt,
-        });
+        })
+        .eq("id", user.id);
 
       if (profileError) {
         throw profileError;
