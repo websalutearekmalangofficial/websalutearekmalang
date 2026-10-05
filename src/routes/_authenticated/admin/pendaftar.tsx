@@ -26,6 +26,8 @@ import {
   fetchRegistrationDocuments,
   fetchRegistrations,
   createRegistrantAccount,
+  fetchRegistrantAccountStatus,
+  resetRegistrantPassword,
   type RegistrationRow,
 } from "@/lib/admin-cms";
 
@@ -287,6 +289,12 @@ function RegistrationsAdmin() {
      * muncul ketika admin membuka pendaftar lain.
      */
     setAccountCredentials(null);
+    setAccountStatus(null);
+    if (row.user_id) {
+      void fetchRegistrantAccountStatus(row.id)
+        .then((status) => setAccountStatus(status))
+        .catch((error: Error) => toast.error("Gagal memuat status akun: " + error.message));
+    }
   };
 
   const closeDetail = () => {
@@ -294,7 +302,19 @@ function RegistrationsAdmin() {
     setDraft(null);
     setEditing(false);
     setAccountCredentials(null);
+    setAccountStatus(null);
   };
+
+  const resetPassword = useMutation({
+    mutationFn: () => resetRegistrantPassword(selected?.id ?? ""),
+    onSuccess: (result) => {
+      setAccountCredentials({ username: result.username ?? "-", password: result.password });
+      setAccountStatus((current) => current ? { ...current, username: result.username, must_change_password: true, first_login_at: null } : current);
+      toast.success("Password user berhasil direset. Simpan password baru ini.");
+      refresh();
+    },
+    onError: (error: Error) => toast.error("Gagal reset password: " + error.message),
+  });
 
   const setField = (
     key: keyof RegistrationRow,
@@ -593,6 +613,9 @@ function RegistrationsAdmin() {
             creatingAccount={
               createAccount.isPending
             }
+            accountStatus={accountStatus}
+            onResetPassword={() => resetPassword.mutate()}
+            resettingPassword={resetPassword.isPending}
           />
         ) : null}
       </div>
@@ -707,6 +730,15 @@ function RegistrationDetail({
   } | null;
   onCreateAccount: () => void;
   creatingAccount: boolean;
+  accountStatus: {
+    username: string | null;
+    must_change_password: boolean;
+    first_login_at: string | null;
+    last_sign_in_at: string | null;
+    created_at: string | null;
+  } | null;
+  onResetPassword: () => void;
+  resettingPassword: boolean;
 }) {
   const documents = useQuery({
     queryKey: [
@@ -1097,6 +1129,21 @@ function RegistrationDetail({
                 </span>
               )}
             </div>
+
+            {accountStatus ? (
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <div><p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Username Saat Ini</p><p className="mt-1 font-mono font-black text-slate-900">{accountStatus.username || "-"}</p></div>
+                  <div><p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Status Password</p><p className="mt-1 text-sm font-bold text-slate-700">{accountStatus.must_change_password ? "Menunggu user mengganti password" : "Password sudah diganti user"}</p></div>
+                  <div><p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Login Terakhir</p><p className="mt-1 text-sm font-semibold text-slate-700">{accountStatus.last_sign_in_at ? new Date(accountStatus.last_sign_in_at).toLocaleString("id-ID") : "Belum login"}</p></div>
+                  <div><p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Akun Dibuat</p><p className="mt-1 text-sm font-semibold text-slate-700">{accountStatus.created_at ? new Date(accountStatus.created_at).toLocaleString("id-ID") : "-"}</p></div>
+                </div>
+                <div className="mt-4 flex flex-col gap-2 rounded-xl border border-blue-200 bg-blue-50 p-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs font-semibold leading-5 text-blue-800">Password lama yang sudah diganti user <strong>tidak dapat dibaca kembali oleh Admin</strong>. Kontrol Admin dilakukan melalui reset password resmi yang membuat password sementara baru.</p>
+                  <Button variant="formOutline" className="shrink-0 rounded-xl bg-white" onClick={onResetPassword} disabled={resettingPassword}>{resettingPassword ? "Mereset…" : "Reset Password User"}</Button>
+                </div>
+              </div>
+            ) : null}
 
             {accountCredentials ? (
               <div className="mt-4 grid gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:grid-cols-2">
