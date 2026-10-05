@@ -190,7 +190,7 @@ function ProfilePage() {
                   {contact.body}
                 </p>
               </div>
-              <div className="grid gap-3 text-sm">
+              <div className="grid w-full min-w-0 gap-3 text-sm lg:max-w-md">
                 <a href="https://wa.me/6281230024264" target="_blank" rel="noreferrer" className="flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-4 font-bold hover:bg-white/15">
                   <MessageCircle className="size-5 text-ut-yellow" />
                   0812-3002-4264
@@ -201,7 +201,7 @@ function ProfilePage() {
                 </a>
                 <div className="flex items-start gap-3 rounded-2xl bg-white/10 px-5 py-4 font-bold">
                   <MapPin className="mt-0.5 size-5 shrink-0 text-ut-yellow" />
-                  <span>{address}</span>
+                  <span className="min-w-0 whitespace-pre-line break-words leading-6">{address}</span>
                 </div>
                 {contact.link_url ? (
                   <a href={contact.link_url} className="inline-flex items-center justify-center gap-2 rounded-xl bg-ut-yellow px-5 py-3 text-sm font-black text-ut-navy">
