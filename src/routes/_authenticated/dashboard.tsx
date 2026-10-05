@@ -134,34 +134,21 @@ function UserDashboard() {
     { label: "Profil Saya", icon: UserRound, href: "/dashboard/profile" },
     { label: "Pendaftaran Saya", icon: ClipboardList, href: "/dashboard/pendaftaran" },
     { label: "Dokumen Saya", icon: FileText, href: "/dashboard/dokumen" },
+    { label: "Pengumuman", icon: Megaphone, href: "/dashboard/pengumuman" },
     { label: "Pengaturan", icon: Settings, href: "#pengaturan" },
   ];
 
   if (location.pathname !== "/dashboard") {
-    return <Outlet />;
+    return (
+      <DashboardShell menu={menu} locationPath={location.pathname} signOut={signOut}>
+        <Outlet />
+      </DashboardShell>
+    );
   }
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-slate-900 text-white lg:flex">
-        <div className="border-b border-white/10 px-5 py-5">
-          <div className="flex items-center gap-3">
-            <div className="grid size-11 place-items-center rounded-xl bg-yellow-400 text-slate-950"><GraduationCap className="size-6" /></div>
-            <div><p className="font-black">SALUT AREK MALANG</p><p className="text-[11px] text-slate-400">Dashboard Pendaftar</p></div>
-          </div>
-        </div>
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {menu.map((item) => {
-            const Icon = item.icon;
-            return <a key={item.label} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"><Icon className="size-5" />{item.label}</a>;
-          })}
-        </nav>
-        <div className="border-t border-white/10 p-4">
-          <button type="button" onClick={signOut} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10"><LogOut className="size-5" />Keluar</button>
-        </div>
-      </aside>
-
-      <div className="lg:pl-64">
+      <DashboardShell menu={menu} locationPath={location.pathname} signOut={signOut}>
         <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm sm:px-6 lg:px-8">
           <div><p className="text-xs font-bold uppercase tracking-wider text-slate-400">Dashboard User</p><h1 className="text-xl font-black text-slate-900">Selamat datang, {profile?.full_name || registration?.nama || "Pendaftar"}</h1></div>
           <div className="flex items-center gap-2">
@@ -215,7 +202,43 @@ function UserDashboard() {
             <div className="flex items-start gap-3"><Settings className="mt-0.5 size-5 text-slate-500" /><div><h2 className="font-black text-slate-900">Pengaturan Akun</h2><p className="mt-1 text-sm text-slate-500">Akun Anda dibuat dan dikelola melalui proses verifikasi admin.</p></div></div>
           </section>
         </main>
-      </div>
+      </DashboardShell>
+    </div>
+  );
+}
+
+function DashboardShell({
+  menu,
+  locationPath,
+  signOut,
+  children,
+}: {
+  menu: Array<{ label: string; icon: typeof GraduationCap; href: string }>;
+  locationPath: string;
+  signOut: () => Promise<void>;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-slate-900 text-white lg:flex">
+        <div className="border-b border-white/10 px-5 py-5">
+          <div className="flex items-center gap-3">
+            <div className="grid size-11 place-items-center rounded-xl bg-yellow-400 text-slate-950"><GraduationCap className="size-6" /></div>
+            <div><p className="font-black">SALUT AREK MALANG</p><p className="text-[11px] text-slate-400">Dashboard Pendaftar</p></div>
+          </div>
+        </div>
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+          {menu.map((item) => {
+            const Icon = item.icon;
+            const active = item.href !== "#pengaturan" && (item.href === "/dashboard" ? locationPath === "/dashboard" : locationPath.startsWith(item.href));
+            return <Link key={item.label} to={item.href} className={"flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition " + (active ? "bg-yellow-400 text-slate-950" : "text-slate-300 hover:bg-white/10 hover:text-white")}><Icon className="size-5" />{item.label}</Link>;
+          })}
+        </nav>
+        <div className="border-t border-white/10 p-4">
+          <button type="button" onClick={signOut} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-300 hover:bg-white/10"><LogOut className="size-5" />Keluar</button>
+        </div>
+      </aside>
+      <div className="lg:pl-64">{children}</div>
     </div>
   );
 }
