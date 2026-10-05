@@ -1,18 +1,13 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Bell,
-  BookOpen,
-  CheckCircle2,
   ClipboardList,
-  CreditCard,
   FileText,
   GraduationCap,
   HelpCircle,
   KeyRound,
   LogOut,
   Megaphone,
-  MessageCircle,
   Settings,
   UserRound,
 } from "lucide-react";
@@ -65,14 +60,6 @@ type Registration = {
   user_id: string | null;
 };
 
-const statusSteps = [
-  ["Pendaftaran", "Pendaftaran Anda telah tercatat."],
-  ["Verifikasi Data", "Data pendaftaran diperiksa oleh admin."],
-  ["Verifikasi Dokumen", "Dokumen pendaftaran diperiksa."],
-  ["Pembayaran", "Menunggu instruksi/status pembayaran."],
-  ["Selesai", "Proses pendaftaran selesai."],
-] as const;
-
 function UserDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,7 +98,6 @@ function UserDashboard() {
   const profile = profileQuery.data;
   const registration = registrationQuery.data;
   const normalizedStatus = (registration?.status ?? "baru").toLowerCase();
-  const verificationIndex = normalizedStatus.includes("terverifikasi") ? 2 : normalizedStatus.includes("tolak") ? -1 : normalizedStatus.includes("proses") ? 1 : 1;
   const currentStep = normalizedStatus.includes("terverifikasi") ? 3 : normalizedStatus.includes("diproses") ? 2 : normalizedStatus.includes("ditolak") ? 0 : 2;
 
   const changePassword = async () => {
@@ -147,12 +133,6 @@ function UserDashboard() {
     { label: "Profil Saya", icon: UserRound, href: "/dashboard/profile" },
     { label: "Pendaftaran Saya", icon: ClipboardList, href: "/dashboard/pendaftaran" },
     { label: "Dokumen Saya", icon: FileText, href: "/dashboard/dokumen" },
-    { label: "Pembayaran", icon: CreditCard, href: "#pembayaran" },
-    { label: "Progress Saya", icon: CheckCircle2, href: "#progress" },
-    { label: "Pengumuman", icon: Megaphone, href: "/dashboard/pengumuman" },
-    { label: "Pesan & Bantuan", icon: MessageCircle, href: "#bantuan" },
-    { label: "Akademik", icon: BookOpen, href: "#akademik" },
-    { label: "Notifikasi", icon: Bell, href: "#notifikasi" },
     { label: "Pengaturan", icon: Settings, href: "#pengaturan" },
   ];
 
@@ -209,17 +189,6 @@ function UserDashboard() {
             <SummaryCard label="Username" value={profile?.username || "-"} icon={UserRound} />
           </section>
 
-          <section id="progress" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="mb-5"><p className="text-xs font-black uppercase tracking-wider text-slate-400">Perjalanan Anda</p><h2 className="text-2xl font-black text-slate-900">Progress Pendaftaran</h2></div>
-            <div className="grid gap-4 md:grid-cols-5">
-              {statusSteps.map(([label, description], index) => {
-                const done = index < currentStep;
-                const active = index === currentStep;
-                return <div key={label} className="relative"><div className={`flex size-10 items-center justify-center rounded-full border-2 text-sm font-black ${done || active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-400"}`}>{done ? "✓" : index + 1}</div><p className="mt-3 text-sm font-black text-slate-900">{label}</p><p className="mt-1 text-xs leading-5 text-slate-500">{active ? "Tahap saat ini." : description}</p></div>;
-              })}
-            </div>
-          </section>
-
           <section id="profil" className="grid gap-4 lg:grid-cols-2">
             <InfoCard title="Profil Saya" icon={UserRound}>
               <InfoRow label="Nama" value={profile?.full_name || registration?.nama} />
@@ -236,14 +205,7 @@ function UserDashboard() {
 
           <section id="dokumen" className="grid gap-4 lg:grid-cols-3">
             <InfoCard title="Dokumen Saya" icon={FileText}><EmptyFeature text="Status dokumen dan upload ulang akan dihubungkan ke data Storage pendaftaran." /></InfoCard>
-            <InfoCard title="Pembayaran" icon={CreditCard} id="pembayaran"><EmptyFeature text="Instruksi dan status pembayaran akan diaktifkan pada tahap pembayaran." /></InfoCard>
             <InfoCard title="Pengumuman" icon={Megaphone} id="pengumuman"><EmptyFeature text="Belum ada pengumuman khusus untuk akun Anda." /></InfoCard>
-          </section>
-
-          <section className="grid gap-4 lg:grid-cols-3">
-            <InfoCard title="Pesan & Bantuan" icon={MessageCircle} id="bantuan"><EmptyFeature text="Pesan resmi dari admin akan tampil di sini." /></InfoCard>
-            <InfoCard title="Akademik" icon={BookOpen} id="akademik"><EmptyFeature text="Menu akademik akan aktif setelah status Anda masuk tahap mahasiswa/peserta aktif." /></InfoCard>
-            <InfoCard title="Notifikasi" icon={Bell} id="notifikasi"><EmptyFeature text="Notifikasi status, dokumen, pembayaran, dan pengumuman akan tampil di sini." /></InfoCard>
           </section>
 
           {registration?.notes ? <section className="rounded-2xl border border-blue-200 bg-blue-50 p-5"><div className="flex items-start gap-3"><HelpCircle className="mt-0.5 size-5 text-blue-700" /><div><h2 className="font-black text-slate-900">Catatan dari Admin</h2><p className="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">{registration.notes}</p></div></div></section> : null}
