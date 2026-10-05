@@ -244,10 +244,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/dashboard/profile': {
       id: '/_authenticated/dashboard/profile'
-      path: '/profile'
+      path: '/dashboard/profile'
       fullPath: '/dashboard/profile'
       preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
