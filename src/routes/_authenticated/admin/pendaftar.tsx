@@ -563,6 +563,7 @@ function RegistrationsAdmin() {
 
                     <td className="border-b px-4 py-4">
                       <Button
+                        type="button"
                         variant="formOutline"
                         className="h-9 rounded-lg px-3"
                         onClick={() =>
@@ -1235,9 +1236,10 @@ function InfoItem({
 function StatusBadge({
   status,
 }: {
-  status: string;
+  status: string | null | undefined;
 }) {
-  const normalized = status.toLowerCase();
+  const safeStatus = status ?? "";
+  const normalized = safeStatus.toLowerCase();
 
   const tone =
     normalized.includes("verifikasi") ||
@@ -1253,7 +1255,7 @@ function StatusBadge({
     <span
       className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-xs font-black ${tone}`}
     >
-      {status || "Belum ditentukan"}
+      {safeStatus || "Belum ditentukan"}
     </span>
   );
 }
