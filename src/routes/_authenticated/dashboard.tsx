@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  CheckCircle2,
   ClipboardList,
   FileText,
   GraduationCap,
