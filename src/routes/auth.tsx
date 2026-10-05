@@ -178,13 +178,13 @@ function AuthPage() {
                 />
               ) : null}
               <input
-                type="email"
+                type="text"
                 required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Email Admin atau Username Pendaftar"
                 aria-label="Email Admin atau Username Pendaftar"
-                autoComplete="email"
+                autoComplete={mode === "masuk" ? "username" : "email"}
                 className="h-12 w-full rounded-xl border border-input bg-background px-4 text-base font-semibold outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/25 sm:text-sm"
               />
               <input
