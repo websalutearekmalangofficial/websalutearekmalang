@@ -438,7 +438,7 @@ function UserProfilePage() {
                   </span>
                   <input
                     type="password"
-                    className={`${fieldClass} h-11 rounded-xl`}
+                    className={fieldClass + " h-11 rounded-xl"}
                     value={newPassword}
                     onChange={(event) => setNewPassword(event.target.value)}
                     placeholder="Minimal 8 karakter"
@@ -453,7 +453,7 @@ function UserProfilePage() {
                   </span>
                   <input
                     type="password"
-                    className={`${fieldClass} h-11 rounded-xl`}
+                    className={fieldClass + " h-11 rounded-xl"}
                     value={confirmPassword}
                     onChange={(event) =>
                       setConfirmPassword(event.target.value)
