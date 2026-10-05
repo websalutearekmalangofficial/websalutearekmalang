@@ -302,7 +302,7 @@ function UserProfilePage() {
               {profile?.avatar_url ? (
                 <img
                   src={profile.avatar_url}
-                  alt={`Foto profil ${displayName}`}
+                  alt="Foto profil pengguna"
                   className="size-full object-cover"
                 />
               ) : (
