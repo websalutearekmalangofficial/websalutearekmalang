@@ -64,7 +64,7 @@ function AuthPage() {
     try {
       const { data } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === "SIGNED_IN" && session && active) {
-          void navigate({ to: "/admin/pendaftar", replace: true }).catch((error) => {
+          void redirectAfterLogin(navigate).catch((error) => {
             console.error("[Auth] Redirect to admin failed", error);
           });
         }
