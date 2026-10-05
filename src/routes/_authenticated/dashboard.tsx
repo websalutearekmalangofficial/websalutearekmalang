@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Bell,
@@ -75,6 +75,7 @@ const statusSteps = [
 
 function UserDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { user } = Route.useRouteContext();
   const [newPassword, setNewPassword] = useState("");
@@ -154,6 +155,10 @@ function UserDashboard() {
     { label: "Notifikasi", icon: Bell, href: "#notifikasi" },
     { label: "Pengaturan", icon: Settings, href: "#pengaturan" },
   ];
+
+  if (location.pathname === "/dashboard/profile") {
+    return <Outlet />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
