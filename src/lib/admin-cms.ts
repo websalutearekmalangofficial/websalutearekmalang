@@ -262,6 +262,29 @@ export type RegistrantAccountResult = {
   message: string;
 };
 
+export type RegistrantAccountStatus = {
+  ok: boolean;
+  action: "status";
+  user_id: string;
+  username: string | null;
+  must_change_password: boolean;
+  first_login_at: string | null;
+  last_sign_in_at: string | null;
+  created_at: string | null;
+  registration_reference: string | null;
+};
+
+export type RegistrantPasswordResetResult = {
+  ok: boolean;
+  action: "reset_password";
+  user_id: string;
+  username: string | null;
+  password: string;
+  registration_reference: string | null;
+  must_change_password: true;
+  message: string;
+};
+
 export async function createRegistrantAccount(registrationId: string, username?: string): Promise<RegistrantAccountResult> {
   const { data, error } = await supabase.functions.invoke("create-registrant-account", {
     body: { registration_id: registrationId, username: username?.trim() || undefined },
@@ -269,6 +292,24 @@ export async function createRegistrantAccount(registrationId: string, username?:
   if (error) throw error;
   if (!data?.ok) throw new Error(data?.error ?? "Akses user gagal dibuat.");
   return data as RegistrantAccountResult;
+}
+
+export async function fetchRegistrantAccountStatus(registrationId: string): Promise<RegistrantAccountStatus> {
+  const { data, error } = await supabase.functions.invoke("manage-registrant-account", {
+    body: { registration_id: registrationId, action: "status" },
+  });
+  if (error) throw error;
+  if (!data?.ok) throw new Error(data?.error ?? "Status akun user gagal dimuat.");
+  return data as RegistrantAccountStatus;
+}
+
+export async function resetRegistrantPassword(registrationId: string): Promise<RegistrantPasswordResetResult> {
+  const { data, error } = await supabase.functions.invoke("manage-registrant-account", {
+    body: { registration_id: registrationId, action: "reset_password" },
+  });
+  if (error) throw error;
+  if (!data?.ok) throw new Error(data?.error ?? "Password user gagal direset.");
+  return data as RegistrantPasswordResetResult;
 }
 
 export async function fetchRegistrations(): Promise<RegistrationRow[]> {
