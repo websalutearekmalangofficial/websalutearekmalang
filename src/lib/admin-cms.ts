@@ -253,6 +253,24 @@ export async function createRegistrationDocumentUrl(path: string) {
   return data.signedUrl;
 }
 
+export type RegistrantAccountResult = {
+  ok: boolean;
+  user_id: string;
+  username: string;
+  password: string;
+  registration_reference: string | null;
+  message: string;
+};
+
+export async function createRegistrantAccount(registrationId: string, username?: string): Promise<RegistrantAccountResult> {
+  const { data, error } = await supabase.functions.invoke("create-registrant-account", {
+    body: { registration_id: registrationId, username: username?.trim() || undefined },
+  });
+  if (error) throw error;
+  if (!data?.ok) throw new Error(data?.error ?? "Akses user gagal dibuat.");
+  return data as RegistrantAccountResult;
+}
+
 export async function fetchRegistrations(): Promise<RegistrationRow[]> {
   const { data, error } = await supabase
     .from("registrations")
