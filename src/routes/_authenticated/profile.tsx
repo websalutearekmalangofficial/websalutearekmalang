@@ -1,7 +1,7 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, CheckCircle2, KeyRound, LogOut, Mail, Save, ShieldCheck, UserRound } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -90,9 +90,9 @@ function UserProfilePage() {
   const registration = registrationQuery.data;
   const currentName = profile?.full_name ?? registration?.nama ?? "";
 
-  if (profile && fullName === "" && currentName) {
-    setFullName(currentName);
-  }
+  useEffect(() => {
+    if (currentName && fullName === "") setFullName(currentName);
+  }, [currentName, fullName]);
 
   const saveProfile = async () => {
     const normalizedName = fullName.trim();
