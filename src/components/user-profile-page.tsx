@@ -42,7 +42,7 @@ type Registration = {
 const fieldClass =
   "w-full border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-2 focus:ring-slate-200";
 
-export function UserProfilePage({ user }: { user: { id: string; email?: string | null } }) {
+export default function UserProfilePage({ user }: { user: { id: string; email?: string | null } }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
