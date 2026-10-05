@@ -72,22 +72,34 @@ function PagesAdmin() {
     onError: () => toast.error("Gagal membuat halaman."),
   });
 
+  const [addSectionOpen, setAddSectionOpen] = useState(false);
+
   const addSection = useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({ kind, title, isPublished }: { kind: string; title: string; isPublished: boolean }) => {
+      if (!selectedPageId) throw new Error("Pilih halaman terlebih dahulu.");
       const nextOrder = (sectionsQuery.data?.length ?? 0) + 1;
-      const { error } = await supabase.from("sections").insert({
-        page_id: selectedPageId!,
-        kind: "richtext",
-        sort_order: nextOrder,
-        title: "Section Baru",
-      });
+      const { data, error } = await supabase
+        .from("sections")
+        .insert({
+          page_id: selectedPageId,
+          kind,
+          sort_order: nextOrder,
+          title: title.trim() || "Section Baru",
+          is_published: isPublished,
+        })
+        .select("*")
+        .single();
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
-      toast.success("Section baru ditambahkan.");
+      toast.success("Section baru berhasil ditambahkan.");
+      setAddSectionOpen(false);
       refreshSections();
     },
-    onError: () => toast.error("Gagal menambah section."),
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Gagal menambah section.");
+    },
   });
 
   const selectedPage = pages.find((page) => page.id === selectedPageId) ?? null;
@@ -223,13 +235,122 @@ function PagesAdmin() {
           {contentSections.length === 0 ? (
             <p className="text-sm text-muted-foreground">Belum ada section di halaman ini.</p>
           ) : null}
-          <Button type="button" variant="utYellow" size="form" onClick={() => addSection.mutate()} disabled={!selectedPageId}>
+          <Button
+            type="button"
+            variant="utYellow"
+            size="form"
+            onClick={() => setAddSectionOpen(true)}
+            disabled={!selectedPageId || addSection.isPending}
+          >
             <Plus className="size-4" aria-hidden="true" />
             Tambah section
           </Button>
         </div>
       </AdminCard>
+
+      {addSectionOpen && selectedPage ? (
+        <AddSectionDialog
+          pageTitle={selectedPage.title}
+          pending={addSection.isPending}
+          onClose={() => setAddSectionOpen(false)}
+          onSubmit={(kind, title, isPublished) => addSection.mutate({ kind, title, isPublished })}
+        />
+      ) : null}
     </>
+  );
+}
+
+function AddSectionDialog({
+  pageTitle,
+  pending,
+  onClose,
+  onSubmit,
+}: {
+  pageTitle: string;
+  pending: boolean;
+  onClose: () => void;
+  onSubmit: (kind: string, title: string, isPublished: boolean) => void;
+}) {
+  const [kind, setKind] = useState<string>("richtext");
+  const [title, setTitle] = useState("Section Baru");
+  const [isPublished, setIsPublished] = useState(false);
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    onSubmit(kind, title, isPublished);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-section-title"
+    >
+      <form onSubmit={submit} className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="add-section-title" className="text-lg font-black text-ut-navy">Tambah Section</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tambahkan section baru ke halaman “{pageTitle}”.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={pending}
+            className="rounded-full px-2 py-1 text-xl leading-none text-muted-foreground hover:bg-muted"
+            aria-label="Tutup"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="mt-5 space-y-4">
+          <Field label="Jenis section">
+            <select
+              autoFocus
+              className={inputClass}
+              value={kind}
+              onChange={(event) => setKind(event.target.value)}
+              disabled={pending}
+            >
+              {sectionKinds.map((sectionKind) => (
+                <option key={sectionKind.value} value={sectionKind.value}>
+                  {sectionKind.label}
+                </option>
+              ))}
+            </select>
+          </Field>
+
+          <Field label="Judul section">
+            <input
+              className={inputClass}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="Contoh: Keunggulan Salute Arek Malang"
+              disabled={pending}
+            />
+          </Field>
+
+          <Toggle label="Tayang di halaman" checked={isPublished} onChange={setIsPublished} />
+
+          <div className="rounded-xl bg-section-blue p-3 text-xs leading-5 text-muted-foreground">
+            Setelah dibuat, section dapat dibuka untuk mengatur isi, gambar, video, tombol, konfigurasi, dan item-item di dalamnya.
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-wrap justify-end gap-2">
+          <Button type="button" variant="formOutline" size="form" onClick={onClose} disabled={pending}>
+            Batal
+          </Button>
+          <Button type="submit" variant="utYellow" size="form" disabled={pending}>
+            <Plus className="size-4" aria-hidden="true" />
+            {pending ? "Menambahkan..." : "Tambah Section"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }
 
