@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { supabase } from "@/integrations/supabase/client";
-import { UserProfilePage } from "@/components/user-profile-page";
+import UserProfilePage from "@/components/user-profile-page";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
   beforeLoad: async () => {
