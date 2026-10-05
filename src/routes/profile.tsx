@@ -52,6 +52,12 @@ function ProfilePage() {
   const vision = sections.find((section) => section.kind === "richtext" && section.title === "Visi & Misi");
   const services = get("benefits");
   const contact = get("contact_banner");
+  const contactConfig = (contact?.config ?? {}) as Record<string, unknown>;
+  const whatsapp = String(contactConfig.whatsapp ?? "0812-3002-4264");
+  const email = String(contactConfig.email ?? "admin@salutarekmalang.com");
+  const address = String(contactConfig.address ?? "Mal Pelayanan Publik Merdeka Malang Lt. 3, Jl. Mayjen Sungkono, Kota Malang.");
+  const whatsappDigits = whatsapp.replace(/\\D/g, "");
+  const whatsappUrl = `https://wa.me/${whatsappDigits.startsWith("0") ? `62${whatsappDigits.slice(1)}` : whatsappDigits}`;
 
   if (query.isLoading) {
     return (
@@ -195,7 +201,7 @@ function ProfilePage() {
                 </a>
                 <div className="flex items-start gap-3 rounded-2xl bg-white/10 px-5 py-4 font-bold">
                   <MapPin className="mt-0.5 size-5 shrink-0 text-ut-yellow" />
-                  <span>Mal Pelayanan Publik Merdeka Malang Lt. 3, Jl. Mayjen Sungkono, Kota Malang.</span>
+                  <span>{address}</span>
                 </div>
                 {contact.link_url ? (
                   <a href={contact.link_url} className="inline-flex items-center justify-center gap-2 rounded-xl bg-ut-yellow px-5 py-3 text-sm font-black text-ut-navy">
