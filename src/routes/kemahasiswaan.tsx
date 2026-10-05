@@ -114,12 +114,6 @@ function KemahasiswaanPage() {
   return (
     <main className="min-h-screen bg-white font-body text-[#101010]">
       <PublicHeader />
-      <section className="relative w-full">
-        <div className="h-[250px] w-full overflow-hidden bg-gray-200 sm:h-[400px]">
-          <img src={hero?.media_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=2000&q=80"} alt={hero?.title || "Kemahasiswaan SALUT Arek Malang"} className="h-full w-full object-cover object-top" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent" />
-        </div>
-      </section>
       <div className="relative z-10 mx-auto -mt-10 max-w-7xl px-5 pb-10 sm:-mt-20 sm:px-8 lg:px-10">
         <h1 className="mb-10 inline-block rounded-xl bg-white/80 px-4 py-2 text-2xl font-bold text-[#08266f] backdrop-blur-sm sm:text-4xl">{hero?.title || "Kemahasiswaan"}</h1>
 
