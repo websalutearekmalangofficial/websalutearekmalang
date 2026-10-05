@@ -54,8 +54,8 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardProfileRoute = AuthenticatedDashboardProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+  id: '/dashboard/profile',
+  path: '/dashboard/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -104,7 +104,7 @@ export interface FileRoutesByFullPath {
   '/program-studi/manajemen': typeof ProgramStudiManajemenRoute
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/admin/halaman': typeof AuthenticatedAdminHalamanRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
@@ -301,16 +301,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedDashboardRouteChildren {
+
+
+interface AuthenticatedRouteChildren {
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
 }
 
-const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren = {
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
 }
 
-const AuthenticatedDashboardRouteWithChildren =
-  AuthenticatedDashboardRoute._addFileChildren(AuthenticatedDashboardRouteChildren)
+const AuthenticatedRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteChildren)
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminHalamanRoute: typeof AuthenticatedAdminHalamanRoute
@@ -340,7 +346,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
