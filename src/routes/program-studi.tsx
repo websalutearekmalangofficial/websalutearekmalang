@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowRight, BookOpen, BriefcaseBusiness, ChevronDown, GraduationCap, Menu, X } from "lucide-react";
@@ -6,12 +6,12 @@ import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/program-studi")({
-  head: () => ({
-    meta: [
-      { title: "Program Studi - Sentra Layanan UT Arek Malang" },
-      { name: "description", content: "Informasi program pendidikan, fakultas, dan program studi Universitas Terbuka melalui Sentra Layanan UT Arek Malang." },
-    ],
-  }),
+  beforeLoad: () => {
+    throw redirect({
+      to: "/program-sarjana",
+      statusCode: 308,
+    });
+  },
   component: ProgramStudiPage,
 });
 
