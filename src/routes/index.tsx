@@ -535,7 +535,7 @@ function CombinedCTAProcessSection() {
               </Link>
 
               <a
-                href="#informasi"
+                href="/kemahasiswaan#informasi-pendidikan"
                 className="inline-flex h-11 items-center justify-center rounded-full bg-[#0B1E48] px-6 text-sm font-extrabold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#11275b] hover:shadow-lg sm:h-12 sm:px-7"
               >
                 Lihat Jurusan Kuliah di UT
