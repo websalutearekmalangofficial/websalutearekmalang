@@ -569,7 +569,7 @@ function CombinedCTAProcessSection() {
 
               <div className="relative z-20 mt-auto pt-24 sm:pt-28">
                 <a
-                  href="https://wa.me/6281234567890?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran"
+                  href="https://wa.me/6281230024264?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-12 w-full items-center justify-between gap-2 rounded-full bg-[#FACC15] px-4 py-2.5 text-[11px] font-extrabold text-[#0B1E48] shadow-lg transition-all hover:scale-[1.02] hover:bg-yellow-400 sm:text-xs"
