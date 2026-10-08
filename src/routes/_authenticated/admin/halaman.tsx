@@ -661,7 +661,9 @@ function SectionEditor({
           document_url: form.document_url,
           link_url: form.link_url,
           link_label: form.link_label,
-          config: form.config as Record<string, string | number | boolean | null>,
+          config: sectionKind === "process"
+            ? { ...(form.config ?? {}), details: processDetails.trim() }
+            : form.config as Record<string, string | number | boolean | null>,
           is_published: form.is_published,
         })
         .eq("id", section.id);
@@ -767,6 +769,17 @@ function SectionEditor({
             <textarea className={textareaClass} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} />
           </Field>
 
+          {sectionKind === "process" ? (
+            <Field label="Detail langkah (satu poin per baris)">
+              <textarea
+                className={textareaClass}
+                value={processDetails}
+                onChange={(e) => setProcessDetails(e.target.value)}
+                placeholder="Contoh: Lengkapi data diri\nSiapkan dokumen\nTunggu verifikasi admin"
+              />
+            </Field>
+          ) : null}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <MediaPicker label="Gambar" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
             <MediaPicker label="Video (unggahan atau tautan YouTube)" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
@@ -802,7 +815,7 @@ function SectionEditor({
             <div className="rounded-xl border border-ut-sky/30 bg-section-blue p-4">
               <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Kontak & Lokasi</p>
               <p className="mb-4 text-xs leading-5 text-muted-foreground">
-                Data ini ditampilkan langsung pada section Kontak & Lokasi di halaman Profile.
+                Data ini dapat digunakan langsung untuk Banner Kontak di homepage dan section Kontak & Lokasi di halaman Profile.
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Nomor WhatsApp">
@@ -923,9 +936,11 @@ function GenericItemEditor({
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(item);
   const [badgeText, setBadgeText] = useState((item.badges ?? []).join(", "));
+  const [processDetails, setProcessDetails] = useState(String(item.config?.details ?? ""));
   useEffect(() => {
     setForm(item);
     setBadgeText((item.badges ?? []).join(", "));
+    setProcessDetails(String(item.config?.details ?? ""));
   }, [item]);
 
   const save = useMutation({
