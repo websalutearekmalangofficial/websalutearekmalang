@@ -1,17 +1,57 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight, Check, Quote } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { Index } from "@/routes/index";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/$slug")({
-  head: () => ({
-    meta: [
-      { title: "Halaman - Sentra Layanan UT Arek Malang" },
-      { name: "description", content: "Informasi Sentra Layanan UT Arek Malang." },
-    ],
-  }),
+  loader: {
+    handler: async ({ params }) => {
+      const data = await fetchPublishedPage(params.slug);
+      if (!data) throw notFound();
+      return data;
+    },
+    staleReloadMode: "background",
+  },
+  head: ({ loaderData }) => {
+    const isHomepageTemplate =
+      (loaderData?.page.content as { template?: string } | null)?.template ===
+      "homepage";
+
+    if (isHomepageTemplate) {
+      return {
+        meta: [
+          { title: "Sentra Layanan UT Arek Malang" },
+          {
+            name: "description",
+            content:
+              "Landing page resmi Sentra Layanan UT Arek Malang untuk pendaftaran, alur layanan, kelebihan, testimoni, dan informasi kontak.",
+          },
+          {
+            property: "og:title",
+            content: "Sentra Layanan UT Arek Malang",
+          },
+          {
+            property: "og:description",
+            content:
+              "Daftar dan dapatkan informasi pendaftaran Universitas Terbuka melalui Sentra Layanan UT Arek Malang.",
+          },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary_large_image" },
+        ],
+      };
+    }
+
+    return {
+      meta: [
+        { title: "Halaman - Sentra Layanan UT Arek Malang" },
+        {
+          name: "description",
+          content: "Informasi Sentra Layanan UT Arek Malang.",
+        },
+      ],
+    };
+  },
   component: PublicCmsPage,
 });
 
@@ -89,22 +129,7 @@ async function fetchPublishedPage(slug: string) {
 }
 
 function PublicCmsPage() {
-  const { slug } = Route.useParams();
-  const query = useQuery({
-    queryKey: ["public-cms-page", slug],
-    queryFn: () => fetchPublishedPage(slug),
-    staleTime: 30_000,
-  });
-
-  if (query.isLoading) {
-    return <main className="min-h-screen bg-[#f8fafc]"><PublicHeader /><div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate-500">Memuat halaman...</div><PublicFooter /></main>;
-  }
-
-  if (query.isError || !query.data) {
-    throw notFound();
-  }
-
-  const { page, sections } = query.data;
+  const { page, sections } = Route.useLoaderData();
 
   if ((page.content as { template?: string } | null)?.template === "homepage") {
     return <Index />;
