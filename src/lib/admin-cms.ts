@@ -18,26 +18,6 @@ export async function fetchPages(): Promise<PageRecord[]> {
   return (data ?? []) as PageRecord[];
 }
 
-export async function duplicatePage(sourcePageId: string, title: string, slug: string): Promise<PageRecord> {
-  const normalizedSlug = slug.trim().toLowerCase();
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalizedSlug)) {
-    throw new Error("Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung (-).");
-  }
-
-  const cleanTitle = title.trim();
-  if (!cleanTitle) throw new Error("Nama halaman wajib diisi.");
-
-  const { data, error } = await supabase.rpc("duplicate_page", {
-    p_source_page_id: sourcePageId,
-    p_title: cleanTitle,
-    p_slug: normalizedSlug,
-  });
-  if (error) throw error;
-  if (!data) throw new Error("Halaman hasil duplikasi gagal dibuat.");
-
-  return data as PageRecord;
-}
-
 export async function fetchSections(pageId: string): Promise<Section[]> {
   const { data, error } = await supabase
     .from("sections")
