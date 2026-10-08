@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowRight, Check, Quote } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
+import { Index } from "@/routes/index";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/$slug")({
@@ -104,6 +105,10 @@ function PublicCmsPage() {
   }
 
   const { page, sections } = query.data;
+
+  if ((page.content as { template?: string } | null)?.template === "homepage") {
+    return <Index />;
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#f8fafc] font-body text-slate-900">
