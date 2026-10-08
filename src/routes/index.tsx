@@ -330,14 +330,6 @@ function CombinedCTAProcessSection() {
     startIndex + cardsPerView,
   );
 
-  const handleNext = () => {
-    setStartIndex((current) => Math.min(current + 1, maxStartIndex));
-  };
-
-  const handlePrev = () => {
-    setStartIndex((current) => Math.max(current - 1, 0));
-  };
-
   useEffect(() => {
     if (!selectedStep) {
       document.body.style.overflow = "unset";
@@ -451,19 +443,6 @@ function CombinedCTAProcessSection() {
               </h2>
 
               <div className="relative px-4 sm:px-5">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  disabled={startIndex === 0}
-                  aria-label="Langkah sebelumnya"
-                  className={`absolute left-0 top-1/2 z-20 grid size-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all sm:size-10 ${
-                    startIndex === 0
-                      ? "cursor-not-allowed bg-amber-100/80 text-amber-300"
-                      : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
-                  }`}
-                >
-                  <ChevronLeft className="size-5 sm:size-6" strokeWidth={3} />
-                </button>
 
                 <div
                   className={`grid gap-3 ${
@@ -524,19 +503,6 @@ function CombinedCTAProcessSection() {
                   })}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={startIndex >= maxStartIndex}
-                  aria-label="Langkah berikutnya"
-                  className={`absolute right-0 top-1/2 z-20 grid size-9 translate-x-1/2 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all sm:size-10 ${
-                    startIndex >= maxStartIndex
-                      ? "cursor-not-allowed bg-amber-100/80 text-amber-300"
-                      : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
-                  }`}
-                >
-                  <ChevronRight className="size-5 sm:size-6" strokeWidth={3} />
-                </button>
               </div>
 
               <div className="mt-4 flex justify-center sm:mt-5">
