@@ -2,8 +2,8 @@
 create or replace function public.duplicate_page(p_source_page_id uuid, p_title text, p_slug text)
 returns public.pages
 language plpgsql
-security invoker
-set search_path = public
+security definer
+set search_path = public, pg_catalog
 as $$
 declare
   v_source public.pages%rowtype;
@@ -13,7 +13,7 @@ declare
   v_slug text := lower(trim(p_slug));
   v_title text := trim(p_title);
 begin
-  if not public.has_role((select auth.uid()), 'admin') then
+  if not public.has_role(auth.uid(), 'admin'::public.app_role) then
     raise exception 'Hanya admin yang dapat menduplikasi halaman.';
   end if;
   if v_title = '' then raise exception 'Nama halaman wajib diisi.'; end if;
