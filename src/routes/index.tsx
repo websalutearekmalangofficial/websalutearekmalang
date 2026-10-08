@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import consultantImage from "@/assets/consultant.webp";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BookOpenCheck,
@@ -592,7 +593,7 @@ function CombinedCTAProcessSection() {
 
               <div className="pointer-events-none absolute inset-y-0 right-0 w-[66%] overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80"
+                  src={consultantImage}
                   alt="Tim SALUT Arek Malang"
                   className="h-full w-full object-cover object-top opacity-95"
                 />
