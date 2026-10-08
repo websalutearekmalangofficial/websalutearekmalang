@@ -175,7 +175,7 @@ const benefits = [
   },
 ];
 
-function Index() {
+export function Index() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#f8fafc] font-body text-foreground">
       <PublicHeader />
