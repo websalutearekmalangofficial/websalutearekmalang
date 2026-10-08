@@ -390,7 +390,7 @@ function CombinedCTAProcessSection() {
     setStartIndex((current) => Math.min(current, maxStartIndex));
   }, [cardsPerView]);
 
-  const maxStartIndex = Math.max(0, processSteps.length - cardsPerView);
+  const maxStartIndex = Math.max(0, cmsProcessSteps.length - cardsPerView);
   const visibleSteps = cmsProcessSteps.slice(
     startIndex,
     startIndex + cardsPerView,
@@ -619,7 +619,7 @@ function CombinedCTAProcessSection() {
 
               <div className="pointer-events-none absolute inset-y-0 right-0 w-[66%] overflow-hidden">
                 <img
-                  src={consultantImage}
+                  src={contactSection?.media_url?.trim() || consultantImage}
                   alt="Tim SALUT Arek Malang"
                   className="h-full w-full object-cover object-top opacity-95"
                 />
