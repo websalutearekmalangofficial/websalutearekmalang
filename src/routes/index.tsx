@@ -300,19 +300,41 @@ function CombinedCTAProcessSection() {
   const [selectedStep, setSelectedStep] =
     useState<(typeof processSteps)[0] | null>(null);
   const [startIndex, setStartIndex] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(4);
 
-  const visibleSteps = processSteps.slice(startIndex, startIndex + 4);
+  useEffect(() => {
+    const updateCardsPerView = () => {
+      if (window.innerWidth < 640) {
+        setCardsPerView(1);
+      } else if (window.innerWidth < 1280) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(4);
+      }
+    };
+
+    updateCardsPerView();
+    window.addEventListener("resize", updateCardsPerView);
+    return () => window.removeEventListener("resize", updateCardsPerView);
+  }, []);
+
+  useEffect(() => {
+    const maxStartIndex = Math.max(0, processSteps.length - cardsPerView);
+    setStartIndex((current) => Math.min(current, maxStartIndex));
+  }, [cardsPerView]);
+
+  const maxStartIndex = Math.max(0, processSteps.length - cardsPerView);
+  const visibleSteps = processSteps.slice(
+    startIndex,
+    startIndex + cardsPerView,
+  );
 
   const handleNext = () => {
-    if (startIndex + 4 < processSteps.length) {
-      setStartIndex((prev) => prev + 1);
-    }
+    setStartIndex((current) => Math.min(current + 1, maxStartIndex));
   };
 
   const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex((prev) => prev - 1);
-    }
+    setStartIndex((current) => Math.max(current - 1, 0));
   };
 
   useEffect(() => {
@@ -340,30 +362,33 @@ function CombinedCTAProcessSection() {
   return (
     <section
       id="panduan"
-      className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+      className="relative z-10 mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8"
     >
       {selectedStep && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-3 backdrop-blur-sm sm:p-4 animate-in fade-in duration-200"
           onClick={() => setSelectedStep(null)}
         >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="process-step-dialog-title"
-            className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
+            className="flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="relative flex items-center justify-between overflow-hidden bg-[#0B1E48] p-6 text-white">
-              <div className="relative z-10 flex items-center gap-4">
-                <div className="grid size-12 place-items-center rounded-full bg-[#FACC15] text-[#0B1E48]">
-                  <selectedStep.icon className="size-6" strokeWidth={2.5} />
+            <div className="relative flex items-center justify-between gap-4 overflow-hidden bg-[#0B1E48] p-5 text-white sm:p-6">
+              <div className="relative z-10 flex min-w-0 items-center gap-3 sm:gap-4">
+                <div className="grid size-11 shrink-0 place-items-center rounded-full bg-[#FACC15] text-[#0B1E48] sm:size-12">
+                  <selectedStep.icon className="size-5 sm:size-6" strokeWidth={2.5} />
                 </div>
-                <div>
-                  <p className="text-xs font-black uppercase tracking-wider text-[#FACC15]">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#FACC15] sm:text-xs">
                     Langkah {selectedStep.number}
                   </p>
-                  <h3 id="process-step-dialog-title" className="text-xl font-extrabold">
+                  <h3
+                    id="process-step-dialog-title"
+                    className="truncate text-lg font-extrabold sm:text-xl"
+                  >
                     {selectedStep.title}
                   </h3>
                 </div>
@@ -372,21 +397,24 @@ function CombinedCTAProcessSection() {
               <button
                 type="button"
                 onClick={() => setSelectedStep(null)}
-                className="grid size-8 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
                 aria-label="Tutup detail langkah"
               >
                 <X className="size-4" />
               </button>
             </div>
 
-            <div className="overflow-y-auto p-6">
-              <p className="mb-4 font-medium text-slate-600">
+            <div className="min-h-0 overflow-y-auto p-5 sm:p-6">
+              <p className="mb-4 text-sm font-medium leading-6 text-slate-600 sm:text-base">
                 {selectedStep.description}
               </p>
               <ul className="space-y-2.5">
                 {selectedStep.details.map((detail, index) => (
-                  <li key={index} className="flex items-start gap-3 text-sm text-slate-700">
-                    <div className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-sm leading-6 text-slate-700"
+                  >
+                    <div className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
                       <Check className="size-3.5" strokeWidth={3} />
                     </div>
                     <span>{detail}</span>
@@ -399,7 +427,7 @@ function CombinedCTAProcessSection() {
               <button
                 type="button"
                 onClick={() => setSelectedStep(null)}
-                className="rounded-full bg-slate-200 px-6 py-2 text-sm font-bold text-slate-800 hover:bg-slate-300"
+                className="rounded-full bg-slate-200 px-6 py-2.5 text-sm font-bold text-slate-800 hover:bg-slate-300"
               >
                 Tutup Pemandu
               </button>
@@ -408,35 +436,43 @@ function CombinedCTAProcessSection() {
         </div>
       )}
 
-      <div className="rounded-[2.5rem] border border-amber-100/60 bg-[#FAF8EE] p-6 shadow-sm md:p-10 lg:p-12">
-        <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12 lg:gap-8">
-          <div className="flex flex-col justify-between lg:col-span-7 xl:col-span-8">
+      <div className="rounded-[2rem] border border-amber-100/70 bg-[#FAF8EE] p-4 shadow-sm sm:rounded-[2.25rem] sm:p-6 md:p-8 lg:rounded-[2.5rem] lg:p-10 xl:p-12">
+        <div className="grid grid-cols-1 items-stretch gap-7 lg:grid-cols-12 lg:gap-8">
+          <div className="flex min-w-0 flex-col justify-between lg:col-span-8">
             <div>
-              <h2 className="mb-8 text-3xl font-extrabold leading-[1.18] tracking-tight text-[#0B1E48] md:text-4xl lg:text-[2.65rem]">
+              <h2 className="mb-6 text-[1.85rem] font-extrabold leading-[1.13] tracking-tight text-[#0B1E48] sm:text-3xl md:text-4xl lg:mb-7 lg:text-[2.65rem]">
                 Kuliah Fleksibel, Raih Masa
-                <br />
+                <br className="hidden sm:block" />
                 Depan Bersama{" "}
                 <span className="text-[#FACC15]">SALUT</span>
-                <br />
+                <br className="hidden sm:block" />
                 <span className="text-[#FBBF24]">Arek Malang</span>
               </h2>
 
-              <div className="relative my-6 px-2">
+              <div className="relative px-4 sm:px-5">
                 <button
                   type="button"
                   onClick={handlePrev}
                   disabled={startIndex === 0}
-                  aria-label="Sebelumnya"
-                  className={`absolute -left-5 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all ${
+                  aria-label="Langkah sebelumnya"
+                  className={`absolute left-0 top-1/2 z-20 grid size-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all sm:size-10 ${
                     startIndex === 0
-                      ? "cursor-not-allowed bg-amber-100/50 text-amber-300"
+                      ? "cursor-not-allowed bg-amber-100/80 text-amber-300"
                       : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
                   }`}
                 >
-                  <ChevronLeft className="size-6" strokeWidth={3} />
+                  <ChevronLeft className="size-5 sm:size-6" strokeWidth={3} />
                 </button>
 
-                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+                <div
+                  className={`grid gap-3 ${
+                    cardsPerView === 1
+                      ? "grid-cols-1"
+                      : cardsPerView === 2
+                        ? "grid-cols-2"
+                        : "grid-cols-4"
+                  }`}
+                >
                   {visibleSteps.map((step) => {
                     const Icon = step.icon;
 
@@ -445,39 +481,39 @@ function CombinedCTAProcessSection() {
                         key={step.number}
                         type="button"
                         onClick={() => setSelectedStep(step)}
-                        className="group relative flex min-h-[190px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+                        className="group relative flex min-h-[175px] w-full min-w-0 cursor-pointer flex-col justify-between rounded-2xl border border-slate-100 bg-white p-3.5 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FACC15]/70 sm:min-h-[185px] sm:p-4"
                       >
-                        <div className="absolute left-3 top-3 flex size-6 items-center justify-center rounded-full bg-[#FACC15] text-xs font-black text-[#0B1E48]">
+                        <div className="absolute left-2 top-2 flex size-6 items-center justify-center rounded-full bg-[#FACC15] text-[11px] font-black text-[#0B1E48] sm:left-3 sm:top-3 sm:size-7 sm:text-xs">
                           {step.number}
                         </div>
 
-                        <div className="mx-auto mb-2 mt-2 grid size-11 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors group-hover:bg-[#FACC15] group-hover:text-[#0B1E48]">
-                          <Icon className="size-5" strokeWidth={2.2} />
+                        <div className="mx-auto mb-2 mt-2 grid size-10 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors group-hover:bg-[#FACC15] group-hover:text-[#0B1E48] sm:size-11">
+                          <Icon className="size-4.5 sm:size-5" strokeWidth={2.2} />
                         </div>
 
-                        <div>
-                          <h3 className="mb-1 text-xs font-extrabold text-[#0B1E48]">
+                        <div className="min-w-0">
+                          <h3 className="mb-1 text-[11px] font-extrabold leading-tight text-[#0B1E48] sm:text-xs">
                             {step.title}
                           </h3>
-                          <p className="line-clamp-3 text-[11px] leading-tight text-slate-500">
+                          <p className="mx-auto line-clamp-3 max-w-[12rem] text-[10px] leading-tight text-slate-500 sm:text-[11px]">
                             {step.description}
                           </p>
                         </div>
 
-                        <div className="mt-3 flex justify-center">
+                        <div className="mt-2 flex min-h-5 items-center justify-center">
                           {step.badges ? (
-                            <div className="flex flex-wrap justify-center gap-1">
+                            <div className="flex max-w-full flex-wrap justify-center gap-1">
                               {step.badges.map((badge) => (
                                 <span
                                   key={badge}
-                                  className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-bold text-slate-600"
+                                  className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[8px] font-bold text-slate-600 sm:text-[9px]"
                                 >
                                   {badge}
                                 </span>
                               ))}
                             </div>
                           ) : (
-                            <span className="text-[11px] font-bold text-blue-600 group-hover:underline">
+                            <span className="text-[10px] font-bold text-blue-600 group-hover:underline sm:text-[11px]">
                               Lihat detail →
                             </span>
                           )}
@@ -490,44 +526,42 @@ function CombinedCTAProcessSection() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  disabled={startIndex + 4 >= processSteps.length}
-                  aria-label="Berikutnya"
-                  className={`absolute -right-5 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all ${
-                    startIndex + 4 >= processSteps.length
-                      ? "cursor-not-allowed bg-amber-100/50 text-amber-300"
+                  disabled={startIndex >= maxStartIndex}
+                  aria-label="Langkah berikutnya"
+                  className={`absolute right-0 top-1/2 z-20 grid size-9 translate-x-1/2 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all sm:size-10 ${
+                    startIndex >= maxStartIndex
+                      ? "cursor-not-allowed bg-amber-100/80 text-amber-300"
                       : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
                   }`}
                 >
-                  <ChevronRight className="size-6" strokeWidth={3} />
+                  <ChevronRight className="size-5 sm:size-6" strokeWidth={3} />
                 </button>
+              </div>
 
-                <div className="mt-5 flex justify-center">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0B1E48] px-3.5 py-1.5 shadow-sm">
-                    {Array.from({
-                      length: Math.max(1, processSteps.length - 3),
-                    }).map((_, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setStartIndex(index)}
-                        className={`size-2 rounded-full transition-all ${
-                          index === startIndex
-                            ? "w-5 bg-[#FACC15]"
-                            : "bg-slate-400 hover:bg-white"
-                        }`}
-                        aria-label={`Ke slide ${index + 1}`}
-                        aria-current={index === startIndex ? "true" : undefined}
-                      />
-                    ))}
-                  </div>
+              <div className="mt-4 flex justify-center sm:mt-5">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0B1E48] px-3 py-1.5 shadow-sm">
+                  {Array.from({ length: maxStartIndex + 1 }).map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setStartIndex(index)}
+                      className={`h-2 rounded-full transition-all ${
+                        index === startIndex
+                          ? "w-5 bg-[#FACC15]"
+                          : "w-2 bg-slate-400 hover:bg-white"
+                      }`}
+                      aria-label={`Ke slide ${index + 1}`}
+                      aria-current={index === startIndex ? "true" : undefined}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3.5">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3.5 lg:mt-7">
               <Link
                 to="/daftar"
-                className="inline-flex items-center gap-2 rounded-full bg-[#FACC15] px-7 py-3.5 text-sm font-extrabold text-[#0B1E48] shadow-md transition-all hover:-translate-y-0.5 hover:bg-yellow-400 hover:shadow-lg"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#FACC15] px-6 text-sm font-extrabold text-[#0B1E48] shadow-md transition-all hover:-translate-y-0.5 hover:bg-yellow-400 hover:shadow-lg sm:h-12 sm:px-7"
               >
                 Mulai Pendaftaran
                 <ArrowRight className="size-4" strokeWidth={2.5} />
@@ -535,17 +569,17 @@ function CombinedCTAProcessSection() {
 
               <a
                 href="#informasi"
-                className="inline-flex items-center justify-center rounded-full bg-[#0B1E48] px-7 py-3.5 text-sm font-extrabold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#11275b] hover:shadow-lg"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-[#0B1E48] px-6 text-sm font-extrabold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#11275b] hover:shadow-lg sm:h-12 sm:px-7"
               >
                 Lihat Jurusan Kuliah di UT
               </a>
             </div>
           </div>
 
-          <div className="lg:col-span-5 xl:col-span-4">
-            <div className="relative flex h-full min-h-[380px] flex-col justify-between overflow-hidden rounded-[2rem] bg-[#0B1E48] p-7 text-white shadow-xl">
-              <div className="relative z-10 max-w-[210px]">
-                <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
+          <div className="min-w-0 lg:col-span-4">
+            <div className="relative flex min-h-[320px] h-full flex-col justify-between overflow-hidden rounded-[1.75rem] bg-[#0B1E48] p-6 text-white shadow-xl sm:min-h-[350px] sm:rounded-[2rem] sm:p-7 lg:min-h-[380px]">
+              <div className="relative z-10 max-w-[58%] sm:max-w-[55%]">
+                <h3 className="text-[1.65rem] font-black leading-[1.04] tracking-tight text-white sm:text-2xl lg:text-3xl">
                   Konsultasi
                   <br />
                   Gratis
@@ -556,24 +590,25 @@ function CombinedCTAProcessSection() {
                 </h3>
               </div>
 
-              <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-3/5 overflow-hidden">
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-[66%] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80"
                   alt="Tim SALUT Arek Malang"
-                  className="h-full w-full object-cover object-top opacity-95 transition-transform duration-500 hover:scale-105"
+                  className="h-full w-full object-cover object-top opacity-95"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E48] via-[#0B1E48]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E48] via-[#0B1E48]/55 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0B1E48]/70 to-transparent" />
               </div>
 
-              <div className="relative z-10 mt-auto pt-16">
+              <div className="relative z-20 mt-auto pt-24 sm:pt-28">
                 <a
                   href="https://wa.me/6281234567890?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-between gap-3 rounded-full bg-[#FACC15] px-5 py-3 text-sm font-extrabold text-[#0B1E48] shadow-lg transition-all hover:scale-[1.02] hover:bg-yellow-400"
+                  className="flex min-h-12 w-full items-center justify-between gap-2 rounded-full bg-[#FACC15] px-4 py-2.5 text-[11px] font-extrabold text-[#0B1E48] shadow-lg transition-all hover:scale-[1.02] hover:bg-yellow-400 sm:text-xs"
                 >
-                  <span>Konsultasi Via Whatsapp</span>
-                  <span className="grid size-7 place-items-center rounded-full bg-[#25D366] text-white shadow-sm">
+                  <span className="min-w-0 truncate">Konsultasi Via Whatsapp</span>
+                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#25D366] text-white shadow-sm">
                     <MessageCircle className="size-4 fill-current" />
                   </span>
                 </a>
