@@ -29,7 +29,8 @@ import {
   Globe,
   Mail,
   LogOut,
-  LayoutDashboard
+  LayoutDashboard,
+  MessageCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -298,6 +299,21 @@ function HeroBanner() {
 function CombinedCTAProcessSection() {
   const [selectedStep, setSelectedStep] =
     useState<(typeof processSteps)[0] | null>(null);
+  const [startIndex, setStartIndex] = useState(0);
+
+  const visibleSteps = processSteps.slice(startIndex, startIndex + 4);
+
+  const handleNext = () => {
+    if (startIndex + 4 < processSteps.length) {
+      setStartIndex((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (startIndex > 0) {
+      setStartIndex((prev) => prev - 1);
+    }
+  };
 
   useEffect(() => {
     if (!selectedStep) {
@@ -324,7 +340,7 @@ function CombinedCTAProcessSection() {
   return (
     <section
       id="panduan"
-      className="relative z-10 px-4 pb-10 pt-12 sm:px-6 md:px-8 md:pb-14 md:pt-20 lg:px-12"
+      className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
     >
       {selectedStep && (
         <div
@@ -336,21 +352,15 @@ function CombinedCTAProcessSection() {
             aria-modal="true"
             aria-labelledby="process-step-dialog-title"
             className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
           >
-            <div className="relative flex items-center justify-between overflow-hidden bg-[#111c38] p-6 text-white">
-              <div className="absolute right-0 top-0 -mr-10 -mt-10 h-32 w-32 rounded-full bg-[#facc15]/10 blur-2xl" />
-
+            <div className="relative flex items-center justify-between overflow-hidden bg-[#0B1E48] p-6 text-white">
               <div className="relative z-10 flex items-center gap-4">
-                <div className="grid size-12 place-items-center rounded-full bg-[#facc15] text-[#111c38]">
-                  <selectedStep.icon
-                    className="size-6"
-                    strokeWidth={2.5}
-                  />
+                <div className="grid size-12 place-items-center rounded-full bg-[#FACC15] text-[#0B1E48]">
+                  <selectedStep.icon className="size-6" strokeWidth={2.5} />
                 </div>
-
                 <div>
-                  <p className="mb-0.5 text-xs font-black uppercase tracking-wider text-[#facc15]">
+                  <p className="text-xs font-black uppercase tracking-wider text-[#FACC15]">
                     Langkah {selectedStep.number}
                   </p>
                   <h3 id="process-step-dialog-title" className="text-xl font-extrabold">
@@ -362,42 +372,34 @@ function CombinedCTAProcessSection() {
               <button
                 type="button"
                 onClick={() => setSelectedStep(null)}
+                className="grid size-8 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
                 aria-label="Tutup detail langkah"
-                className="relative z-10 grid size-8 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               >
                 <X className="size-4" />
               </button>
             </div>
 
-            <div className="overflow-y-auto p-6 md:p-8">
-              <p className="mb-5 font-medium text-slate-600">
+            <div className="overflow-y-auto p-6">
+              <p className="mb-4 font-medium text-slate-600">
                 {selectedStep.description}
               </p>
-
-              <ul className="space-y-3">
-                {selectedStep.details.map((detail, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-3 text-sm text-slate-700"
-                  >
+              <ul className="space-y-2.5">
+                {selectedStep.details.map((detail, index) => (
+                  <li key={index} className="flex items-start gap-3 text-sm text-slate-700">
                     <div className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600">
-                      <Check
-                        className="size-3.5"
-                        strokeWidth={3}
-                      />
+                      <Check className="size-3.5" strokeWidth={3} />
                     </div>
-
-                    <span className="leading-snug">{detail}</span>
+                    <span>{detail}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="flex justify-end border-t border-slate-100 bg-slate-50 p-4 px-6 md:px-8">
+            <div className="flex justify-end border-t border-slate-100 bg-slate-50 p-4">
               <button
                 type="button"
                 onClick={() => setSelectedStep(null)}
-                className="rounded-full bg-slate-200 px-6 py-2.5 text-sm font-bold text-slate-800 transition-colors hover:bg-slate-300"
+                className="rounded-full bg-slate-200 px-6 py-2 text-sm font-bold text-slate-800 hover:bg-slate-300"
               >
                 Tutup Pemandu
               </button>
@@ -406,111 +408,177 @@ function CombinedCTAProcessSection() {
         </div>
       )}
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16 xl:gap-24">
-        <div className="flex flex-col items-start gap-6 lg:pr-8 xl:pr-12">
-          <h2 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-[#111c38] md:text-5xl lg:text-[3.25rem]">
-            Kuliah Fleksibel,{" "}
-            <br className="hidden md:block" />
-            Raih Masa Depan{" "}
-            <br className="hidden md:block" />
-            Bersama{" "}
-            <span className="text-[#facc15]">
-              SALUT Arek Malang
-            </span>
-          </h2>
+      <div className="rounded-[2.5rem] border border-amber-100/60 bg-[#FAF8EE] p-6 shadow-sm md:p-10 lg:p-12">
+        <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12 lg:gap-8">
+          <div className="flex flex-col justify-between lg:col-span-7 xl:col-span-8">
+            <div>
+              <h2 className="mb-8 text-3xl font-extrabold leading-[1.18] tracking-tight text-[#0B1E48] md:text-4xl lg:text-[2.65rem]">
+                Kuliah Fleksibel, Raih Masa
+                <br />
+                Depan Bersama{" "}
+                <span className="text-[#FACC15]">SALUT</span>
+                <br />
+                <span className="text-[#FBBF24]">Arek Malang</span>
+              </h2>
 
-          <p className="max-w-md text-lg leading-relaxed text-slate-500 md:text-xl">
-            Wujudkan impianmu meraih gelar sarjana dengan sistem belajar jarak
-            jauh yang inovatif dan terjangkau. Klik setiap alur untuk info
-            lebih lanjut!
-          </p>
+              <div className="relative my-6 px-2">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={startIndex === 0}
+                  aria-label="Sebelumnya"
+                  className={`absolute -left-5 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all ${
+                    startIndex === 0
+                      ? "cursor-not-allowed bg-amber-100/50 text-amber-300"
+                      : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
+                  }`}
+                >
+                  <ChevronLeft className="size-6" strokeWidth={3} />
+                </button>
 
-          <Link
-            to="/daftar"
-            className="group mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#facc15] px-8 text-base font-bold text-[#111c38] shadow-[0_8px_20px_-6px_rgba(250,204,21,0.6)] transition-all hover:-translate-y-1 hover:bg-yellow-400 md:h-14"
-          >
-            Mulai Pendaftaran
-            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
-        </div>
+                <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+                  {visibleSteps.map((step) => {
+                    const Icon = step.icon;
 
-        <div className="w-full">
-          <div className="mb-10 border-b-2 border-slate-100 pb-4">
-            <h2 className="font-display text-2xl font-extrabold text-[#111c38] md:text-3xl">
-              Alur Pendaftaran Sentra Layanan UT
-            </h2>
+                    return (
+                      <button
+                        key={step.number}
+                        type="button"
+                        onClick={() => setSelectedStep(step)}
+                        className="group relative flex min-h-[190px] cursor-pointer flex-col justify-between rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+                      >
+                        <div className="absolute left-3 top-3 flex size-6 items-center justify-center rounded-full bg-[#FACC15] text-xs font-black text-[#0B1E48]">
+                          {step.number}
+                        </div>
 
-            <div
-              className="mt-3 h-1.5 w-20 rounded-full bg-[#facc15]"
-              aria-hidden="true"
-            />
+                        <div className="mx-auto mb-2 mt-2 grid size-11 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors group-hover:bg-[#FACC15] group-hover:text-[#0B1E48]">
+                          <Icon className="size-5" strokeWidth={2.2} />
+                        </div>
+
+                        <div>
+                          <h3 className="mb-1 text-xs font-extrabold text-[#0B1E48]">
+                            {step.title}
+                          </h3>
+                          <p className="line-clamp-3 text-[11px] leading-tight text-slate-500">
+                            {step.description}
+                          </p>
+                        </div>
+
+                        <div className="mt-3 flex justify-center">
+                          {step.badges ? (
+                            <div className="flex flex-wrap justify-center gap-1">
+                              {step.badges.map((badge) => (
+                                <span
+                                  key={badge}
+                                  className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-bold text-slate-600"
+                                >
+                                  {badge}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-[11px] font-bold text-blue-600 group-hover:underline">
+                              Lihat detail →
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={startIndex + 4 >= processSteps.length}
+                  aria-label="Berikutnya"
+                  className={`absolute -right-5 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full shadow-md transition-all ${
+                    startIndex + 4 >= processSteps.length
+                      ? "cursor-not-allowed bg-amber-100/50 text-amber-300"
+                      : "bg-[#FACC15] text-[#0B1E48] hover:scale-105 hover:bg-yellow-400"
+                  }`}
+                >
+                  <ChevronRight className="size-6" strokeWidth={3} />
+                </button>
+
+                <div className="mt-5 flex justify-center">
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-[#0B1E48] px-3.5 py-1.5 shadow-sm">
+                    {Array.from({
+                      length: Math.max(1, processSteps.length - 3),
+                    }).map((_, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setStartIndex(index)}
+                        className={`size-2 rounded-full transition-all ${
+                          index === startIndex
+                            ? "w-5 bg-[#FACC15]"
+                            : "bg-slate-400 hover:bg-white"
+                        }`}
+                        aria-label={`Ke slide ${index + 1}`}
+                        aria-current={index === startIndex ? "true" : undefined}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3.5">
+              <Link
+                to="/daftar"
+                className="inline-flex items-center gap-2 rounded-full bg-[#FACC15] px-7 py-3.5 text-sm font-extrabold text-[#0B1E48] shadow-md transition-all hover:-translate-y-0.5 hover:bg-yellow-400 hover:shadow-lg"
+              >
+                Mulai Pendaftaran
+                <ArrowRight className="size-4" strokeWidth={2.5} />
+              </Link>
+
+              <a
+                href="#informasi"
+                className="inline-flex items-center justify-center rounded-full bg-[#0B1E48] px-7 py-3.5 text-sm font-extrabold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#11275b] hover:shadow-lg"
+              >
+                Lihat Jurusan Kuliah di UT
+              </a>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-            {processSteps.map((step, index) => {
-              const Icon = step.icon;
+          <div className="lg:col-span-5 xl:col-span-4">
+            <div className="relative flex h-full min-h-[380px] flex-col justify-between overflow-hidden rounded-[2rem] bg-[#0B1E48] p-7 text-white shadow-xl">
+              <div className="relative z-10 max-w-[210px]">
+                <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
+                  Konsultasi
+                  <br />
+                  Gratis
+                  <br />
+                  dengan
+                  <br />
+                  <span className="text-[#FACC15]">Tim SALUT</span>
+                </h3>
+              </div>
 
-              return (
-                <div
-                  key={step.number}
-                  className="group relative mt-2"
+              <div className="pointer-events-none absolute bottom-0 right-0 top-0 w-3/5 overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80"
+                  alt="Tim SALUT Arek Malang"
+                  className="h-full w-full object-cover object-top opacity-95 transition-transform duration-500 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0B1E48] via-[#0B1E48]/40 to-transparent" />
+              </div>
+
+              <div className="relative z-10 mt-auto pt-16">
+                <a
+                  href="https://wa.me/6281234567890?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-between gap-3 rounded-full bg-[#FACC15] px-5 py-3 text-sm font-extrabold text-[#0B1E48] shadow-lg transition-all hover:scale-[1.02] hover:bg-yellow-400"
                 >
-                  <button
-                    onClick={() => setSelectedStep(step)}
-                    className="relative flex h-full min-h-[170px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-[0_4px_16px_-4px_rgba(0,0,0,0.05)] transition-all duration-500 hover:-translate-y-2 hover:border-transparent hover:bg-[#111c38] hover:shadow-[0_16px_32px_-15px_rgba(17,28,56,0.4)] focus:outline-none focus:ring-4 focus:ring-yellow-400/50"
-                  >
-                    <div className="absolute -left-3 -top-4 flex size-10 items-center justify-center rounded-full border-4 border-white bg-[#facc15] text-xl font-black text-[#111c38] shadow-lg transition-all duration-500 group-hover:rotate-12 group-hover:scale-110 group-hover:border-[#111c38]">
-                      {step.number}
-                    </div>
-
-                    <div className="mb-3 flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-sm transition-all duration-500 group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-[#facc15] group-hover:text-[#111c38]">
-                      <Icon
-                        className="size-6"
-                        strokeWidth={2.5}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <h3 className="mb-1.5 text-base font-extrabold leading-tight text-[#111c38] transition-colors duration-500 group-hover:text-white">
-                      {step.title}
-                    </h3>
-
-                    <p className="mb-3 max-w-[15rem] text-xs leading-relaxed text-slate-500 transition-colors duration-500 group-hover:text-slate-200">
-                      {step.description}
-                    </p>
-
-                    {step.badges ? (
-                      <div className="mt-auto flex flex-wrap justify-center gap-2">
-                        {step.badges.map((badge) => (
-                          <span
-                            key={badge}
-                            className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] font-bold text-slate-600 transition-colors duration-500 group-hover:border-slate-700 group-hover:bg-slate-800 group-hover:text-slate-200"
-                          >
-                            <CheckCircle2
-                              className="size-3 text-[#facc15]"
-                              aria-hidden="true"
-                            />
-                            {badge}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="mt-auto text-xs font-bold text-blue-600 transition-colors duration-500 group-hover:text-[#facc15]">
-                        Lihat detail →
-                      </div>
-                    )}
-                  </button>
-
-                  {index % 4 !== 3 &&
-                  index < processSteps.length - 1 ? (
-                    <ChevronRight
-                      className="pointer-events-none absolute -right-5 top-1/2 z-10 hidden size-7 -translate-y-1/2 text-slate-300 transition-all duration-500 group-hover:translate-x-2 group-hover:text-[#facc15] lg:block"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
+                  <span>Konsultasi Via Whatsapp</span>
+                  <span className="grid size-7 place-items-center rounded-full bg-[#25D366] text-white shadow-sm">
+                    <MessageCircle className="size-4 fill-current" />
+                  </span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
