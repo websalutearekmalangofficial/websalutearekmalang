@@ -47,7 +47,7 @@ type Section = {
 async function fetchPublishedPage(slug: string) {
   const { data: page, error: pageError } = await supabase
     .from("pages")
-    .select("id, slug, title, meta_title, meta_description, is_published")
+    .select("id, slug, title, meta_title, meta_description, content, is_published")
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
