@@ -41,6 +41,7 @@ import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteLogo } from "@/components/site-logo";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
+import { resolveIcon } from "@/lib/cms";
 import {
   Carousel,
   CarouselContent,
@@ -153,6 +154,41 @@ const processSteps = [
     ]
   },
 ];
+
+async function fetchHomepageCms() {
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id")
+    .eq("slug", "beranda")
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (pageError) throw pageError;
+  if (!page?.id) return { sections: [], items: [] };
+
+  const { data: sections, error: sectionsError } = await supabase
+    .from("sections")
+    .select("id, kind, title, subtitle, body, media_url, link_url, link_label, config, is_published, sort_order")
+    .eq("page_id", page.id)
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+
+  if (sectionsError) throw sectionsError;
+
+  const sectionIds = (sections ?? []).map((section) => section.id);
+  if (!sectionIds.length) return { sections: sections ?? [], items: [] };
+
+  const { data: items, error: itemsError } = await supabase
+    .from("section_items")
+    .select("id, section_id, sort_order, title, subtitle, body, icon, badges, media_url, video_url, document_url, link_url, link_label, config, is_published")
+    .in("section_id", sectionIds)
+    .eq("is_published", true)
+    .order("sort_order", { ascending: true });
+
+  if (itemsError) throw itemsError;
+
+  return { sections: sections ?? [], items: items ?? [] };
+}
 
 const benefits = [
   {
@@ -298,6 +334,36 @@ function HeroBanner() {
 }
 
 function CombinedCTAProcessSection() {
+  const homepageCmsQuery = useQuery({
+    queryKey: ["homepage-cms", "beranda"],
+    queryFn: fetchHomepageCms,
+    staleTime: 0,
+    refetchOnMount: "always",
+  });
+
+  const cmsSections = homepageCmsQuery.data?.sections ?? [];
+  const cmsItems = homepageCmsQuery.data?.items ?? [];
+  const processSection = cmsSections.find((section) => section.kind === "process");
+  const contactSection = cmsSections.find((section) => section.kind === "contact_banner");
+  const cmsProcessItems = cmsItems
+    .filter((item) => item.section_id === processSection?.id)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  const cmsProcessSteps = cmsProcessItems.length
+    ? cmsProcessItems.map((item, index) => ({
+        number: String(index + 1),
+        icon: resolveIcon(item.icon) ?? processSteps[index]?.icon ?? ClipboardPenLine,
+        title: item.title?.trim() || processSteps[index]?.title || "Langkah",
+        description: item.body?.trim() || processSteps[index]?.description || "",
+        badges: item.badges?.length ? item.badges : processSteps[index]?.badges,
+        details: typeof item.config?.details === "string" && item.config.details.trim()
+          ? item.config.details.split("\\n").map((detail) => detail.trim()).filter(Boolean)
+          : [item.body?.trim() || processSteps[index]?.description || ""],
+      }))
+    : processSteps;
+  const cmsProcessTitle = processSection?.title?.trim() || "Kuliah Fleksibel, Raih Masa Depan Bersama SALUT Arek Malang";
+  const cmsContactTitle = contactSection?.title?.trim() || "Konsultasi Gratis dengan Tim SALUT";
+  const cmsContactLink = contactSection?.link_url?.trim() || "https://wa.me/6281230024264?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran";
+  const cmsContactButton = contactSection?.link_label?.trim() || "Konsultasi Via Whatsapp";
   const [selectedStep, setSelectedStep] =
     useState<(typeof processSteps)[0] | null>(null);
   const [startIndex, setStartIndex] = useState(0);
@@ -320,12 +386,12 @@ function CombinedCTAProcessSection() {
   }, []);
 
   useEffect(() => {
-    const maxStartIndex = Math.max(0, processSteps.length - cardsPerView);
+    const maxStartIndex = Math.max(0, cmsProcessSteps.length - cardsPerView);
     setStartIndex((current) => Math.min(current, maxStartIndex));
   }, [cardsPerView]);
 
   const maxStartIndex = Math.max(0, processSteps.length - cardsPerView);
-  const visibleSteps = processSteps.slice(
+  const visibleSteps = cmsProcessSteps.slice(
     startIndex,
     startIndex + cardsPerView,
   );
@@ -547,13 +613,7 @@ function CombinedCTAProcessSection() {
             <div className="relative flex min-h-[320px] h-full flex-col justify-between overflow-hidden rounded-[1.75rem] bg-[#0B1E48] p-6 text-white shadow-xl sm:min-h-[350px] sm:rounded-[2rem] sm:p-7 lg:min-h-[380px]">
               <div className="relative z-10 max-w-[58%] sm:max-w-[55%]">
                 <h3 className="text-[1.65rem] font-black leading-[1.04] tracking-tight text-white sm:text-2xl lg:text-3xl">
-                  Konsultasi
-                  <br />
-                  Gratis
-                  <br />
-                  dengan
-                  <br />
-                  <span className="text-[#FACC15]">Tim SALUT</span>
+                  {cmsContactTitle}
                 </h3>
               </div>
 
@@ -569,12 +629,12 @@ function CombinedCTAProcessSection() {
 
               <div className="relative z-20 mt-auto pt-24 sm:pt-28">
                 <a
-                  href="https://wa.me/6281230024264?text=Halo%20Tim%20SALUT%20Arek%20Malang,%20saya%20ingin%20konsultasi%20pendaftaran"
+                  href={cmsContactLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-12 w-full items-center justify-between gap-2 rounded-full bg-[#FACC15] px-4 py-2.5 text-[11px] font-extrabold text-[#0B1E48] shadow-lg transition-all hover:scale-[1.02] hover:bg-yellow-400 sm:text-xs"
                 >
-                  <span className="min-w-0 truncate">Konsultasi Via Whatsapp</span>
+                  <span className="min-w-0 truncate">{cmsContactButton}</span>
                   <span className="grid size-7 shrink-0 place-items-center rounded-full bg-[#25D366] text-white shadow-sm">
                     <MessageCircle className="size-4 fill-current" />
                   </span>
@@ -655,6 +715,26 @@ function KeunggulanBannerSection() {
 }
 
 function BenefitsSection() {
+  const homepageCmsQuery = useQuery({
+    queryKey: ["homepage-cms", "benefits"],
+    queryFn: fetchHomepageCms,
+    staleTime: 0,
+    refetchOnMount: "always",
+  });
+  const cmsSections = homepageCmsQuery.data?.sections ?? [];
+  const cmsItems = homepageCmsQuery.data?.items ?? [];
+  const benefitsSection = cmsSections.find((section) => section.kind === "benefits");
+  const cmsBenefits = cmsItems
+    .filter((item) => item.section_id === benefitsSection?.id)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  const visibleBenefits = cmsBenefits.length
+    ? cmsBenefits.map((item, index) => ({
+        icon: resolveIcon(item.icon) ?? benefits[index]?.icon ?? Gift,
+        title: item.title?.trim() || benefits[index]?.title || "Keunggulan",
+        description: item.body?.trim() || benefits[index]?.description || "",
+      }))
+    : benefits;
+
   return (
     <section
       id="informasi"
@@ -663,7 +743,7 @@ function BenefitsSection() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
           <h2 className="font-display text-3xl font-extrabold leading-tight text-[#111c38] sm:text-4xl">
-            Kenapa Memilih Salute Arek Malang?
+            {benefitsSection?.title?.trim() || "Kenapa Memilih Salute Arek Malang?"}
           </h2>
 
           <div
@@ -673,7 +753,7 @@ function BenefitsSection() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {benefits.map((benefit) => {
+          {visibleBenefits.map((benefit) => {
             const Icon = benefit.icon;
 
             return (
