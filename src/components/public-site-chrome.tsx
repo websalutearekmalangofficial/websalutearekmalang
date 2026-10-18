@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, CircleUserRound, ClipboardPenLine, Globe, Home, LayoutDashboard, LogOut, Mail, MapPin, Menu, Phone, UserRound, X, Instagram } from "lucide-react";
+import { ChevronDown, ClipboardPenLine, Globe, Home, LayoutDashboard, LogOut, Mail, MapPin, Menu, Phone, UserRound, X, Instagram } from "lucide-react";
 import { SiteLogo } from "@/components/site-logo";
 import { defaultFooterContent, fetchPublicFooter } from "@/lib/footer";
 import { supabase } from "@/integrations/supabase/client";
@@ -92,7 +92,6 @@ export function PublicHeader() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link to="/auth" aria-label="Masuk" className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-hero-foreground/60 bg-transparent px-2.5 py-2 text-[0.65rem] font-bold text-hero-foreground sm:px-4 sm:text-xs md:text-sm"><CircleUserRound className="size-3.5 sm:size-4" /><span>Masuk</span></Link>
               <Link to="/daftar" aria-label="Daftar" className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-ut-yellow px-2.5 py-2 text-[0.65rem] font-black text-ut-navy shadow-yellow sm:px-4 sm:text-xs md:text-sm"><ClipboardPenLine className="size-3.5 sm:size-4" /><span>Daftar</span></Link>
             </div>
           )}
