@@ -263,7 +263,7 @@ function AddSectionDialog({
       className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="add-section-title"
+      aria-label="Tambah Section"
     >
       <div className="w-full max-w-lg rounded-2xl bg-card p-5 shadow-2xl sm:p-6">
         <div className="flex items-start justify-between gap-4">
@@ -643,7 +643,13 @@ function SectionEditor({
 }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(section);
-  useEffect(() => setForm(section), [section]);
+  const [processDetails, setProcessDetails] = useState(String(section.config?.details ?? ""));
+  const sectionKind = form.kind;
+
+  useEffect(() => {
+    setForm(section);
+    setProcessDetails(String(section.config?.details ?? ""));
+  }, [section]);
 
   const save = useMutation({
     mutationFn: async () => {
