@@ -2,7 +2,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Outlet, createFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  BarChart3,
   ChevronDown,
   ClipboardList,
   ExternalLink,
@@ -12,9 +11,7 @@ import {
   Settings,
   LogOut,
   Menu,
-  RefreshCw,
   ShieldCheck,
-  Users,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -34,9 +31,6 @@ const menu = [
   { to: "/admin/navigasi", label: "Menu Navigasi", icon: Menu, exact: false },
   { to: "/admin/media", label: "Media / Dokumen", icon: FileText, exact: false },
   { to: "/admin/pengaturan", label: "Pengaturan", icon: Settings, exact: false },
-  { to: "/admin/syncron", label: "Sinkronisasi", icon: RefreshCw, exact: false },
-  { to: "/admin/pendaftar", label: "Pengguna Admin", icon: Users, exact: false, disabled: true },
-  { to: "/admin/syncron", label: "Pelaporan", icon: BarChart3, exact: false, disabled: true },
 ] as const;
 
 function AdminLayout() {
