@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, ChevronRight, Instagram, Menu, Play, Sparkles, Trophy, Users, Video, X } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, ChevronRight, Instagram, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -33,7 +33,6 @@ type CmsSection = {
   items: CmsItem[];
 };
 
-const yellow = "#F8E51C";
 const galleryFallback = [
   { title: "Belajar Bersama", category: "Aktivitas Mahasiswa", image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=85" },
   { title: "Kolaborasi Kreatif", category: "Komunitas", image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=85" },
@@ -171,7 +170,7 @@ export function KemahasiswaanEditorial() {
         <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-3 sm:gap-4 lg:auto-rows-[210px] lg:grid-cols-4">
           {visibleGallery.map((item: any, i) => <article key={(item.id || item.title) + "-" + galleryIndex} className={`kem-gallery-card group relative overflow-hidden rounded-2xl bg-[#f8e51c] ${i === 0 ? "row-span-2 sm:col-span-2" : i === 3 ? "sm:row-span-2" : ""}`}><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="kem-card-image h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#101629]/85 via-[#101629]/5 to-transparent opacity-90 transition group-hover:opacity-100" /><div className="absolute inset-x-0 bottom-0 p-4 sm:p-5"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f8e51c]">{item.category || item.subtitle || "Cerita komunitas"}</p><h3 className="mt-1 text-base font-black text-white sm:text-lg">{item.title}</h3><span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-white/85">Lihat cerita <ArrowUpRight className="size-3" /></span></div></article>)}
         </div>
-        {galleryItems === galleryFallback as any ? null : <p className="mt-4 text-xs text-slate-500">Galeri ditampilkan dari konten yang tersedia di CMS.</p>}
+        {activitySection?.items?.length ? <p className="mt-4 text-xs text-slate-500">Galeri ditampilkan dari konten yang tersedia di CMS.</p> : <p className="mt-4 text-xs text-slate-500">Visual contoh sementara untuk pratinjau desain; ganti dengan foto kegiatan resmi melalui CMS sebelum dipublikasikan sebagai dokumentasi nyata.</p>}
       </section>
 
       <section className="overflow-hidden bg-[#17203b] py-12 text-white sm:py-16">
@@ -187,7 +186,7 @@ export function KemahasiswaanEditorial() {
       </section>
 
       <section className="bg-[#f8e51c] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
-        <div className="mx-auto grid max-w-7xl gap-7 rounded-[2rem] border border-[#17203b]/10 bg-white/55 p-6 backdrop-blur sm:p-9 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#776900]">Agenda & partisipasi</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">Mari bertumbuh bersama.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700 sm:text-base">Punya pertanyaan atau ingin tahu aktivitas berikutnya? Hubungi tim SALUT Arek Malang untuk mendapatkan informasi yang sesuai kebutuhan Anda.</p></div><div className="flex flex-col gap-3 sm:flex-row lg:flex-col"><a href="https://wa.me/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#17203b] px-6 py-3.5 text-sm font-black text-white transition hover:-translate-y-1 hover:shadow-lg">Konsultasi via WhatsApp <ArrowUpRight className="size-4" /></a><a href="/daftar" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#17203b] px-6 py-3.5 text-sm font-black text-[#17203b] transition hover:bg-white/70">Mulai Pendaftaran <ArrowRight className="size-4" /></a></div></div>
+        <div className="mx-auto grid max-w-7xl gap-7 rounded-[2rem] border border-[#17203b]/10 bg-white/55 p-6 backdrop-blur sm:p-9 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#776900]">Agenda & partisipasi</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">Mari bertumbuh bersama.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700 sm:text-base">Punya pertanyaan atau ingin tahu aktivitas berikutnya? Hubungi tim SALUT Arek Malang untuk mendapatkan informasi yang sesuai kebutuhan Anda.</p></div><div className="flex flex-col gap-3 sm:flex-row lg:flex-col"><a href="/#kontak" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#17203b] px-6 py-3.5 text-sm font-black text-white transition hover:-translate-y-1 hover:shadow-lg">Konsultasi via WhatsApp <ArrowUpRight className="size-4" /></a><a href="/daftar" className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#17203b] px-6 py-3.5 text-sm font-black text-[#17203b] transition hover:bg-white/70">Mulai Pendaftaran <ArrowRight className="size-4" /></a></div></div>
       </section>
       <PublicFooter />
     </main>
