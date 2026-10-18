@@ -83,7 +83,8 @@ export function KemahasiswaanEditorial() {
   }, [activitySection]);
   const newsItems = newsSection?.items ?? [];
   const videoItem = videoSection?.items.find((item) => item.video_url) || (videoSection?.video_url ? { title: videoSection.title || "Video profil SALUT Arek Malang", video_url: videoSection.video_url } as CmsItem : undefined);
-  const heroImage = imageOf(hero, "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=2000&q=90");
+  // Hero image is managed in CMS (sections.media_url); do not override it with a hard-coded stock image.
+  const heroImage = imageOf(hero);
   const visibleGallery = Array.from({ length: Math.min(5, galleryItems.length) }, (_, i) => galleryItems[(galleryIndex + i) % galleryItems.length]);
   const visibleNews = newsItems.length ? [newsItems[newsIndex % newsItems.length], ...newsItems.filter((_, i) => i !== newsIndex % newsItems.length).slice(0, 3)] : [];
 
@@ -110,7 +111,7 @@ export function KemahasiswaanEditorial() {
       <PublicHeader />
 
       <section className="relative isolate min-h-[590px] overflow-hidden bg-[#f8e51c] sm:min-h-[650px] lg:min-h-[690px]">
-        <img src={heroImage} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" />
+        {heroImage ? <img src={heroImage} alt="" className="absolute inset-0 -z-20 h-full w-full object-cover object-center" /> : null}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#f8e51c] via-[#f8e51c]/95 to-[#f8e51c]/35" />
         <div className="absolute -right-24 -top-28 -z-10 size-[28rem] rounded-full border-[70px] border-white/20 sm:size-[42rem]" />
         <div className="mx-auto grid min-h-[590px] max-w-7xl items-center gap-8 px-5 py-14 sm:min-h-[650px] sm:px-8 lg:min-h-[690px] lg:grid-cols-[1fr_.8fr] lg:px-12">
@@ -126,7 +127,7 @@ export function KemahasiswaanEditorial() {
           </div>
           <div className="relative hidden min-h-[420px] lg:block">
             <div className="absolute right-0 top-1/2 w-[88%] -translate-y-1/2 rotate-2 overflow-hidden rounded-[2.5rem] border-[10px] border-white/70 shadow-2xl">
-              <img src={heroImage} alt="Mahasiswa dan komunitas SALUT Arek Malang" className="h-[430px] w-full object-cover object-center" />
+              {heroImage ? <img src={heroImage} alt="Mahasiswa dan komunitas SALUT Arek Malang" className="h-[430px] w-full object-cover object-center" /> : <div className="grid h-[430px] place-items-center bg-[#fff7a8] p-6 text-center text-sm font-bold text-[#17203b]">Tambahkan gambar melalui Admin → Halaman → Kemahasiswaan → Hero Banner Kemahasiswaan.</div>}
             </div>
             <div className="kem-float absolute bottom-7 left-0 max-w-[220px] rounded-2xl border border-white/70 bg-white/90 p-4 shadow-xl backdrop-blur"><p className="text-xs font-bold uppercase tracking-widest text-slate-500">Ruang bertumbuh</p><p className="mt-1 text-lg font-black">Ide, aksi, cerita.</p><p className="mt-1 text-sm text-slate-600">Semua punya tempat untuk berkembang.</p></div>
           </div>
