@@ -11,7 +11,6 @@ type CmsItem = {
   subtitle?: string | null;
   body?: string | null;
   media_url?: string | null;
-  image_url?: string | null;
   video_url?: string | null;
   link_url?: string | null;
   link_label?: string | null;
@@ -27,7 +26,6 @@ type CmsSection = {
   subtitle?: string | null;
   body?: string | null;
   media_url?: string | null;
-  image_url?: string | null;
   link_url?: string | null;
   link_label?: string | null;
   items: CmsItem[];
@@ -49,7 +47,7 @@ const socialFallback = [
 ];
 
 function imageOf(item?: Partial<CmsItem | CmsSection> | null, fallback?: string) {
-  return item?.media_url || item?.image_url || fallback || "";
+  return item?.media_url || fallback || "";
 }
 function safeExternal(url?: string | null) {
   return !!url && /^https?:\/\//i.test(url);
@@ -58,15 +56,14 @@ function safeExternal(url?: string | null) {
 export function KemahasiswaanEditorial() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
-  const [mobileMenu, setMobileMenu] = useState(false);
   const [playingVideo, setPlayingVideo] = useState(false);
   const { data: sections = [], isLoading } = useQuery({
     queryKey: ["kemahasiswaan-editorial-sections"],
     queryFn: async () => {
-      const { data: page, error: pageError } = await supabase.from("pages").select("id").eq("slug", "kemahasiswaan").maybeSingle();
+      const { data: page, error: pageError } = await supabase.from("pages").select("id").eq("slug", "kemahasiswaan").eq("is_published", true).maybeSingle();
       if (pageError) throw pageError;
       if (!page) return [] as CmsSection[];
-      const { data, error } = await supabase.from("sections").select("*, items:section_items(*)").eq("page_id", page.id).order("sort_order", { ascending: true });
+      const { data, error } = await supabase.from("sections").select("*, items:section_items(*)").eq("page_id", page.id).eq("is_published", true).order("sort_order", { ascending: true });
       if (error) throw error;
       return (data ?? []).map((section: any) => ({
         ...section,
@@ -79,13 +76,13 @@ export function KemahasiswaanEditorial() {
   const intro = section("benefits");
   const activitySection = section("activities");
   const videoSection = section("leaderboard");
-  const newsSection = section("news") || section("announcements");
+  const newsSection = section("news") || section("announcements") || section("richtext");
   const galleryItems = useMemo(() => {
     const items = (activitySection?.items ?? []).map((item) => ({ ...item, image: imageOf(item) })).filter((item) => item.image);
     return items.length ? items : galleryFallback.map((item, i) => ({ ...item, id: "sample-" + i, sort_order: i, is_published: true }));
   }, [activitySection]);
   const newsItems = newsSection?.items ?? [];
-  const videoItem = videoSection?.items.find((item) => item.video_url);
+  const videoItem = videoSection?.items.find((item) => item.video_url) || (videoSection?.video_url ? { title: videoSection.title || "Video profil SALUT Arek Malang", video_url: videoSection.video_url } as CmsItem : undefined);
   const heroImage = imageOf(hero, "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=2000&q=90");
   const visibleGallery = Array.from({ length: Math.min(5, galleryItems.length) }, (_, i) => galleryItems[(galleryIndex + i) % galleryItems.length]);
   const visibleNews = newsItems.length ? [newsItems[newsIndex % newsItems.length], ...newsItems.filter((_, i) => i !== newsIndex % newsItems.length).slice(0, 3)] : [];
@@ -103,7 +100,6 @@ export function KemahasiswaanEditorial() {
       <style>{`
         @keyframes kem-fade-up { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: translateY(0) } }
         @keyframes kem-float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
-        @keyframes kem-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
         .kem-reveal { animation: kem-fade-up .7s cubic-bezier(.2,.75,.25,1) both; }
         .kem-float { animation: kem-float 5s ease-in-out infinite; }
         .kem-card-image { transition: transform .65s cubic-bezier(.2,.75,.25,1), filter .4s ease; }
