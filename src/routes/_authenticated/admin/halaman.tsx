@@ -195,9 +195,29 @@ function PagesAdmin() {
         <HeroBannerManager pageId={selectedPage.id} sectionId={heroSection?.id ?? null} />
       ) : null}
 
+      {selectedPage?.slug === "kemahasiswaan" ? (
+        <AdminCard
+          title="Hero Banner Kemahasiswaan"
+          description="Gambar, judul, subjudul, dan teks hero halaman Kemahasiswaan disimpan pada section hero di database. Upload atau pilih gambar, lalu simpan section untuk menerapkan perubahan ke halaman publik."
+        >
+          {heroSection ? (
+            <SectionEditor
+              key={heroSection.id}
+              section={heroSection}
+              index={0}
+              total={1}
+              siblings={[heroSection]}
+              onChanged={refreshSections}
+            />
+          ) : (
+            <p className="text-sm text-muted-foreground">Section hero belum tersedia. Muat ulang halaman setelah section dibuat.</p>
+          )}
+        </AdminCard>
+      ) : null}
+
       <AdminCard
         title="Section di Halaman Ini"
-        description="Kelola section konten halaman. Pengaturan Hero Banner Beranda dipisahkan di bagian khusus di atas."
+        description="Kelola section konten halaman. Pengaturan Hero Banner Beranda dan Hero Banner Kemahasiswaan dipisahkan di bagian khusus di atas."
       >
         <div className="space-y-3">
           {contentSections.map((section, index) => (
