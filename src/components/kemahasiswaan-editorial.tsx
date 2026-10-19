@@ -103,7 +103,7 @@ export function KemahasiswaanEditorial() {
   const intro = section("benefits");
   const activitySection = section("activities");
   const videoSection = section("leaderboard");
-  const galleryItems = useMemo(() => {
+  const allActivityImages = useMemo(() => {
     return [...(activitySection?.items ?? [])]
       .filter((item) => item.is_published && Boolean(item.media_url))
       .sort((a, b) => {
@@ -111,15 +111,17 @@ export function KemahasiswaanEditorial() {
         const bCreated = b.created_at ? new Date(b.created_at).getTime() : 0;
         return bCreated - aCreated || a.sort_order - b.sort_order;
       })
-      .slice(0, 4);
+      .map((item) => ({ ...item, image: item.media_url! }));
   }, [activitySection]);
+  // The featured "Terbaru" strip stays capped at four images; the main gallery shows every published CMS image.
+  const galleryItems = allActivityImages.slice(0, 4);
   const videoItem = videoSection?.items.find((item) => item.video_url) || (videoSection?.video_url ? { title: videoSection.title || "Video profil SALUT Arek Malang", video_url: videoSection.video_url } as CmsItem : undefined);
   // Hero image is managed in CMS (sections.media_url); do not override it with a hard-coded stock image.
   const heroImage = imageOf(hero);
   // The spotlight and gallery use the same latest four published CMS activity photos.
   const spotlightItems = galleryItems;
-  const visibleGallery = galleryItems.length
-    ? Array.from({ length: Math.min(4, galleryItems.length) }, (_, i) => galleryItems[(galleryIndex + i) % galleryItems.length])
+  const visibleGallery = allActivityImages.length
+    ? Array.from({ length: Math.min(4, allActivityImages.length) }, (_, i) => allActivityImages[(galleryIndex + i) % allActivityImages.length])
     : [];
 
   useEffect(() => {
@@ -206,11 +208,19 @@ export function KemahasiswaanEditorial() {
       </section>
 
       <section id="galeri" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <div className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#8b7c00]">{activitySection?.eyebrow || ""}</p><h2 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">{activitySection?.title || ""}<span className="text-[#d6c400]">.</span></h2><p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">{activitySection?.body || activitySection?.subtitle || ""}</p></div>{galleryItems.length > 1 ? <div className="flex gap-2"><button type="button" aria-label="Foto sebelumnya" onClick={() => setGalleryIndex((galleryIndex - 1 + galleryItems.length) % galleryItems.length)} className="grid size-11 place-items-center rounded-full border border-slate-300 bg-white transition hover:border-[#17203b] hover:bg-[#f8e51c]"><ArrowLeft className="size-4" /></button><button type="button" aria-label="Foto berikutnya" onClick={() => setGalleryIndex((galleryIndex + 1) % galleryItems.length)} className="grid size-11 place-items-center rounded-full bg-[#f8e51c] transition hover:-translate-y-0.5 hover:shadow-md"><ArrowRight className="size-4" /></button></div> : null}</div>
-        <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-3 sm:gap-4 lg:auto-rows-[210px] lg:grid-cols-4">
-          {visibleGallery.map((item: any, i) => <article key={(item.id || item.title) + "-" + galleryIndex} className={`kem-gallery-card group relative overflow-hidden rounded-2xl bg-[#f8e51c] ${i === 0 ? "row-span-2 sm:col-span-2" : i === 3 ? "sm:row-span-2" : ""}`}><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="kem-card-image h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#101629]/85 via-[#101629]/5 to-transparent opacity-90 transition group-hover:opacity-100" /><div className="absolute inset-x-0 bottom-0 p-4 sm:p-5"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f8e51c]">{item.category || item.subtitle || ""}</p><h3 className="mt-1 text-base font-black text-white sm:text-lg">{item.title}</h3></div></article>)}
+        <div className="mb-8">
+          <p className="text-xs font-black uppercase tracking-[.22em] text-[#8b7c00]">{activitySection?.eyebrow || ""}</p>
+          <h2 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">{activitySection?.title || ""}<span className="text-[#d6c400]">.</span></h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">{activitySection?.body || activitySection?.subtitle || ""}</p>
         </div>
-        {galleryItems.length === 0 && <p className="mt-4 text-sm text-slate-500">Belum ada foto aktivitas yang dipublikasikan. Tambahkan foto aktivitas melalui Admin → Halaman → Kemahasiswaan.</p>}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+          {allActivityImages.map((item: any) => (
+            <figure key={item.id} className="group aspect-square min-w-0 overflow-hidden rounded-2xl bg-[#f8e51c] shadow-sm">
+              <img src={item.media_url} alt={item.title || "Galeri aktivitas SALUT Arek Malang"} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </figure>
+          ))}
+        </div>
+        {allActivityImages.length === 0 && <p className="mt-4 text-sm text-slate-500">Belum ada foto aktivitas yang dipublikasikan. Tambahkan foto aktivitas melalui Admin → Halaman → Kemahasiswaan.</p>}
       </section>
 
       <section className="bg-[#f8e51c] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
