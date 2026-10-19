@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, Play, Sparkles, Trophy, Users } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -178,7 +178,6 @@ export function KemahasiswaanEditorial() {
             <p className="text-xs font-black uppercase tracking-[.2em] text-[#776900]">{videoSection?.eyebrow || ""}</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">{videoSection?.title || "Video Profil SALUT Arek Malang"}</h2>
             {videoSection?.subtitle || videoSection?.body ? <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:text-base">{videoSection?.subtitle || videoSection?.body}</p> : null}
-            <span className="mx-auto mt-4 inline-flex items-center rounded-full border border-[#17203b]/20 bg-white/60 px-4 py-2 text-xs font-bold"><Video className="mr-2 size-4" /> Video profil</span>
           </div>
           <div className="w-full max-w-5xl overflow-hidden rounded-2xl bg-[#17203b] shadow-xl ring-1 ring-[#17203b]/10 sm:rounded-3xl">
             {playingVideo && videoItem?.video_url ? (
