@@ -47,6 +47,45 @@ const diplomaPrograms: Item[] = [
   },
 ];
 
+function parseDiplomaSubsections(item: Item) {
+  const normalize = (value: string) => value
+    .replace(/\\\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r/g, "")
+    .trim();
+  const raw = normalize(item.body || "");
+  const parts: { title: string; content: string }[] = [];
+  const headingPattern = /(?:^|\n)\s*(Misi|Tujuan(?: Program Studi)?|Informasi Akademik)\s*:\s*/gi;
+  const matches = [...raw.matchAll(headingPattern)];
+  if (matches.length) {
+    const first = matches[0];
+    if (first.index !== undefined && first.index > 0) {
+      const preface = raw.slice(0, first.index).trim();
+      if (preface) parts.push({ title: "Informasi", content: preface });
+    }
+    matches.forEach((match, index) => {
+      const start = (match.index ?? 0) + match[0].length;
+      const end = index + 1 < matches.length ? (matches[index + 1].index ?? raw.length) : raw.length;
+      const title = match[1].toLowerCase().startsWith("tujuan") ? "Tujuan" : match[1];
+      const content = raw.slice(start, end).trim();
+      if (content) parts.push({ title, content });
+    });
+  } else if (raw) {
+    parts.push({ title: "Informasi Program", content: raw });
+  }
+  const vision = normalize(item.subtitle || "").replace(/^Visi\s*:\s*/i, "");
+  return [{ title: "Visi", content: vision }, ...parts].filter(part => part.content);
+}
+
+function renderDiplomaContent(content: string) {
+  const lines = content.split("\n").map(line => line.trim()).filter(Boolean);
+  const bullets = lines.filter(line => /^[•●▪*-]\s*/.test(line) || /^\d+[.)]\s*/.test(line));
+  if (bullets.length && bullets.length === lines.length) {
+    return <ul className="space-y-3">{bullets.map((line, index) => <li key={index} className="flex items-start gap-3"><span className="mt-[0.6rem] size-2 shrink-0 rounded-full bg-[#c6b400]" /><span>{line.replace(/^[•●▪*-]\s*/, "").replace(/^\d+[.)]\s*/, "")}</span></li>)}</ul>;
+  }
+  return <div className="space-y-3">{lines.map((line, index) => <p key={index}>{line.replace(/^[•●▪*-]\s*/, "").replace(/^\d+[.)]\s*/, "")}</p>)}</div>;
+}
+
 function iconFor(name: string | null) {
   const key = name?.toLowerCase();
   if (key === "graduation-cap") return GraduationCap;
@@ -96,10 +135,12 @@ export function ProgramLevelPage({ program, credential, slug }: Props) {
           <div className="grid items-start gap-6 lg:grid-cols-2">
             {factsItems.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[1.75rem] border border-[#eee6a1] bg-white shadow-[0_18px_55px_-35px_rgba(23,32,59,.5)]">
               <div className="bg-[#17203b] px-6 py-6 text-white sm:px-8"><p className="text-xs font-extrabold uppercase tracking-[.18em] text-[#f8e51c]">Program Diploma {index + 1}</p><h3 className="mt-2 text-2xl font-black sm:text-3xl">{item.title}</h3></div>
-              <div className="space-y-6 p-6 sm:p-8">
-                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Visi</h4><p className="mt-2 text-sm leading-7 text-slate-700">{(item.subtitle || "").replace(/^Visi:\s*/i, "")}</p></div>
-                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Misi dan Tujuan</h4><div className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">{(item.body || "").replace(/\\n/g, "\n")}</div></div>
-                {item.link_url ? <a href={item.link_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">{item.link_label || "Informasi Selengkapnya"} <ArrowRight className="size-4" /></a> : null}
+              <div className="grid grid-cols-1 gap-4 p-5 sm:p-7 sm:grid-cols-2 sm:gap-5">
+                {parseDiplomaSubsections(item).map((part, partIndex) => <section key={part.title} className={`min-w-0 rounded-2xl border border-[#eee7b0] bg-[#fffef8] p-5 shadow-sm sm:p-6 ${part.title === "Visi" ? "sm:col-span-2 bg-[#fffbea]" : ""}`}>
+                  <div className="mb-3 flex items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#f8e51c] text-sm font-black text-[#17203b]">{String(partIndex + 1).padStart(2, "0")}</span><h4 className="text-sm font-black uppercase tracking-wide text-[#17203b] sm:text-base">{part.title}</h4></div>
+                  <div className="break-words text-sm leading-7 text-slate-700 [&_ul]:list-none">{renderDiplomaContent(part.content)}</div>
+                </section>)}
+                {item.link_url ? <div className="sm:col-span-2"><a href={item.link_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">{item.link_label || "Informasi Selengkapnya"} <ArrowRight className="size-4" /></a></div> : null}
               </div>
             </article>)}
           </div>
