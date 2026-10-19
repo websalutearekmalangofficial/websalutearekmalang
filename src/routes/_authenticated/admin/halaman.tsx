@@ -664,11 +664,13 @@ function SectionEditor({
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(section);
   const [processDetails, setProcessDetails] = useState(String(section.config?.details ?? ""));
+  const [videoSourceType, setVideoSourceType] = useState(String(section.config?.video_source_type ?? "youtube"));
   const sectionKind = form.kind;
 
   useEffect(() => {
     setForm(section);
     setProcessDetails(String(section.config?.details ?? ""));
+    setVideoSourceType(String(section.config?.video_source_type ?? (section.video_url ? "youtube" : "upload")));
   }, [section]);
 
   const save = useMutation({
@@ -689,7 +691,9 @@ function SectionEditor({
           link_label: form.link_label?.trim() || null,
           config: sectionKind === "process"
             ? { ...(form.config ?? {}), details: processDetails.trim() }
-            : form.config as Record<string, string | number | boolean | null>,
+            : sectionKind === "leaderboard"
+              ? { ...(form.config ?? {}), video_source_type: videoSourceType }
+              : form.config as Record<string, string | number | boolean | null>,
           is_published: form.is_published,
         })
         .eq("id", section.id)
@@ -840,9 +844,31 @@ function SectionEditor({
             </div>
           ) : null}
 
+          {sectionKind === "leaderboard" ? (
+            <div className="space-y-4 rounded-xl border border-ut-sky/30 bg-section-blue p-4">
+              <div>
+                <h3 className="text-sm font-black text-ut-navy">Video Profil & Cerita Kami</h3>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">Pilih video dari Media yang sudah diunggah, atau tempel tautan YouTube, Instagram Reels, Facebook, TikTok, maupun URL video langsung. Data disimpan ke kolom video_url dan konfigurasi section di database.</p>
+              </div>
+              <Field label="Sumber video">
+                <select className={inputClass} value={videoSourceType} onChange={(e) => setVideoSourceType(e.target.value)}>
+                  <option value="upload">Video yang diunggah / Media Library</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="instagram">Instagram Reels / Postingan</option>
+                  <option value="social">Tautan media sosial lain</option>
+                </select>
+              </Field>
+              <MediaPicker label="Pilih video dari Media atau tempel URL video" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
+              <MediaPicker label="Gambar sampul / thumbnail video (opsional)" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
+              <p className="text-xs leading-5 text-muted-foreground">Untuk YouTube/Reels, tempel URL postingan asli. Untuk video yang diunggah, pilih berkas video di Media Library. Jika sumber sosial tidak mendukung embed, halaman publik tetap menyediakan tautan untuk membukanya.</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <MediaPicker label="Gambar" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
+              <MediaPicker label="Video (unggahan atau tautan YouTube)" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
+            </div>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
-            <MediaPicker label="Gambar" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
-            <MediaPicker label="Video (unggahan atau tautan YouTube)" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
             <MediaPicker label="Dokumen" kind="document" value={form.document_url} onChange={(url) => setForm({ ...form, document_url: url })} />
             <Field label="Tautan tombol">
               <input className={inputClass} value={form.link_url ?? ""} onChange={(e) => setForm({ ...form, link_url: e.target.value })} />
