@@ -840,6 +840,21 @@ function SectionEditor({
                 <Field label="Judul bagian Instagram">
                   <input className={inputClass} value={String(form.config?.social_title ?? "")} onChange={(e) => setConfig("social_title", e.target.value)} />
                 </Field>
+                <Field label="Username Instagram">
+                  <input className={inputClass} value={String(form.config?.social_username ?? "salutearekmalang_ut").replace(/^@/, "")} onChange={(e) => setConfig("social_username", e.target.value.replace(/^@/, "").replace(/[^a-zA-Z0-9._]/g, ""))} placeholder="salutearekmalang_ut" />
+                </Field>
+                <Field label="Jumlah postingan yang ditampilkan">
+                  <select className={inputClass} value={String(form.config?.social_post_limit ?? "5")} onChange={(e) => setConfig("social_post_limit", e.target.value)}>
+                    <option value="3">3 postingan</option>
+                    <option value="5">5 postingan</option>
+                    <option value="6">6 postingan</option>
+                    <option value="9">9 postingan</option>
+                  </select>
+                </Field>
+              </div>
+              <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-5 text-amber-950">
+                <p className="font-black">Status koneksi: Belum terhubung</p>
+                <p className="mt-1">Username dan jumlah postingan disimpan sebagai konfigurasi. Pengambilan postingan otomatis belum aktif sampai akun Instagram profesional dan akses API Meta disiapkan. Jangan memasukkan access token di kolom ini.</p>
               </div>
             </div>
           ) : null}
