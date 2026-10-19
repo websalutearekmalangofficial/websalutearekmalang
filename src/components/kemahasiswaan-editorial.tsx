@@ -40,13 +40,8 @@ const galleryFallback = [
   { title: "Diskusi dan Inspirasi", category: "Pengembangan Diri", image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=85" },
   { title: "Ruang Ide Baru", category: "Kreativitas", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=900&q=85" },
 ];
-const socialFallback = [
-  "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=520&q=80",
-  "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=520&q=80",
-  "https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=520&q=80",
-  "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=520&q=80",
-  "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=520&q=80",
-];
+// Real Instagram posts will be rendered here once an authorized Meta API connection is configured.
+
 
 function imageOf(item?: Partial<CmsItem | CmsSection> | null, fallback?: string) {
   return item?.media_url || fallback || "";
@@ -107,6 +102,9 @@ export function KemahasiswaanEditorial() {
   const hero = section("hero");
   const intro = section("benefits");
   const activitySection = section("activities");
+  const instagramUsername = String(activitySection?.config?.social_username ?? "salutearekmalang_ut").replace(/^@/, "").trim() || "salutearekmalang_ut";
+  const instagramProfileUrl = "https://www.instagram.com/" + encodeURIComponent(instagramUsername) + "/";
+  const instagramPostLimit = Math.min(9, Math.max(3, Number(activitySection?.config?.social_post_limit ?? 5) || 5));
   const videoSection = section("leaderboard");
   const newsSection = section("news") || section("announcements") || section("richtext");
   const galleryItems = useMemo(() => {
@@ -221,9 +219,24 @@ export function KemahasiswaanEditorial() {
       </section>
 
       <section className="overflow-hidden bg-[#17203b] py-12 text-white sm:py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12"><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#f8e51c]">{String(activitySection?.config?.social_eyebrow ?? "")}</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">{String(activitySection?.config?.social_title ?? "")}</h2><p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">Lihat potongan aktivitas, informasi, dan inspirasi dari komunitas.</p></div><a href="https://www.instagram.com/salutearekmalang_ut/" target="_blank" rel="noreferrer" className="inline-flex w-fit items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b] transition hover:-translate-y-1"><Instagram className="size-4" /> Follow Instagram <ArrowUpRight className="size-4" /></a></div>
-          <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">{socialFallback.map((image, i) => <a href="https://www.instagram.com/salutearekmalang_ut/" target="_blank" rel="noreferrer" key={image} className={`group relative overflow-hidden rounded-2xl bg-white/10 ${i === 4 ? "hidden md:block" : ""}`}><img src={image} alt="Contoh visual aktivitas komunitas" loading="lazy" className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-110 group-hover:opacity-80" /><span className="absolute inset-0 grid place-items-center bg-black/0 transition group-hover:bg-black/20"><Instagram className="size-7 scale-75 text-white opacity-0 transition group-hover:scale-100 group-hover:opacity-100" /></span></a>)}</div>
-          <p className="mt-3 text-xs text-slate-400">Gambar pada bagian ini adalah visual contoh sementara, bukan postingan yang diambil otomatis dari Instagram.</p>
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[.22em] text-[#f8e51c]">{String(activitySection?.config?.social_eyebrow ?? "Ikuti keseharian kami")}</p>
+              <h2 className="mt-2 text-3xl font-black sm:text-4xl">{String(activitySection?.config?.social_title ?? "Cerita yang terus bergerak.")}</h2>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">Lihat potongan aktivitas, informasi, dan inspirasi dari komunitas.</p>
+            </div>
+            <a href={instagramProfileUrl} target="_blank" rel="noreferrer" className="inline-flex w-fit items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b] transition hover:-translate-y-1">
+              <Instagram className="size-4" /> @{instagramUsername} <ArrowUpRight className="size-4" />
+            </a>
+          </div>
+          <div className="mt-7 rounded-3xl border border-white/15 bg-white/5 px-5 py-10 text-center sm:px-10">
+            <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f8e51c] text-[#17203b]"><Instagram className="size-7" /></div>
+            <p className="mt-4 text-lg font-black">Feed Instagram belum terhubung</p>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-300">Bagian ini disiapkan untuk menampilkan hingga {instagramPostLimit} postingan terbaru dari @{instagramUsername}. Postingan asli akan muncul setelah koneksi resmi Instagram/Meta dikonfigurasi.</p>
+            <a href={instagramProfileUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#f8e51c]/60 px-5 py-2.5 text-sm font-bold text-[#f8e51c] transition hover:bg-[#f8e51c] hover:text-[#17203b]">Lihat profil Instagram <ArrowUpRight className="size-4" /></a>
+            <p className="mt-4 text-xs text-slate-400">Status: belum terhubung. Tidak ada foto dummy yang ditampilkan sebagai postingan Instagram asli.</p>
+          </div>
         </div>
       </section>
 
