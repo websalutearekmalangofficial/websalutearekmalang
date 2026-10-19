@@ -673,7 +673,7 @@ function SectionEditor({
 
   const save = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("sections")
         .update({
           kind: form.kind,
@@ -692,8 +692,14 @@ function SectionEditor({
             : form.config as Record<string, string | number | boolean | null>,
           is_published: form.is_published,
         })
-        .eq("id", section.id);
+        .eq("id", section.id)
+        .select("id, page_id, kind, title, subtitle, body, media_url, is_published")
+        .maybeSingle();
+
       if (error) throw error;
+      if (!data) {
+        throw new Error("Perubahan tidak tersimpan: section tidak ditemukan atau akses database menolak pembaruan. Periksa izin/RLS Supabase.");
+      }
     },
     onSuccess: () => {
       toast.success("Section disimpan.");
