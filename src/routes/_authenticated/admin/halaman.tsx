@@ -956,7 +956,8 @@ function SectionEditor({
           </div>
 
           <div className="rounded-xl bg-section-blue p-3">
-            <h3 className="mb-3 text-sm font-black text-ut-navy">Isi di dalam section ({section.items.length})</h3>
+            <h3 className="mb-3 text-sm font-black text-ut-navy">{section.kind === "activities" ? "Daftar Kegiatan Mahasiswa" : "Isi di dalam section"} ({section.items.length})</h3>
+            {section.kind === "activities" ? <p className="mb-3 text-xs leading-5 text-muted-foreground">Kelola kartu kegiatan yang tampil di galeri frontend. Setiap kegiatan dapat memiliki judul, deskripsi, foto dari Media Library, video, tautan, urutan, dan status tayang. Jika foto belum dipilih, frontend memakai gambar placeholder sampai foto kegiatan diunggah.</p> : null}
             <div className="space-y-2">
               {section.items.map((item, itemIndex) => (
                 <ItemEditor
@@ -971,7 +972,7 @@ function SectionEditor({
               ))}
               <Button type="button" variant="formOutline" size="form" onClick={() => addItem.mutate()}>
                 <Plus className="size-4" aria-hidden="true" />
-                Tambah isi
+                {section.kind === "activities" ? "Tambah Kegiatan" : "Tambah isi"}
               </Button>
             </div>
           </div>
@@ -1020,6 +1021,7 @@ function GenericItemEditor({
   onChanged: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const isActivityItem = sectionKind === "activities";
   const [form, setForm] = useState(item);
   const [badgeText, setBadgeText] = useState((item.badges ?? []).join(", "));
   const [processDetails, setProcessDetails] = useState(String(item.config?.details ?? ""));
@@ -1108,10 +1110,10 @@ function GenericItemEditor({
       {open ? (
         <div className="space-y-4 border-t border-border p-3">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Judul">
+            <Field label={isActivityItem ? "Nama kegiatan" : "Judul"}>
               <input className={inputClass} value={form.title ?? ""} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             </Field>
-            <Field label="Subjudul / status">
+            <Field label={isActivityItem ? "Kategori / subjudul (opsional)" : "Subjudul / status"}>
               <input className={inputClass} value={form.subtitle ?? ""} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} />
             </Field>
             <Field label="Ikon">
@@ -1129,25 +1131,25 @@ function GenericItemEditor({
             </Field>
           </div>
 
-          <Field label="Isi teks">
+          <Field label={isActivityItem ? "Deskripsi kegiatan" : "Isi teks"}>
             <textarea className={textareaClass} value={form.body ?? ""} onChange={(e) => setForm({ ...form, body: e.target.value })} />
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <MediaPicker label="Gambar" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
-            <MediaPicker label="Video" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
+            <MediaPicker label={isActivityItem ? "Foto kegiatan (Media Library)" : "Gambar"} value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
+            <MediaPicker label={isActivityItem ? "Video kegiatan (opsional)" : "Video"} kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
             <MediaPicker label="Dokumen" kind="document" value={form.document_url} onChange={(url) => setForm({ ...form, document_url: url })} />
-            <Field label="Tautan">
+            <Field label={isActivityItem ? "Tautan kegiatan / postingan (opsional)" : "Tautan"}>
               <input className={inputClass} value={form.link_url ?? ""} onChange={(e) => setForm({ ...form, link_url: e.target.value })} />
             </Field>
           </div>
 
-          <Toggle label="Tayang" checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
+          <Toggle label={isActivityItem ? "Tampilkan kegiatan di frontend" : "Tayang"} checked={form.is_published} onChange={(v) => setForm({ ...form, is_published: v })} />
 
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="utYellow" size="form" onClick={() => save.mutate()} disabled={save.isPending}>
               <Save className="size-4" aria-hidden="true" />
-              Simpan isi
+              {isActivityItem ? "Simpan Kegiatan" : "Simpan isi"}
             </Button>
             <Button
               type="button"
