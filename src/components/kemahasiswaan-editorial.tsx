@@ -207,7 +207,7 @@ export function KemahasiswaanEditorial() {
         <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-3 sm:gap-4 lg:auto-rows-[210px] lg:grid-cols-4">
           {visibleGallery.map((item: any, i) => <article key={(item.id || item.title) + "-" + galleryIndex} className={`kem-gallery-card group relative overflow-hidden rounded-2xl bg-[#f8e51c] ${i === 0 ? "row-span-2 sm:col-span-2" : i === 3 ? "sm:row-span-2" : ""}`}><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="kem-card-image h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#101629]/85 via-[#101629]/5 to-transparent opacity-90 transition group-hover:opacity-100" /><div className="absolute inset-x-0 bottom-0 p-4 sm:p-5"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f8e51c]">{item.category || item.subtitle || ""}</p><h3 className="mt-1 text-base font-black text-white sm:text-lg">{item.title}</h3></div></article>)}
         </div>
-        {activitySection?.items?.length ? <p className="mt-4 text-xs text-slate-500">Galeri ditampilkan dari konten yang tersedia di CMS.</p> : <p className="mt-4 text-xs text-slate-500">Visual contoh sementara untuk pratinjau desain; ganti dengan foto kegiatan resmi melalui CMS sebelum dipublikasikan sebagai dokumentasi nyata.</p>}
+        {!activitySection?.items?.length && <p className="mt-4 text-xs text-slate-500">Visual contoh sementara untuk pratinjau desain; ganti dengan foto kegiatan resmi melalui CMS sebelum dipublikasikan sebagai dokumentasi nyata.</p>}
       </section>
 
       <section className="bg-[#f8e51c] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
