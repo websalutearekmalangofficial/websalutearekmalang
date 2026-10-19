@@ -99,8 +99,8 @@ export function ProgramLevelPage({ program, credential, slug }: Props) {
             {factsItems.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[1.75rem] border border-[#eee6a1] bg-white shadow-[0_18px_55px_-35px_rgba(23,32,59,.5)]">
               <div className="bg-[#17203b] px-6 py-6 text-white sm:px-8"><p className="text-xs font-extrabold uppercase tracking-[.18em] text-[#f8e51c]">Program Diploma {index + 1}</p><h3 className="mt-2 text-2xl font-black sm:text-3xl">{item.title}</h3></div>
               <div className="space-y-6 p-6 sm:p-8">
-                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Visi</h4><p className="mt-2 text-sm leading-7 text-slate-700">{(item.subtitle || "").replace(/^Visi:\\s*/i, "")}</p></div>
-                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Misi dan Tujuan</h4><div className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">{item.body}</div></div>
+                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Visi</h4><p className="mt-2 text-sm leading-7 text-slate-700">{(item.subtitle || "").replace(/^Visi:\s*/i, "")}</p></div>
+                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Misi dan Tujuan</h4><div className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">{(item.body || "").replace(/\\n/g, "\n")}</div></div>
                 {item.link_url ? <a href={item.link_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">{item.link_label || "Informasi Selengkapnya"} <ArrowRight className="size-4" /></a> : null}
               </div>
             </article>)}
