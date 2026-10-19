@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, ChevronRight, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -82,7 +82,6 @@ function isDirectVideoUrl(url?: string | null) {
 
 export function KemahasiswaanEditorial() {
   const [galleryIndex, setGalleryIndex] = useState(0);
-  const [newsIndex, setNewsIndex] = useState(0);
   const [playingVideo, setPlayingVideo] = useState(true);
   const { data: sections = [], isLoading } = useQuery({
     queryKey: ["kemahasiswaan-editorial-sections"],
@@ -103,7 +102,6 @@ export function KemahasiswaanEditorial() {
   const intro = section("benefits");
   const activitySection = section("activities");
   const videoSection = section("leaderboard");
-  const newsSection = section("news") || section("announcements") || section("richtext");
   const galleryItems = useMemo(() => {
     const items = (activitySection?.items ?? []).map((item, i) => ({
       ...item,
@@ -113,7 +111,6 @@ export function KemahasiswaanEditorial() {
     }));
     return items.length ? items : galleryFallback.map((item, i) => ({ ...item, id: "sample-" + i, sort_order: i, is_published: true }));
   }, [activitySection]);
-  const newsItems = newsSection?.items ?? [];
   const videoItem = videoSection?.items.find((item) => item.video_url) || (videoSection?.video_url ? { title: videoSection.title || "Video profil SALUT Arek Malang", video_url: videoSection.video_url } as CmsItem : undefined);
   // Hero image is managed in CMS (sections.media_url); do not override it with a hard-coded stock image.
   const heroImage = imageOf(hero);
@@ -121,7 +118,6 @@ export function KemahasiswaanEditorial() {
   // Only the card image may use a visual placeholder until a real activity photo is uploaded.
   const spotlightItems = (activitySection?.items ?? []).map((item, i) => ({ ...item, image: imageOf(item, galleryFallback[i % galleryFallback.length]?.image) }));
   const visibleGallery = Array.from({ length: Math.min(5, galleryItems.length) }, (_, i) => galleryItems[(galleryIndex + i) % galleryItems.length]);
-  const visibleNews = newsItems.length ? [newsItems[newsIndex % newsItems.length], ...newsItems.filter((_, i) => i !== newsIndex % newsItems.length).slice(0, 3)] : [];
 
   useEffect(() => {
     if (galleryItems.length < 2) return;
@@ -156,7 +152,6 @@ export function KemahasiswaanEditorial() {
             <p className="mt-6 max-w-lg text-base font-semibold leading-relaxed text-[#30364a] sm:text-lg">{hero?.body || ""}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#galeri" className="inline-flex items-center gap-2 rounded-full bg-[#17203b] px-5 py-3 text-sm font-extrabold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#26365f]">Jelajahi Galeri <ArrowDownRight className="size-4" /></a>
-              <a href="#kabar" className="inline-flex items-center gap-2 rounded-full border-2 border-[#17203b] px-5 py-3 text-sm font-extrabold text-[#17203b] transition hover:-translate-y-1 hover:bg-white/60">Baca Berita Terbaru <ArrowUpRight className="size-4" /></a>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-xs font-bold text-[#30364a] sm:text-sm"><span className="flex items-center gap-2"><Users className="size-4" /> Belajar bersama</span><span className="flex items-center gap-2"><Trophy className="size-4" /> Tumbuh dan berprestasi</span><span className="flex items-center gap-2"><Sparkles className="size-4" /> Berbagi inspirasi</span></div>
           </div>
@@ -213,11 +208,6 @@ export function KemahasiswaanEditorial() {
           {visibleGallery.map((item: any, i) => <article key={(item.id || item.title) + "-" + galleryIndex} className={`kem-gallery-card group relative overflow-hidden rounded-2xl bg-[#f8e51c] ${i === 0 ? "row-span-2 sm:col-span-2" : i === 3 ? "sm:row-span-2" : ""}`}><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="kem-card-image h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#101629]/85 via-[#101629]/5 to-transparent opacity-90 transition group-hover:opacity-100" /><div className="absolute inset-x-0 bottom-0 p-4 sm:p-5"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f8e51c]">{item.category || item.subtitle || "Cerita komunitas"}</p><h3 className="mt-1 text-base font-black text-white sm:text-lg">{item.title}</h3><span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-white/85">Lihat cerita <ArrowUpRight className="size-3" /></span></div></article>)}
         </div>
         {activitySection?.items?.length ? <p className="mt-4 text-xs text-slate-500">Galeri ditampilkan dari konten yang tersedia di CMS.</p> : <p className="mt-4 text-xs text-slate-500">Visual contoh sementara untuk pratinjau desain; ganti dengan foto kegiatan resmi melalui CMS sebelum dipublikasikan sebagai dokumentasi nyata.</p>}
-      </section>
-
-      <section id="kabar" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <div className="mb-8 flex items-end justify-between gap-4"><div><p className="text-xs font-black uppercase tracking-[.22em] text-[#8b7c00]">{newsSection?.eyebrow || "Informasi & inspirasi"}</p><h2 className="mt-2 text-4xl font-black sm:text-5xl">{newsSection?.title || ""}<span className="text-[#d6c400]">.</span></h2></div>{newsItems.length > 1 && <div className="flex gap-2"><button type="button" aria-label="Berita sebelumnya" onClick={() => setNewsIndex((newsIndex - 1 + newsItems.length) % newsItems.length)} className="grid size-10 place-items-center rounded-full border border-slate-300 hover:bg-[#fff7a8]"><ArrowLeft className="size-4" /></button><button type="button" aria-label="Berita berikutnya" onClick={() => setNewsIndex((newsIndex + 1) % newsItems.length)} className="grid size-10 place-items-center rounded-full bg-[#f8e51c]"><ArrowRight className="size-4" /></button></div>}</div>
-        {visibleNews.length ? <div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]"><a href={visibleNews[0].link_url || "#kabar"} className="group relative min-h-[340px] overflow-hidden rounded-[1.75rem] bg-[#17203b] sm:min-h-[420px]"><img src={imageOf(visibleNews[0], "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=85")} alt={visibleNews[0].title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#111629] via-[#111629]/20 to-transparent" /><div className="absolute inset-x-0 bottom-0 p-6 sm:p-8"><span className="inline-flex rounded-full bg-[#f8e51c] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#17203b]">Sorotan</span><h3 className="mt-3 max-w-2xl text-2xl font-black leading-tight text-white sm:text-3xl">{visibleNews[0].title}</h3><p className="mt-3 line-clamp-2 max-w-xl text-sm leading-6 text-white/80">{visibleNews[0].body}</p><span className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#f8e51c]">Baca selengkapnya <ArrowUpRight className="size-4" /></span></div></a><div className="grid gap-3">{visibleNews.slice(1).map((item) => <a key={item.id} href={item.link_url || "#kabar"} className="group grid grid-cols-[110px_1fr] gap-4 rounded-2xl border border-[#eee7a0] bg-white p-3 transition hover:-translate-y-0.5 hover:shadow-lg sm:grid-cols-[140px_1fr]"><img src={imageOf(item, "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=600&q=80")} alt={item.title} loading="lazy" className="h-full min-h-[112px] w-full rounded-xl object-cover" /><div className="flex flex-col justify-center py-1"><p className="text-[10px] font-black uppercase tracking-widest text-[#8b7c00]">Kabar komunitas</p><h3 className="mt-1 line-clamp-2 text-sm font-black leading-snug sm:text-base">{item.title}</h3><p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-500">{item.body}</p><span className="mt-2 inline-flex items-center gap-1 text-xs font-extrabold">Baca <ChevronRight className="size-3" /></span></div></a>)}</div></div> : <div className="rounded-3xl border-2 border-dashed border-[#e8dc54] bg-[#fffbe0] p-8 text-center sm:p-12"><CalendarDays className="mx-auto size-8 text-[#8b7c00]" /><h3 className="mt-3 text-xl font-black">Cerita berikutnya segera hadir</h3><p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-600">Belum ada artikel yang diterbitkan melalui CMS untuk bagian ini. Kelola konten terlebih dahulu melalui Admin agar berita tampil di halaman publik.</p><Link to="/admin/halaman" className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#17203b] px-5 py-3 text-sm font-extrabold text-white">Kelola konten <ArrowUpRight className="size-4" /></Link></div>}
       </section>
 
       <section className="bg-[#f8e51c] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
