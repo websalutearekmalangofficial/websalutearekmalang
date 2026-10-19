@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle2, Mail, MapPin, MessageCircle, Target, Eye } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowRight, CheckCircle2, Mail, MapPin, MessageCircle, Target, Eye, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,6 +20,40 @@ export const Route = createFileRoute("/profile")({
 });
 
 function ProfilePage() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(0.5);
+
+  const togglePlayback = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      try { await video.play(); setIsPlaying(true); }
+      catch { setIsPlaying(false); }
+    } else { video.pause(); setIsPlaying(false); }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const nextMuted = !isMuted;
+    video.muted = nextMuted;
+    setIsMuted(nextMuted);
+  };
+
+  const changeVolume = (nextVolume: number) => {
+    const video = videoRef.current;
+    const safeVolume = Math.min(1, Math.max(0, nextVolume));
+    setVolume(safeVolume);
+    if (video) {
+      video.volume = safeVolume;
+      const nextMuted = safeVolume === 0;
+      video.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
   const query = useQuery({
     queryKey: ["profile-sections"],
     queryFn: async () => {
@@ -80,6 +115,9 @@ function ProfilePage() {
         className="relative isolate h-[38vh] min-h-[260px] max-h-[720px] w-full overflow-hidden bg-[#08266f] sm:h-[52vh] sm:min-h-[360px] lg:h-[68vh] lg:min-h-[480px]"
       >
         <video
+          ref={videoRef}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
           className="absolute inset-0 h-full w-full object-cover"
           src="https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/sign/cms-media/1792399409261-Video-Profil.mp4?token=eyJraWQiOiI4MTNjMTY3Ny04ZTVmLTRiZmYtOTAyNS1lMTIxY2U2ZDZlNTAiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjbXMtbWVkaWEvMTc5MjM5OTQwOTI2MS1WaWRlby1Qcm9maWwubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5MjM5OTU1MywiZXhwIjoxOTUwMDc5NTUzfQ.AONOT88srWjt50Q34tq7xkT0mU2-WEg91JS4rBvMqusjfFZm_Ozqjd3BYZMt5v9Ry7NbtTScelplgxKgij2EPQ"
           autoPlay
@@ -90,6 +128,22 @@ function ProfilePage() {
           controls={false}
           aria-label="Video Profil SALUT Arek Malang"
         />
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-4 pb-4 pt-12 sm:px-6 sm:pb-6">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 rounded-2xl border border-white/20 bg-black/45 p-3 text-white shadow-lg backdrop-blur-md sm:gap-4 sm:px-4">
+            <button type="button" onClick={togglePlayback} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-ut-yellow text-ut-navy transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={isPlaying ? "Jeda video" : "Putar video"} title={isPlaying ? "Jeda video" : "Putar video"}>
+              {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
+            </button>
+            <button type="button" onClick={toggleMute} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-white transition hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ut-yellow" aria-label={isMuted ? "Aktifkan suara" : "Matikan suara"} title={isMuted ? "Aktifkan suara" : "Matikan suara"}>
+              {isMuted || volume === 0 ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+            </button>
+            <label className="flex min-w-[150px] flex-1 items-center gap-3 text-xs font-semibold sm:max-w-sm">
+              <span className="whitespace-nowrap">Volume</span>
+              <input type="range" min="0" max="1" step="0.05" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="h-2 min-w-0 flex-1 cursor-pointer accent-[#facc15]" aria-label="Atur volume video" aria-valuetext={Math.round(volume * 100) + " persen"} />
+              <span className="w-9 text-right tabular-nums">{Math.round(volume * 100)}%</span>
+            </label>
+            <span className="ml-auto hidden text-xs font-semibold text-white/80 sm:inline">Video Profil SALUT Arek Malang</span>
+          </div>
+        </div>
       </section>
 
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
