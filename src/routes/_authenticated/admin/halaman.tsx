@@ -812,6 +812,34 @@ function SectionEditor({
             </Field>
           ) : null}
 
+          {sectionKind === "benefits" ? (
+            <div className="rounded-xl border border-ut-sky/30 bg-section-blue p-4">
+              <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Sorotan</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Label kecil sorotan">
+                  <input className={inputClass} value={String(form.config?.spotlight_eyebrow ?? "Sorotan")} onChange={(e) => setConfig("spotlight_eyebrow", e.target.value)} />
+                </Field>
+                <Field label="Judul sorotan">
+                  <input className={inputClass} value={String(form.config?.spotlight_title ?? "Aktivitas SALUT Arek Malang")} onChange={(e) => setConfig("spotlight_title", e.target.value)} />
+                </Field>
+              </div>
+            </div>
+          ) : null}
+
+          {sectionKind === "activities" ? (
+            <div className="rounded-xl border border-ut-sky/30 bg-section-blue p-4">
+              <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Bagian Instagram</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Label kecil Instagram">
+                  <input className={inputClass} value={String(form.config?.social_eyebrow ?? "Ikuti keseharian kami")} onChange={(e) => setConfig("social_eyebrow", e.target.value)} />
+                </Field>
+                <Field label="Judul bagian Instagram">
+                  <input className={inputClass} value={String(form.config?.social_title ?? "Cerita yang terus bergerak.")} onChange={(e) => setConfig("social_title", e.target.value)} />
+                </Field>
+              </div>
+            </div>
+          ) : null}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <MediaPicker label="Gambar" value={form.media_url} onChange={(url) => setForm({ ...form, media_url: url })} />
             <MediaPicker label="Video (unggahan atau tautan YouTube)" kind="video" value={form.video_url} onChange={(url) => setForm({ ...form, video_url: url })} />
