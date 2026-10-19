@@ -135,8 +135,8 @@ export function ProgramLevelPage({ program, credential, slug }: Props) {
           <div className="grid items-start gap-6 lg:grid-cols-2">
             {factsItems.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[1.75rem] border border-[#eee6a1] bg-white shadow-[0_18px_55px_-35px_rgba(23,32,59,.5)]">
               <div className="bg-[#17203b] px-6 py-6 text-white sm:px-8"><p className="text-xs font-extrabold uppercase tracking-[.18em] text-[#f8e51c]">Program Diploma {index + 1}</p><h3 className="mt-2 text-2xl font-black sm:text-3xl">{item.title}</h3></div>
-              <div className="grid grid-cols-1 gap-4 p-5 sm:p-7 sm:grid-cols-2 sm:gap-5">
-                {parseDiplomaSubsections(item).map((part, partIndex) => <section key={part.title} className={`min-w-0 rounded-2xl border border-[#eee7b0] bg-[#fffef8] p-5 shadow-sm sm:p-6 ${part.title === "Visi" ? "sm:col-span-2 bg-[#fffbea]" : ""}`}>
+              <div className="grid grid-cols-1 gap-4 p-5 sm:p-7 sm:gap-5">
+                {parseDiplomaSubsections(item).map((part, partIndex) => <section key={part.title} className={`min-w-0 rounded-2xl border border-[#eee7b0] bg-[#fffef8] p-5 shadow-sm sm:p-6 ${part.title === "Visi" ? "bg-[#fffbea]" : ""}`}>
                   <div className="mb-3 flex items-center gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#f8e51c] text-sm font-black text-[#17203b]">{String(partIndex + 1).padStart(2, "0")}</span><h4 className="text-sm font-black uppercase tracking-wide text-[#17203b] sm:text-base">{part.title}</h4></div>
                   <div className="break-words text-sm leading-7 text-slate-700 [&_ul]:list-none">{renderDiplomaContent(part.content)}</div>
                 </section>)}
