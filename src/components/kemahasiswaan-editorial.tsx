@@ -116,7 +116,7 @@ export function KemahasiswaanEditorial() {
         <div className="absolute -right-24 -top-28 -z-10 size-[28rem] rounded-full border-[70px] border-white/20 sm:size-[42rem]" />
         <div className="mx-auto grid min-h-[590px] max-w-7xl items-center gap-8 px-5 py-14 sm:min-h-[650px] sm:px-8 lg:min-h-[690px] lg:grid-cols-[1fr_.8fr] lg:px-12">
           <div className="kem-reveal relative z-10 max-w-3xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#17203b]/20 bg-white/55 px-4 py-2 text-xs font-extrabold uppercase tracking-[.16em] backdrop-blur"><Sparkles className="size-4" /> Cerita Arek Malang</div>
+            
             <h1 className="max-w-3xl text-4xl font-black leading-[.99] tracking-[-.045em] text-[#17203b] sm:text-6xl lg:text-7xl">{hero?.title || "Kamu Bisa Jadi Apa Setelah Daftar Member"} <span className="mt-2 block text-[#17203b] [text-shadow:2px_2px_0_#fff,3px_3px_0_#17203b]">{hero?.subtitle || "SALUT Arek Malang?"}</span></h1>
             <p className="mt-6 max-w-lg text-base font-semibold leading-relaxed text-[#30364a] sm:text-lg">{hero?.body || "Intip galeri aktivitas, kreativitas, dan cerita komunitas kami yang terus tumbuh bersama."}</p>
             <div className="mt-8 flex flex-wrap gap-3">
