@@ -24,6 +24,7 @@ function ProfilePage() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [volume, setVolume] = useState(0.5);
+  const [controlsVisible, setControlsVisible] = useState(true);
 
   const togglePlayback = async () => {
     const video = videoRef.current;
@@ -113,6 +114,10 @@ function ProfilePage() {
       <section
         aria-label="Video Profil SALUT Arek Malang"
         className="relative isolate aspect-video max-h-[80vh] w-full overflow-hidden bg-[#08266f]"
+        onMouseEnter={() => setControlsVisible(true)}
+        onMouseMove={() => setControlsVisible(true)}
+        onMouseLeave={() => setControlsVisible(false)}
+        onTouchStart={() => setControlsVisible(true)}
       >
         <video
           ref={videoRef}
@@ -128,7 +133,7 @@ function ProfilePage() {
           controls={false}
           aria-label="Video Profil SALUT Arek Malang"
         />
-        <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-4 pb-4 pt-12 sm:px-6 sm:pb-6">
+        <div className={`absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-4 pb-4 pt-12 transition-opacity duration-300 sm:px-6 sm:pb-6 ${controlsVisible ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`} aria-hidden={!controlsVisible}>
           <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 rounded-2xl border border-white/20 bg-black/45 p-3 text-white shadow-lg backdrop-blur-md sm:gap-4 sm:px-4">
             <button type="button" onClick={togglePlayback} className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-ut-yellow text-ut-navy transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={isPlaying ? "Jeda video" : "Putar video"} title={isPlaying ? "Jeda video" : "Putar video"}>
               {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
