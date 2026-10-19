@@ -122,9 +122,9 @@ export function KemahasiswaanEditorial() {
   const videoItem = videoSection?.items.find((item) => item.video_url) || (videoSection?.video_url ? { title: videoSection.title || "Video profil SALUT Arek Malang", video_url: videoSection.video_url } as CmsItem : undefined);
   // Hero image is managed in CMS (sections.media_url); do not override it with a hard-coded stock image.
   const heroImage = imageOf(hero);
-  // The Sorotan card must render its own CMS section_items (benefits), not borrow items from Kegiatan Member.
-  // Existing FE gallery imagery is used only as a visual placeholder when an item has no uploaded media.
-  const spotlightItems = (intro?.items ?? []).map((item, i) => ({ ...item, image: imageOf(item, galleryFallback[i % galleryFallback.length]?.image) }));
+  // Every activity card on this page is driven by the same activities CMS list, so the admin list and frontend cards stay in sync.
+  // Only the card image may use a visual placeholder until a real activity photo is uploaded.
+  const spotlightItems = (activitySection?.items ?? []).map((item, i) => ({ ...item, image: imageOf(item, galleryFallback[i % galleryFallback.length]?.image) }));
   const visibleGallery = Array.from({ length: Math.min(5, galleryItems.length) }, (_, i) => galleryItems[(galleryIndex + i) % galleryItems.length]);
   const visibleNews = newsItems.length ? [newsItems[newsIndex % newsItems.length], ...newsItems.filter((_, i) => i !== newsIndex % newsItems.length).slice(0, 3)] : [];
 
