@@ -26,6 +26,7 @@ type CmsSection = {
   subtitle?: string | null;
   body?: string | null;
   media_url?: string | null;
+  video_url?: string | null;
   link_url?: string | null;
   link_label?: string | null;
   config?: Record<string, unknown> | null;
@@ -87,7 +88,7 @@ function isDirectVideoUrl(url?: string | null) {
 export function KemahasiswaanEditorial() {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [newsIndex, setNewsIndex] = useState(0);
-  const [playingVideo, setPlayingVideo] = useState(false);
+  const [playingVideo, setPlayingVideo] = useState(true);
   const { data: sections = [], isLoading } = useQuery({
     queryKey: ["kemahasiswaan-editorial-sections"],
     queryFn: async () => {
