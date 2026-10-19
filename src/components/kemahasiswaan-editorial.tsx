@@ -192,7 +192,6 @@ export function KemahasiswaanEditorial() {
               )
             ) : <button type="button" onClick={() => videoItem?.video_url ? setPlayingVideo(true) : document.getElementById("galeri")?.scrollIntoView({ behavior: "smooth" })} className="group relative block w-full text-left"><img src={imageOf(videoSection, "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=85")} alt={videoItem?.title || "Video profil SALUT Arek Malang"} className="aspect-video w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.02]" /><span className="absolute inset-0 grid place-items-center"><span className="grid size-16 place-items-center rounded-full bg-[#f8e51c] text-[#17203b] shadow-xl transition group-hover:scale-110"><Play className="ml-1 size-7 fill-current" /></span></span><span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent p-5 pt-14 text-lg font-black text-white">{videoItem?.title || videoSection?.title || "Cerita dan perjalanan komunitas"}</span></button>}
           </div>
-          {videoItem?.title && <p className="mt-4 max-w-3xl text-center text-sm font-semibold text-[#30364a]">{videoItem.title}</p>}
         </div>
       </section>
 
