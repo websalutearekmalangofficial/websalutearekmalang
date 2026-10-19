@@ -112,13 +112,13 @@ function ProfilePage() {
 
       <section
         aria-label="Video Profil SALUT Arek Malang"
-        className="relative isolate h-[38vh] min-h-[260px] max-h-[720px] w-full overflow-hidden bg-[#08266f] sm:h-[52vh] sm:min-h-[360px] lg:h-[68vh] lg:min-h-[480px]"
+        className="relative isolate aspect-video max-h-[80vh] w-full overflow-hidden bg-black"
       >
         <video
           ref={videoRef}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain"
           src="https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/sign/cms-media/1792399409261-Video-Profil.mp4?token=eyJraWQiOiI4MTNjMTY3Ny04ZTVmLTRiZmYtOTAyNS1lMTIxY2U2ZDZlNTAiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjbXMtbWVkaWEvMTc5MjM5OTQwOTI2MS1WaWRlby1Qcm9maWwubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5MjM5OTU1MywiZXhwIjoxOTUwMDc5NTUzfQ.AONOT88srWjt50Q34tq7xkT0mU2-WEg91JS4rBvMqusjfFZm_Ozqjd3BYZMt5v9Ry7NbtTScelplgxKgij2EPQ"
           autoPlay
           muted
