@@ -92,7 +92,7 @@ function ProfilePage() {
         />
       </section>
 
-      <div className="mx-auto max-w-7xl px-5 py-14      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
         {about && (
           <section className="mb-16 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
