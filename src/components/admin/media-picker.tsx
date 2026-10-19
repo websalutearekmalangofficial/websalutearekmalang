@@ -38,6 +38,7 @@ export function MediaPicker({
     };
   }, [queryClient, pickerId]);
   const Icon = kindIcon[kind];
+  const matchingMedia = media.filter((item) => item.media_kind === kind);
 
   return (
     <div className="space-y-2">
@@ -68,11 +69,11 @@ export function MediaPicker({
         <div className="max-h-64 overflow-y-auto rounded-xl border border-border bg-background p-2">
           {isFetching && media.length === 0 ? (
             <p className="p-3 text-sm text-muted-foreground">Memuat Media...</p>
-          ) : media.length === 0 ? (
-            <p className="p-3 text-sm text-muted-foreground">Belum ada berkas. Unggah dulu di menu Media atau gunakan Upload Langsung jika tersedia.</p>
+          ) : matchingMedia.length === 0 ? (
+            <p className="p-3 text-sm text-muted-foreground">Belum ada {kind === "video" ? "video" : kind === "image" ? "gambar" : "dokumen"} di Media Library. Unggah berkas dengan jenis yang sesuai melalui menu Media, atau tempel tautan di kolom.</p>
           ) : (
             <ul className="grid gap-2 sm:grid-cols-2">
-              {media.map((item) => (
+              {matchingMedia.map((item) => (
                 <li key={item.id}>
                   <button
                     type="button"
