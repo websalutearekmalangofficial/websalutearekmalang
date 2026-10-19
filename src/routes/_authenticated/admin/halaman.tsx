@@ -677,16 +677,16 @@ function SectionEditor({
         .from("sections")
         .update({
           kind: form.kind,
-          eyebrow: form.eyebrow,
-          title: form.title,
-          subtitle: form.subtitle,
-          body: form.body,
-          media_url: form.media_url,
-          media_kind: form.media_kind,
-          video_url: form.video_url,
-          document_url: form.document_url,
-          link_url: form.link_url,
-          link_label: form.link_label,
+          eyebrow: form.eyebrow?.trim() || null,
+          title: form.title?.trim() || null,
+          subtitle: form.subtitle?.trim() || null,
+          body: form.body?.trim() || null,
+          media_url: form.media_url?.trim() || null,
+          media_kind: form.media_kind?.trim() || null,
+          video_url: form.video_url?.trim() || null,
+          document_url: form.document_url?.trim() || null,
+          link_url: form.link_url?.trim() || null,
+          link_label: form.link_label?.trim() || null,
           config: sectionKind === "process"
             ? { ...(form.config ?? {}), details: processDetails.trim() }
             : form.config as Record<string, string | number | boolean | null>,
@@ -817,10 +817,10 @@ function SectionEditor({
               <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Sorotan</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Label kecil sorotan">
-                  <input className={inputClass} value={String(form.config?.spotlight_eyebrow ?? "Sorotan")} onChange={(e) => setConfig("spotlight_eyebrow", e.target.value)} />
+                  <input className={inputClass} value={String(form.config?.spotlight_eyebrow ?? "")} onChange={(e) => setConfig("spotlight_eyebrow", e.target.value)} />
                 </Field>
                 <Field label="Judul sorotan">
-                  <input className={inputClass} value={String(form.config?.spotlight_title ?? "Aktivitas SALUT Arek Malang")} onChange={(e) => setConfig("spotlight_title", e.target.value)} />
+                  <input className={inputClass} value={String(form.config?.spotlight_title ?? "")} onChange={(e) => setConfig("spotlight_title", e.target.value)} />
                 </Field>
               </div>
             </div>
@@ -831,10 +831,10 @@ function SectionEditor({
               <p className="mb-3 text-sm font-black text-ut-navy">Pengaturan Bagian Instagram</p>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Label kecil Instagram">
-                  <input className={inputClass} value={String(form.config?.social_eyebrow ?? "Ikuti keseharian kami")} onChange={(e) => setConfig("social_eyebrow", e.target.value)} />
+                  <input className={inputClass} value={String(form.config?.social_eyebrow ?? "")} onChange={(e) => setConfig("social_eyebrow", e.target.value)} />
                 </Field>
                 <Field label="Judul bagian Instagram">
-                  <input className={inputClass} value={String(form.config?.social_title ?? "Cerita yang terus bergerak.")} onChange={(e) => setConfig("social_title", e.target.value)} />
+                  <input className={inputClass} value={String(form.config?.social_title ?? "")} onChange={(e) => setConfig("social_title", e.target.value)} />
                 </Field>
               </div>
             </div>
