@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
@@ -82,7 +82,6 @@ function isDirectVideoUrl(url?: string | null) {
 }
 
 export function KemahasiswaanEditorial() {
-  const [galleryIndex, setGalleryIndex] = useState(0);
   const [playingVideo, setPlayingVideo] = useState(true);
   const { data: sections = [], isLoading } = useQuery({
     queryKey: ["kemahasiswaan-editorial-sections"],
@@ -120,16 +119,6 @@ export function KemahasiswaanEditorial() {
   const heroImage = imageOf(hero);
   // The spotlight and gallery use the same latest four published CMS activity photos.
   const spotlightItems = galleryItems;
-  const visibleGallery = allActivityImages.length
-    ? Array.from({ length: Math.min(4, allActivityImages.length) }, (_, i) => allActivityImages[(galleryIndex + i) % allActivityImages.length])
-    : [];
-
-  useEffect(() => {
-    if (galleryItems.length < 2) return;
-    const timer = window.setInterval(() => setGalleryIndex((current) => (current + 1) % galleryItems.length), 5000);
-    return () => window.clearInterval(timer);
-  }, [galleryItems.length]);
-
   if (isLoading) return <main className="min-h-screen bg-[#fffef6]"><PublicHeader /><div className="mx-auto max-w-7xl px-6 py-24 text-center text-slate-600">Menyiapkan cerita dan aktivitas mahasiswa…</div><PublicFooter /></main>;
 
   return (
@@ -183,27 +172,28 @@ export function KemahasiswaanEditorial() {
         </div>
       </section>
 
-      <section className="bg-[#fff7a8] py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="mb-7 flex items-end justify-between gap-4"><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#776900]">{videoSection?.eyebrow || ""}</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">{videoSection?.title || ""}</h2></div><span className="hidden rounded-full border border-[#17203b]/20 bg-white/60 px-4 py-2 text-xs font-bold sm:inline-flex"><Video className="mr-2 size-4" /> Video pilihan</span></div>
-          <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr]">
-            <div className="relative overflow-hidden rounded-[1.75rem] bg-[#17203b] shadow-xl">
-              {playingVideo && videoItem?.video_url ? (
-                isDirectVideoUrl(videoItem.video_url) || String(videoSection?.config?.video_source_type ?? "") === "upload" ? (
-                  <video src={videoItem.video_url} poster={imageOf(videoSection)} controls playsInline autoPlay className="aspect-video w-full bg-black" />
-                ) : videoEmbedUrl(videoItem.video_url) ? (
-                  <iframe src={videoEmbedUrl(videoItem.video_url)!} title={videoItem.title || "Video profil SALUT Arek Malang"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="aspect-video w-full" />
-                ) : (
-                  <div className="grid aspect-video place-items-center bg-[#17203b] p-6 text-center text-white">
-                    <div><Play className="mx-auto size-10 text-[#f8e51c]" /><p className="mt-3 font-bold">Video ini dibuka di platform asalnya.</p><a href={videoItem.video_url} target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">Tonton video <ArrowUpRight className="ml-2 size-4" /></a></div>
-                  </div>
-                )
-              ) : <button type="button" onClick={() => videoItem?.video_url ? setPlayingVideo(true) : document.getElementById("galeri")?.scrollIntoView({ behavior: "smooth" })} className="group relative block w-full text-left"><img src={imageOf(videoSection, "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=85")} alt={videoItem?.title || "Video profil SALUT Arek Malang"} className="aspect-video w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.02]" /><span className="absolute inset-0 grid place-items-center"><span className="grid size-16 place-items-center rounded-full bg-[#f8e51c] text-[#17203b] shadow-xl transition group-hover:scale-110"><Play className="ml-1 size-7 fill-current" /></span></span><span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent p-5 pt-14 text-lg font-black text-white">{videoItem?.title || videoSection?.title || "Cerita dan perjalanan komunitas"}</span></button>}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {visibleGallery.slice(1, 3).map((item: any) => <a key={item.id || item.title} href="#galeri" className="group relative overflow-hidden rounded-[1.5rem] bg-[#17203b]"><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="h-full min-h-[160px] w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-3 pt-10 text-xs font-extrabold text-white sm:p-4 sm:pt-12">{item.title}</span></a>)}
-            </div>
+      <section className="bg-[#fff7a8] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
+        <div className="mx-auto flex max-w-7xl flex-col items-center">
+          <div className="mb-7 w-full max-w-4xl text-center">
+            <p className="text-xs font-black uppercase tracking-[.2em] text-[#776900]">{videoSection?.eyebrow || ""}</p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">{videoSection?.title || "Video Profil SALUT Arek Malang"}</h2>
+            {videoSection?.subtitle || videoSection?.body ? <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-700 sm:text-base">{videoSection?.subtitle || videoSection?.body}</p> : null}
+            <span className="mx-auto mt-4 inline-flex items-center rounded-full border border-[#17203b]/20 bg-white/60 px-4 py-2 text-xs font-bold"><Video className="mr-2 size-4" /> Video profil</span>
           </div>
+          <div className="w-full max-w-5xl overflow-hidden rounded-2xl bg-[#17203b] shadow-xl ring-1 ring-[#17203b]/10 sm:rounded-3xl">
+            {playingVideo && videoItem?.video_url ? (
+              isDirectVideoUrl(videoItem.video_url) || String(videoSection?.config?.video_source_type ?? "") === "upload" ? (
+                <video src={videoItem.video_url} poster={imageOf(videoSection)} controls playsInline autoPlay className="block aspect-video w-full bg-black object-contain" />
+              ) : videoEmbedUrl(videoItem.video_url) ? (
+                <iframe src={videoEmbedUrl(videoItem.video_url)!} title={videoItem.title || "Video profil SALUT Arek Malang"} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" className="block aspect-video w-full" />
+              ) : (
+                <div className="grid aspect-video place-items-center bg-[#17203b] p-6 text-center text-white">
+                  <div><Play className="mx-auto size-10 text-[#f8e51c]" /><p className="mt-3 font-bold">Video ini dibuka di platform asalnya.</p><a href={videoItem.video_url} target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">Tonton video <ArrowUpRight className="ml-2 size-4" /></a></div>
+                </div>
+              )
+            ) : <button type="button" onClick={() => videoItem?.video_url ? setPlayingVideo(true) : document.getElementById("galeri")?.scrollIntoView({ behavior: "smooth" })} className="group relative block w-full text-left"><img src={imageOf(videoSection, "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1400&q=85")} alt={videoItem?.title || "Video profil SALUT Arek Malang"} className="aspect-video w-full object-cover opacity-85 transition duration-500 group-hover:scale-[1.02]" /><span className="absolute inset-0 grid place-items-center"><span className="grid size-16 place-items-center rounded-full bg-[#f8e51c] text-[#17203b] shadow-xl transition group-hover:scale-110"><Play className="ml-1 size-7 fill-current" /></span></span><span className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 to-transparent p-5 pt-14 text-lg font-black text-white">{videoItem?.title || videoSection?.title || "Cerita dan perjalanan komunitas"}</span></button>}
+          </div>
+          {videoItem?.title && <p className="mt-4 max-w-3xl text-center text-sm font-semibold text-[#30364a]">{videoItem.title}</p>}
         </div>
       </section>
 
