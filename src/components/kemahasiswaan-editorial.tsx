@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, ChevronRight, Instagram, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, ChevronRight, Play, Sparkles, Trophy, Users, Video } from "lucide-react";
 import { PublicHeader, PublicFooter } from "@/components/public-site-chrome";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -102,9 +102,6 @@ export function KemahasiswaanEditorial() {
   const hero = section("hero");
   const intro = section("benefits");
   const activitySection = section("activities");
-  const instagramUsername = String(activitySection?.config?.social_username ?? "salutearekmalang_ut").replace(/^@/, "").trim() || "salutearekmalang_ut";
-  const instagramProfileUrl = "https://www.instagram.com/" + encodeURIComponent(instagramUsername) + "/";
-  const instagramPostLimit = Math.min(9, Math.max(3, Number(activitySection?.config?.social_post_limit ?? 5) || 5));
   const videoSection = section("leaderboard");
   const newsSection = section("news") || section("announcements") || section("richtext");
   const galleryItems = useMemo(() => {
@@ -216,28 +213,6 @@ export function KemahasiswaanEditorial() {
           {visibleGallery.map((item: any, i) => <article key={(item.id || item.title) + "-" + galleryIndex} className={`kem-gallery-card group relative overflow-hidden rounded-2xl bg-[#f8e51c] ${i === 0 ? "row-span-2 sm:col-span-2" : i === 3 ? "sm:row-span-2" : ""}`}><img src={item.image || imageOf(item)} alt={item.title} loading="lazy" className="kem-card-image h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#101629]/85 via-[#101629]/5 to-transparent opacity-90 transition group-hover:opacity-100" /><div className="absolute inset-x-0 bottom-0 p-4 sm:p-5"><p className="text-[10px] font-black uppercase tracking-[.18em] text-[#f8e51c]">{item.category || item.subtitle || "Cerita komunitas"}</p><h3 className="mt-1 text-base font-black text-white sm:text-lg">{item.title}</h3><span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-white/85">Lihat cerita <ArrowUpRight className="size-3" /></span></div></article>)}
         </div>
         {activitySection?.items?.length ? <p className="mt-4 text-xs text-slate-500">Galeri ditampilkan dari konten yang tersedia di CMS.</p> : <p className="mt-4 text-xs text-slate-500">Visual contoh sementara untuk pratinjau desain; ganti dengan foto kegiatan resmi melalui CMS sebelum dipublikasikan sebagai dokumentasi nyata.</p>}
-      </section>
-
-      <section className="overflow-hidden bg-[#17203b] py-12 text-white sm:py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[.22em] text-[#f8e51c]">{String(activitySection?.config?.social_eyebrow ?? "Ikuti keseharian kami")}</p>
-              <h2 className="mt-2 text-3xl font-black sm:text-4xl">{String(activitySection?.config?.social_title ?? "Cerita yang terus bergerak.")}</h2>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-slate-300">Lihat potongan aktivitas, informasi, dan inspirasi dari komunitas.</p>
-            </div>
-            <a href={instagramProfileUrl} target="_blank" rel="noreferrer" className="inline-flex w-fit items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b] transition hover:-translate-y-1">
-              <Instagram className="size-4" /> @{instagramUsername} <ArrowUpRight className="size-4" />
-            </a>
-          </div>
-          <div className="mt-7 rounded-3xl border border-white/15 bg-white/5 px-5 py-10 text-center sm:px-10">
-            <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-[#f8e51c] text-[#17203b]"><Instagram className="size-7" /></div>
-            <p className="mt-4 text-lg font-black">Feed Instagram belum terhubung</p>
-            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-300">Bagian ini disiapkan untuk menampilkan hingga {instagramPostLimit} postingan terbaru dari @{instagramUsername}. Postingan asli akan muncul setelah koneksi resmi Instagram/Meta dikonfigurasi.</p>
-            <a href={instagramProfileUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#f8e51c]/60 px-5 py-2.5 text-sm font-bold text-[#f8e51c] transition hover:bg-[#f8e51c] hover:text-[#17203b]">Lihat profil Instagram <ArrowUpRight className="size-4" /></a>
-            <p className="mt-4 text-xs text-slate-400">Status: belum terhubung. Tidak ada foto dummy yang ditampilkan sebagai postingan Instagram asli.</p>
-          </div>
-        </div>
       </section>
 
       <section id="kabar" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
