@@ -110,7 +110,12 @@ export function KemahasiswaanEditorial() {
   const videoSection = section("leaderboard");
   const newsSection = section("news") || section("announcements") || section("richtext");
   const galleryItems = useMemo(() => {
-    const items = (activitySection?.items ?? []).map((item) => ({ ...item, image: imageOf(item) })).filter((item) => item.image);
+    const items = (activitySection?.items ?? []).map((item, i) => ({
+      ...item,
+      // Use a visual placeholder only when an admin has not uploaded a photo yet;
+      // keep the CMS title, description, publish status, and ordering as the source of truth.
+      image: imageOf(item, galleryFallback[i % galleryFallback.length]?.image),
+    }));
     return items.length ? items : galleryFallback.map((item, i) => ({ ...item, id: "sample-" + i, sort_order: i, is_published: true }));
   }, [activitySection]);
   const newsItems = newsSection?.items ?? [];
