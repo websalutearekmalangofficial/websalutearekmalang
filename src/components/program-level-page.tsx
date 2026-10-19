@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 type Program = "Diploma" | "Magister" | "Doktoral" | "Profesi Guru";
 type Props = { program: Program; credential: string; slug: string };
-type Item = { id: string; title: string | null; subtitle: string | null; body: string | null; icon: string | null; is_published: boolean };
+type Item = { id: string; title: string | null; subtitle: string | null; body: string | null; icon: string | null; link_url?: string | null; link_label?: string | null; is_published: boolean };
 type Section = { id: string; kind: string; eyebrow: string | null; title: string | null; subtitle: string | null; body: string | null; media_url: string | null; link_url: string | null; link_label: string | null; items: Item[] };
 
 const defaults: Record<Program, { intro: string; facts: string[]; description: string }> = {
@@ -23,10 +23,31 @@ async function fetchCms(slug: string): Promise<Section[]> {
   if (se) throw se;
   const ids = (sections ?? []).map(s => s.id);
   if (!ids.length) return [];
-  const { data: items, error: ie } = await supabase.from("section_items").select("id,section_id,title,subtitle,body,icon,is_published,sort_order").in("section_id", ids).eq("is_published", true).order("sort_order");
+  const { data: items, error: ie } = await supabase.from("section_items").select("id,section_id,title,subtitle,body,icon,link_url,link_label,is_published,sort_order").in("section_id", ids).eq("is_published", true).order("sort_order");
   if (ie) throw ie;
   return (sections ?? []).map(s => ({ ...s, items: (items ?? []).filter(i => i.section_id === s.id) }));
 }
+
+const diplomaPrograms: Item[] = [
+  {
+    id: "d3-perpajakan",
+    title: "D3 Perpajakan",
+    subtitle: "Visi: Menjadi Program Studi vokasi yang berkualitas di bidang perpajakan melalui penyelenggaraan Pendidikan Tinggi Terbuka dan Jarak Jauh (PTTJJ).",
+    body: "Misi:\n• Menyelenggarakan pendidikan vokasi dalam bidang perpajakan bagi masyarakat melalui PTTJJ.\n• Menyelenggarakan penelitian dan mendiseminasikan hasil penelitian di bidang perpajakan.\n• Menghasilkan lulusan yang mempunyai keahlian di bidang perpajakan dan mempunyai daya saing di masyarakat.\n• Menjalin kemitraan dengan institusi baik di dalam maupun luar negeri untuk pengembangan bidang perpajakan.\n\nTujuan:\n• Menghasilkan lulusan yang mampu menggunakan konsep dan teori di bidang perpajakan.\n• Menghasilkan dan mendiseminasikan penelitian yang mendukung pengembangan perpajakan.\n• Menghasilkan program pengabdian kepada masyarakat yang sesuai dengan bidang perpajakan.\n• Menghasilkan kerja sama dengan berbagai pihak yang dapat mendukung peningkatan kuantitas dan kualitas program studi perpajakan.",
+    icon: "graduation-cap",
+    is_published: true,
+  },
+  {
+    id: "d4-kearsipan",
+    title: "D4 Kearsipan",
+    subtitle: "Visi: Menjadi program studi D4-Kearsipan yang berkualitas di bidang kearsipan yang mudah diakses melalui pendidikan tinggi terbuka dan jarak jauh (PTTJJ).",
+    body: "Misi:\n• Menghasilkan lulusan program sarjana terapan bidang arsip yang mampu bersaing di dunia kerja.\n• Menghasilkan lulusan program sarjana terapan bidang arsip sesuai dengan standar kompetensi nasional.\n• Menghasilkan lulusan bidang arsip yang menguasai TIK serta menguasai manajemen arsip statis dan arsip dinamis.\n• Menghasilkan lulusan yang mampu melakukan penelitian dan pengembangan ilmu kearsipan yang bermanfaat bagi dunia kerja.\n• Menghasilkan lulusan yang mampu menjalin kerja sama dengan institusi terkait dalam rangka mengembangkan inovasi bidang kearsipan.\n\nTujuan Program Studi:\n1. Menghasilkan lulusan program sarjana terapan bidang arsip yang mampu bersaing di dunia kerja.\n2. Menghasilkan lulusan program sarjana terapan bidang arsip sesuai dengan standar kompetensi nasional.\n3. Menghasilkan lulusan bidang arsip yang menguasai TIK serta menguasai manajemen arsip statis dan arsip dinamis.\n4. Menghasilkan lulusan yang mampu melakukan penelitian dan pengembangan ilmu kearsipan yang bermanfaat bagi dunia kerja.\n5. Menghasilkan lulusan yang mampu menjalin kerja sama dengan institusi terkait dalam rangka mengembangkan inovasi bidang kearsipan.",
+    icon: "graduation-cap",
+    link_url: "https://svokasi.ut.ac.id/d4-kearsipan-profil-lulusan/",
+    link_label: "Profil Lulusan D4 Kearsipan",
+    is_published: true,
+  },
+];
 
 function iconFor(name: string | null) {
   const key = name?.toLowerCase();
@@ -52,12 +73,44 @@ export function ProgramLevelPage({ program, credential, slug }: Props) {
   const application = cms.find(s => s.kind.includes("application"));
   const cta = cms.find(s => s.kind.includes("cta"));
   const heroImage = hero?.media_url || "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=85";
-  const factsItems = facts?.items.length ? facts.items : fallback.facts.map((title, i) => ({ id: String(i), title, subtitle: credential, body: "Pilihan program pendidikan yang dapat disesuaikan dengan tujuan akademik dan profesional Anda.", icon: "graduation-cap", is_published: true }));
+  const factsItems = facts?.items.length ? facts.items : (program === "Diploma" ? diplomaPrograms : fallback.facts.map((title, i) => ({ id: String(i), title, subtitle: credential, body: "Pilihan program pendidikan yang dapat disesuaikan dengan tujuan akademik dan profesional Anda.", icon: "graduation-cap", is_published: true })));
   const contactItems = cta?.items.length ? cta.items : [
     { id:"loc", title:"SALUT Arek Malang", subtitle:"Mal Pelayanan Publik Merdeka Malang Lt. 3", body:"Jl. Mayjen Sungkono, Kota Malang", icon:"map-pin", is_published:true },
     { id:"wa", title:"WhatsApp", subtitle:"0812-3002-4264", body:"Konsultasi dan informasi pendaftaran", icon:"phone", is_published:true },
     { id:"mail", title:"E-mail", subtitle:"admin@salutarekmalang.com", body:"Kirim pertanyaan melalui email", icon:"mail", is_published:true },
   ];
+
+  if (program === "Diploma") {
+    return <main className="min-h-screen bg-[#fffef7] font-body text-[#17203b]">
+      <PublicHeader />
+      <section className="relative overflow-hidden bg-[#f8e51c] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+        <div className="absolute -right-20 -top-24 size-80 rounded-full border-[50px] border-white/30" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="text-xs font-black uppercase tracking-[.22em] text-[#776900]">{hero?.eyebrow || "Program Pendidikan Vokasi"}</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">{hero?.title || "Pilihan Program Diploma yang Tersedia"}</h1>
+          <p className="mt-5 max-w-3xl text-base leading-7 text-slate-700 sm:text-lg">{hero?.body || "Pilih program Diploma Universitas Terbuka yang sesuai dengan minat dan rencana profesional Anda."}</p>
+          <div className="mt-7 flex flex-wrap gap-3"><a href="#pilihan-program" className="rounded-full bg-[#17203b] px-6 py-3 text-sm font-black text-white">Lihat Pilihan Program</a><a href="/daftar" className="rounded-full border-2 border-[#17203b] px-6 py-3 text-sm font-black text-[#17203b]">Mulai Pendaftaran</a></div>
+        </div>
+      </section>
+      <section id="pilihan-program" className="scroll-mt-24 px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-9 max-w-3xl"><p className="text-xs font-black uppercase tracking-[.2em] text-[#8b7c00]">{facts?.eyebrow || "Program Diploma Universitas Terbuka"}</p><h2 className="mt-2 text-3xl font-black sm:text-4xl">{facts?.title || "Pilihan Program Diploma yang Tersedia"}</h2><p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">{facts?.subtitle || "Saat ini tersedia dua pilihan program Diploma berikut."}</p></div>
+          <div className="grid items-start gap-6 lg:grid-cols-2">
+            {factsItems.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[1.75rem] border border-[#eee6a1] bg-white shadow-[0_18px_55px_-35px_rgba(23,32,59,.5)]">
+              <div className="bg-[#17203b] px-6 py-6 text-white sm:px-8"><p className="text-xs font-extrabold uppercase tracking-[.18em] text-[#f8e51c]">Program Diploma {index + 1}</p><h3 className="mt-2 text-2xl font-black sm:text-3xl">{item.title}</h3></div>
+              <div className="space-y-6 p-6 sm:p-8">
+                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Visi</h4><p className="mt-2 text-sm leading-7 text-slate-700">{(item.subtitle || "").replace(/^Visi:\\s*/i, "")}</p></div>
+                <div><h4 className="text-sm font-black uppercase tracking-wide text-[#8b7c00]">Misi dan Tujuan</h4><div className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-700">{item.body}</div></div>
+                {item.link_url ? <a href={item.link_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#f8e51c] px-5 py-3 text-sm font-black text-[#17203b]">{item.link_label || "Informasi Selengkapnya"} <ArrowRight className="size-4" /></a> : null}
+              </div>
+            </article>)}
+          </div>
+        </div>
+      </section>
+      <section className="bg-[#17203b] px-5 py-12 text-white sm:px-8 sm:py-16 lg:px-12"><div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 md:flex-row md:items-center"><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#f8e51c]">SALUT Arek Malang</p><h2 className="mt-2 text-2xl font-black sm:text-3xl">Butuh informasi program Diploma?</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-blue-100">Tim SALUT Arek Malang siap membantu Anda memahami pilihan program dan proses pendaftaran.</p></div><a href="/daftar" className="inline-flex items-center gap-2 rounded-full bg-[#f8e51c] px-6 py-3.5 text-sm font-black text-[#17203b]">Mulai Pendaftaran <ArrowRight className="size-4" /></a></div></section>
+      <PublicFooter />
+    </main>;
+  }
 
   return <main className="min-h-screen bg-[#fafaf5] font-body text-[#101010]">
     <PublicHeader />
