@@ -75,34 +75,24 @@ function ProfilePage() {
     <main className="min-h-screen bg-white font-body text-[#101010]">
       <PublicHeader />
 
-      <section className="relative overflow-hidden bg-[#08266f] text-white">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#08266f] via-[#0b347f] to-[#0a1d50]" />
-        {hero?.media_url ? (
-          <img
-            src={hero.media_url}
-            alt={hero.title || "Profil SALUT Arek Malang"}
-            className="absolute inset-0 h-full w-full object-cover opacity-20"
-          />
-        ) : null}
-        <div className="relative mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-blue-200">
-            {hero?.eyebrow || "Profil Kami"}
-          </p>
-          <h1 className="mt-4 max-w-4xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-            {hero?.title || "Mengenal Lebih Dekat SALUT Arek Malang"}
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg font-bold leading-relaxed text-white/90">
-            {hero?.subtitle ||
-              "Mitra Resmi Universitas Terbuka untuk Wilayah Malang dan Sekitarnya."}
-          </p>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 sm:text-base">
-            {hero?.body ||
-              "Kami hadir untuk mendekatkan akses pendidikan tinggi berkualitas kepada masyarakat, memberikan pendampingan penuh dari proses pendaftaran hingga Anda meraih gelar sarjana."}
-          </p>
-        </div>
+      <section
+        aria-label="Video Profil SALUT Arek Malang"
+        className="relative isolate h-[38vh] min-h-[260px] max-h-[720px] w-full overflow-hidden bg-[#08266f] sm:h-[52vh] sm:min-h-[360px] lg:h-[68vh] lg:min-h-[480px]"
+      >
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src="https://yfhbokrybbcbxgafjdhi.supabase.co/storage/v1/object/sign/cms-media/1792399409261-Video-Profil.mp4?token=eyJraWQiOiI4MTNjMTY3Ny04ZTVmLTRiZmYtOTAyNS1lMTIxY2U2ZDZlNTAiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJjbXMtbWVkaWEvMTc5MjM5OTQwOTI2MS1WaWRlby1Qcm9maWwubXA0Iiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc5MjM5OTU1MywiZXhwIjoxOTUwMDc5NTUzfQ.AONOT88srWjt50Q34tq7xkT0mU2-WEg91JS4rBvMqusjfFZm_Ozqjd3BYZMt5v9Ry7NbtTScelplgxKgij2EPQ"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          controls={false}
+          aria-label="Video Profil SALUT Arek Malang"
+        />
       </section>
 
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
+      <div className="mx-auto max-w-7xl px-5 py-14      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-10">
         {about && (
           <section className="mb-16 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div>
