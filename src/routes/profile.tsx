@@ -112,7 +112,7 @@ function ProfilePage() {
 
       <section
         aria-label="Video Profil SALUT Arek Malang"
-        className="relative isolate aspect-video max-h-[80vh] w-full overflow-hidden bg-black"
+        className="relative isolate aspect-video max-h-[80vh] w-full overflow-hidden bg-[#08266f]"
       >
         <video
           ref={videoRef}
