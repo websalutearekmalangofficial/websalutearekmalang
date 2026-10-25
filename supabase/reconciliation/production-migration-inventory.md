@@ -11,7 +11,7 @@ Audit branch: `chore/supabase-reconciliation-validation`
 
 ## Applied migration history reported by Supabase
 
-| Version | Database migration name | Exact version file seen in repository listing? |
+| Version | Database migration name | Exact-version SQL file present in GitHub main? |
 |---|---|---|
 | 20260908050226 | 88741e57-9d85-49fd-9b32-ee47a0380cc0 | Yes |
 | 20260908050253 | f2a271ad-0a64-4924-8b6f-92a8d5a8bf0f | Yes |
@@ -35,14 +35,14 @@ Audit branch: `chore/supabase-reconciliation-validation`
 | 20261001185754 | restore_public_registration_insert_policy | No |
 | 20261001234432 | add_public_site_logo_setting | No |
 | 20261002144238 | add_footer_content_setting | No |
-| 20261005022013 | add_user_dashboard_account_fields | No exact version (related file exists under a different version) |
-| 20261005075545 | allow_admin_insert_sections | No exact version (related file exists under a different version) |
-| 20261005080153 | allow_admin_insert_section_items | No exact version (related file exists under a different version) |
+| 20261005022013 | add_user_dashboard_account_fields | No exact-version file in GitHub main; Lovable snapshot has a similarly named file with a different timestamp |
+| 20261005075545 | allow_admin_insert_sections | No exact-version file in GitHub main; Lovable snapshot has a similarly named file with a different timestamp |
+| 20261005080153 | allow_admin_insert_section_items | No exact-version file in GitHub main; Lovable snapshot has a similarly named file with a different timestamp |
 | 20261008185013 | duplicate_page_copies_homepage_template_and_hero_banners | Yes |
 | 20261018165750 | restrict_duplicate_page_execution_to_authenticated_admins | Yes |
 | 20261018180040 | disable_duplicate_page_function | Yes |
 | 20261018180043 | revoke_duplicate_page_execution | Yes |
-| 20261018223357 | setup_kemahasiswaan_editorial_cms_sections | No exact version (related file exists under a different version) |
+| 20261018223357 | setup_kemahasiswaan_editorial_cms_sections | No exact-version file in GitHub main; Lovable snapshot has a similarly named file with a different timestamp |
 
 "Yes" means a filename with that exact timestamp was visible in the inspected repository listing; it does not prove the SQL contents are identical to production. All SQL files still require content review.
 
