@@ -6,6 +6,7 @@ on:
       - "supabase/**"
       - "scripts/validate-supabase-repo.sh"
       - ".github/workflows/supabase-validate.yml"
+      - "package.json"
   push:
     branches:
       - main
@@ -14,6 +15,7 @@ on:
       - "supabase/**"
       - "scripts/validate-supabase-repo.sh"
       - ".github/workflows/supabase-validate.yml"
+      - "package.json"
 
 permissions:
   contents: read
@@ -30,6 +32,14 @@ jobs:
         shell: bash
         run: bash scripts/validate-supabase-repo.sh
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install project dependencies for npm specifier resolution
+        run: npm install --ignore-scripts --no-audit --no-fund
+
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
@@ -41,7 +51,7 @@ jobs:
           set -euo pipefail
           for fn in submit-registration send-whatsapp-registration create-registrant-account manage-registrant-account; do
             echo "Checking $fn"
-            deno check "supabase/functions/$fn/index.ts"
+            deno check --node-modules-dir=auto "supabase/functions/$fn/index.ts"
           done
 
       - name: Confirm workflow is validation-only
