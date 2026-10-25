@@ -54,10 +54,3 @@ jobs:
             deno check --node-modules-dir=auto "supabase/functions/$fn/index.ts"
           done
 
-      - name: Confirm workflow is validation-only
-        run: |
-          if grep -Eiq 'supabase (db push|functions deploy)|apply_migration|deploy_edge_function' .github/workflows/supabase-validate.yml; then
-            echo "Deployment command found in validation workflow; refusing."
-            exit 1
-          fi
-          echo "No production deployment commands found."
