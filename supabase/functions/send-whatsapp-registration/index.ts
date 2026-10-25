@@ -1,5 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -46,7 +46,10 @@ function getSecrets() {
   };
 }
 
-async function getAdminUserId(req: Request, client: ReturnType<typeof createClient>) {
+async function getAdminUserId(
+  req: Request,
+  client: SupabaseClient<any, "public", "public", any, any>,
+) {
   const authorization = req.headers.get("Authorization");
   if (!authorization?.startsWith("Bearer ")) return null;
 
