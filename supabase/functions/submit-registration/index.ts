@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = (await req.json()) as RegistrationPayload;
+
     const nama = body.nama?.trim();
     const email = body.email?.trim() || null;
     const nomorHp = body.nomor_hp?.trim() || null;
@@ -52,12 +53,16 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const secretKeysRaw = Deno.env.get("SUPABASE_SECRET_KEYS");
     if (!supabaseUrl || !secretKeysRaw) {
+      console.error("Missing Supabase runtime configuration");
       return json({ error: "Konfigurasi server belum tersedia." }, 500);
     }
 
     const secretKeys = JSON.parse(secretKeysRaw);
     const secretKey = secretKeys.default;
-    if (!secretKey) return json({ error: "Konfigurasi server belum tersedia." }, 500);
+    if (!secretKey) {
+      console.error("Default Supabase secret key is missing");
+      return json({ error: "Konfigurasi server belum tersedia." }, 500);
+    }
 
     const admin = createClient(supabaseUrl, secretKey, {
       auth: { persistSession: false, autoRefreshToken: false },
