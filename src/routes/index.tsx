@@ -233,6 +233,26 @@ export function Index() {
 
 function HeroBanner() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("public-hero-banners-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "hero_banners" },
+        () => {
+          void queryClient.invalidateQueries({
+            queryKey: ["public-hero-banners"],
+          });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const heroBannersQuery = useQuery({
     queryKey: ["public-hero-banners"],
